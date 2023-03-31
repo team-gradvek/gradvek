@@ -1,74 +1,88 @@
 # Installation 
 
-## Pull repo
+# First Pull
+
+### 1. Setup python environment (optional)
+Note: If you create a Python env, add it to the .gitingore file
+
+`cd` into `backend` folder
 
 ```
-git pull 
-```
-
-## Setup python environment (optional)
-
-`cd` into backend folder
-
-```
+pip3 install virtualenv
 python3 -m venv env
 source env/bin/activate
 ```
 
-## Install python modules
 
-`cd` into backend folder
+### 2. Install Python modules
+Note: if you created a Python env, install the modules inside the environement. 
+To start the env:
 
 ```
-pip install -r requirements.txt
+source env/bin/activate 
+```
+To stop the env:
+```
+deactivate 
 ```
 
-## Run Migration
 
-`cd` into backend folder
+`cd` into `backend` folder
+
+```
+pip3 install -r requirements.txt
+```
+
+### 3. Run Django Migration
+
+`cd` into `backend` folder
 
 ```
 python3 manage.py migrate
 ```
 
-# Run Admin Config
+### 4. Run Admin Config
 
 `cd` into backend folder
 
 ```
 python3 manage.py createsuperuser
 ```
+test at : http://localhost:8000/admin/
 
-## Create Descriptor
+### 5. Create Descriptor (optional - only to showcase a database example)
 
-Log-in to admin and add a new descriptor
+Log-in to admin and add a a few descriptors http://localhost:8000/admin/
 
 
-## Install node_modules
+### 6. Install node_modules
 
 `cd` into frontend folder
 
-Browse to the frontend folder and install modules
+Browse to the `frontend` folder and install modules
 ```
 npm i
 ```
 
-## Run Frontend
+# How to run the frontend and backend
+### 1. Run Frontend
 
 `cd` into frontend folder
 
 ```
 npm run dev
 ```
+http://localhost:3000/
 
-## Run Backend
+### 2.  Run Backend
 
 `cd` into backend folder
 
 ```
 python3 manage.py runserver
 ```
+http://localhost:8000/
 
-
+# Make file commands
 
 
