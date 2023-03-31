@@ -7,7 +7,7 @@
 # First Pull
 
 ### 1. Setup python environment (optional)
-Note: If you create a Python env, add it to the .gitingore file
+Note: If you create a Python env, add it to the .gitignore file
 
 `cd` into `backend` folder
 
@@ -54,9 +54,9 @@ python3 manage.py createsuperuser
 ```
 test at : http://localhost:8000/admin/
 
-### 5. Create Descriptor (optional - only to showcase a database example)
+### 5. Create descriptor objects (optional - only to showcase a database example)
 
-Log-in to admin and add a a few descriptors http://localhost:8000/admin/
+Log-in to admin and add a few descriptors http://localhost:8000/admin/
 
 
 ### 6. Install node_modules
