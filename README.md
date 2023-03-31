@@ -55,9 +55,9 @@ python3 manage.py createsuperuser
 ```
 test at : http://localhost:8000/admin/
 
-### 5. Create Descriptor (optional - only to showcase a database example)
+### 5. Create descriptor objects (optional - only to showcase a database example)
 
-Log-in to admin and add a a few descriptors http://localhost:8000/admin/
+Log-in to admin and add a few descriptors http://localhost:8000/admin/
 
 
 ### 6. Install node_modules
