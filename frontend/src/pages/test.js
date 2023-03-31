@@ -1,12 +1,9 @@
 function Home({descriptors}) {
   return (
       <>
-      <div>
-          console.log(descriptors)
           {descriptors.map((descriptor) => (
-              <p>{descriptor.descriptor_name}</p>
+              <p key={descriptor.descriptor_name}>{descriptor.descriptor_name}</p>
           ))}
-      </div>
       </>
   )
 }
