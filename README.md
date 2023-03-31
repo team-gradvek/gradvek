@@ -7,7 +7,7 @@
 # First Pull
 
 ### 1. Setup python environment (optional)
-Note: If you create a Python env, add it to the .gitingore file
+Note: If you create a Python env (with a different name), add it to the .gitingore file
 
 `cd` into `backend` folder
 
@@ -44,10 +44,11 @@ pip3 install -r requirements.txt
 ```
 python3 manage.py migrate
 ```
+https://stackoverflow.com/questions/29980211/django-1-8-whats-the-difference-between-migrate-and-makemigrations
 
 ### 4. Run Admin Config
 
-`cd` into backend folder
+`cd` into `backend` folder
 
 ```
 python3 manage.py createsuperuser
@@ -61,12 +62,13 @@ Log-in to admin and add a a few descriptors http://localhost:8000/admin/
 
 ### 6. Install node_modules
 
-`cd` into frontend folder
+`cd` into `frontend` folder
 
 Browse to the `frontend` folder and install modules
 ```
 npm i
 ```
+https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 
 # How to run the frontend and backend
 ### 1. Run Frontend
