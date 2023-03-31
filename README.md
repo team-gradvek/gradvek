@@ -1,4 +1,8 @@
-# Installation 
+# Installation
+
+[First Pull](https://github.com/team-gradvek/gradvek#first-pull)  
+[How to run frontend and backend](https://github.com/team-gradvek/gradvek#how-to-run-the-frontend-and-backend)  
+[Make file commands](https://github.com/team-gradvek/gradvek#make-file-commands)  
 
 # First Pull
 
