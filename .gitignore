@@ -1,2 +1,8 @@
 .DS_Store
 .ipynb_checkpoints/
+diseases/
+fda/
+mechanismOfAction/
+molecule/
+mousePhenotypes/
+targets/
