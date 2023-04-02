@@ -39,13 +39,14 @@ def main():
             # the parsing function will return a list of cypher queries
             # the list of cypher queries will be executed to insert the data into the database
 
+            # this if statement is for testing while more cypher functions are being created
             if(data_type == "targets"):
-                switcher = {
-                    "targets": parse_targets
+                # dictionary to choose the correct function foq the data type
+                cypher_generator_functions = {
+                    "targets": create_cypher_query_targets
                 }
                 # get the function from switcher dictionary
-                func = switcher.get(data_type, lambda: "Invalid data type")
-                print(func)
+                func = cypher_generator_functions.get(data_type, lambda: "Invalid data type")
                 # execute the function
                 queries = func(table)
                 # execute the queries
@@ -61,7 +62,7 @@ def main():
     + dataset: StringEscapeUtils.escapeEcmaScript (mFromDatase) + ", "
     + "symbol:\'" + StringEscapeUtils.escapeEcmaScript (mSymbol) + "\'"
     + "})"); """
-def parse_targets(table):
+def create_cypher_query_targets(table):
     # get the data from the table
     df = table.to_pandas()
     # create a list to store the cypher queries
