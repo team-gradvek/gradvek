@@ -8,12 +8,12 @@ import posixpath
 
 # Project path and Open Target path dict
 paths = {
-    # "diseases": ["opentarget/diseases", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/21.04/output/etl/parquet/diseases/"],
-    # "fda": ["opentarget/fda", ""],
-    # "mechanismOfAction": ["opentarget/mechanismOfAction", ""],
-    # "molecules": ["opentarget/molecule", ""],
-    # "mousePhenotypes": ["opentarget/mousePhenotypes", "ftp.ebi.ac.uk/pub/databases/opentargets/platform/23.02/output/etl/parquet/mousePhenotypes"],
-    "targets": ["opentarget/targets","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/23.02/output/etl/parquet/targets/"]
+    "diseases": ["opentarget/diseases", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/diseases/"],
+    "fda": ["opentarget/fda", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/fda/significantAdverseDrugReactions/"],
+    "mechanismOfAction": ["opentarget/mechanismOfAction", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/mechanismOfAction/"],
+    "molecules": ["opentarget/molecule", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/molecule/"],
+    "mousePhenotypes": ["opentarget/mousePhenotypes", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/mousePhenotypes/"],
+    "targets": ["opentarget/targets","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/targets/"]
 }
 
 
@@ -39,6 +39,11 @@ def get_datasets(name, project_path, ot_path):
         current_dir = os.getcwd()
         output_dir = f"{current_dir}/{project_path}"
 
+        # remove any lingering .tmp files from the output directory
+        for file in os.listdir(output_dir):
+            if file.endswith(".tmp"):
+                os.remove(os.path.join(output_dir, file))
+
         # Use wget to retrieve the HTML content of the page
         html_content = wget.download(url, out=output_dir)
 
@@ -52,12 +57,15 @@ def get_datasets(name, project_path, ot_path):
                     link = line[start:end]
                     if link.endswith('.parquet'):
                         links.append(url + link)
-
         # Download the files
-        for link in links:
+        for n, link in enumerate(links):
+            print(f"\nDownloading {name} file {n+1} of {len(links)} ")
             filename = os.path.basename(link)
             output_file = os.path.join(output_dir, filename)
-            wget.download(link, out=output_file)
+            if os.path.exists(output_file):
+                print(f"File {filename} already exists. Skipping...")
+            else:
+                wget.download(link, out=output_file)
 
         print("Files downloaded successfully!")
 
