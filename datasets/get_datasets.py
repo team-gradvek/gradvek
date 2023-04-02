@@ -6,23 +6,38 @@ from datetime import datetime
 import posixpath
 
 
+# Project path and Open Target path dict
+paths = {
+    "diseases": ["opentarget/diseases", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/21.04/output/etl/parquet/diseases/"],
+    # "fda": ["opentarget/fda", ""],
+    # "mechanismOfAction": ["opentarget/mechanismOfAction", ""],
+    # "molecules": ["opentarget/molecule", ""],
+    # "mousePhenotypes": ["opentarget/mousePhenotypes", "ftp.ebi.ac.uk/pub/databases/opentargets/platform/23.02/output/etl/parquet/mousePhenotypes"],
+    # "targets": ["opentarget/targets","ftp.ebi.ac.uk/pub/databases/opentargets/platform/23.02/output/etl/parquet/targets"]
+}
+
+
 def main():
+
     print("Start Program... ")
 
-    try:
-        print("Start Downloading files... ")
+    for key, values in paths.items():
+        get_datasets(key, values[0], values[1])
 
-        # Get current time
-        timenow = datetime.now()
-        timenow_iso = timenow.strftime('%Y-%m-%d')
+    
+def get_datasets(name, project_path, ot_path):
+    """
+    Get and download datasets files inside Open Target(OT) directory.
+    """
+    try:
+        print(f"Start Downloading {name} files... ")
 
         # Specify the URL
+        url = ot_path
 
-        
-        url = 'https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/21.04/output/etl/parquet/diseases/'
-
-        # Use the current directory as the output directory
-        output_dir = os.getcwd()
+        # Use the opentarget directory as the output directory
+        current_dir = os.getcwd()
+        output_dir = f"{current_dir}/{project_path}"
 
         # Use wget to retrieve the HTML content of the page
         html_content = wget.download(url, out=output_dir)
