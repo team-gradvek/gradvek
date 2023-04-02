@@ -33,16 +33,6 @@ def get_datasets(name, project_path, ot_path):
         current_dir = os.getcwd()
         print()
         output_dir = f"{current_dir}/{project_path}"
-        print(output_dir)
-
-        # Remove any lingering .tmp files from the output directory
-        for file in os.listdir(output_dir):
-            if file.endswith(".tmp"):
-                os.remove(os.path.join(output_dir, file))
-
-        # Remove the download.wget file if it already exists
-        if os.path.exists(os.path.join(output_dir, "download.wget")):
-            os.remove(os.path.join(output_dir, "download.wget"))
 
         # Download the HTML content of the page using wget
         html_content = wget.download(url, out=output_dir)
