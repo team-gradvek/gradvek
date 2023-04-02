@@ -8,12 +8,12 @@ import posixpath
 
 # Project path and Open Target path dict
 paths = {
-    "diseases": ["opentarget/diseases", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/21.04/output/etl/parquet/diseases/"],
-    "significantAdverseDrugReactions": ["opentarget/significantAdverseDrugReactions", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/fda/significantAdverseDrugReactions/"],
-    "mechanismOfAction": ["opentarget/mechanismOfAction", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/21.04/output/etl/parquet/mechanismOfAction/"],
-    "molecules": ["opentarget/molecule", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/21.04/output/etl/parquet/molecule/"],
-    "mousePhenotypes": ["opentarget/mousePhenotypes", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/21.04/output/etl/parquet/mousePhenotypes/"],
-    "targets": ["opentarget/targets","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/21.04/output/etl/parquet/targets/"]
+    "diseases": ["opentarget/diseases", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/diseases/"],
+    "fda": ["opentarget/fda", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/fda/significantAdverseDrugReactions/"],
+    "mechanismOfAction": ["opentarget/mechanismOfAction", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/mechanismOfAction/"],
+    "molecules": ["opentarget/molecule", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/molecule/"],
+    "mousePhenotypes": ["opentarget/mousePhenotypes", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/mousePhenotypes/"],
+    "targets": ["opentarget/targets","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/targets/"]
 }
 
 
@@ -37,9 +37,7 @@ def get_datasets(name, project_path, ot_path):
 
         # Use the opentarget directory as the output directory
         current_dir = os.getcwd()
-        print()
         output_dir = f"{current_dir}/{project_path}"
-        print(output_dir)
 
         # Use wget to retrieve the HTML content of the page
         html_content = wget.download(url, out=output_dir)
@@ -54,9 +52,9 @@ def get_datasets(name, project_path, ot_path):
                     link = line[start:end]
                     if link.endswith('.parquet'):
                         links.append(url + link)
-
         # Download the files
-        for link in links:
+        for n, link in enumerate(links):
+            print(f"\nDownloading {name} file {n+1} of {len(links)} ")
             filename = os.path.basename(link)
             output_file = os.path.join(output_dir, filename)
             wget.download(link, out=output_file)
