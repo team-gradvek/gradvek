@@ -39,6 +39,11 @@ def get_datasets(name, project_path, ot_path):
         current_dir = os.getcwd()
         output_dir = f"{current_dir}/{project_path}"
 
+        # remove any lingering .tmp files from the output directory
+        for file in os.listdir(output_dir):
+            if file.endswith(".tmp"):
+                os.remove(os.path.join(output_dir, file))
+
         # Use wget to retrieve the HTML content of the page
         html_content = wget.download(url, out=output_dir)
 
@@ -57,7 +62,10 @@ def get_datasets(name, project_path, ot_path):
             print(f"\nDownloading {name} file {n+1} of {len(links)} ")
             filename = os.path.basename(link)
             output_file = os.path.join(output_dir, filename)
-            wget.download(link, out=output_file)
+            if os.path.exists(output_file):
+                print(f"File {filename} already exists. Skipping...")
+            else:
+                wget.download(link, out=output_file)
 
         print("Files downloaded successfully!")
 
