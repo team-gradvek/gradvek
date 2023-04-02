@@ -8,12 +8,12 @@ import posixpath
 
 # Project path and Open Target path dict
 paths = {
-    "diseases": ["opentarget/diseases", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/21.04/output/etl/parquet/diseases/"],
+    # "diseases": ["opentarget/diseases", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/21.04/output/etl/parquet/diseases/"],
     # "fda": ["opentarget/fda", ""],
     # "mechanismOfAction": ["opentarget/mechanismOfAction", ""],
     # "molecules": ["opentarget/molecule", ""],
     # "mousePhenotypes": ["opentarget/mousePhenotypes", "ftp.ebi.ac.uk/pub/databases/opentargets/platform/23.02/output/etl/parquet/mousePhenotypes"],
-    # "targets": ["opentarget/targets","ftp.ebi.ac.uk/pub/databases/opentargets/platform/23.02/output/etl/parquet/targets"]
+    "targets": ["opentarget/targets","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/23.02/output/etl/parquet/targets/"]
 }
 
 
