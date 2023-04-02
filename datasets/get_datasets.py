@@ -43,8 +43,12 @@ def get_datasets(name, project_path, ot_path):
         for file in os.listdir(output_dir):
             if file.endswith(".tmp"):
                 os.remove(os.path.join(output_dir, file))
+        
+        # if download.wget already exists, remove it
+        if os.path.exists(os.path.join(output_dir, "download.wget")):
+            os.remove(os.path.join(output_dir, "download.wget"))
 
-        # Use wget to retrieve the HTML content of the page
+        # Use wget to retrieve the HTML content of the page, creates the download.wget file
         html_content = wget.download(url, out=output_dir)
 
         # Extract the links to the files on the page
