@@ -121,4 +121,8 @@ https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-fai
 
 "Once upon a time I stumbled with this issue. If you're using macOS go to Macintosh HD > Applications > Python3.6 folder (or whatever version of python you're using) > double click on "Install Certificates.command" file. :D"
 
+"If you install Python using Homebrew that file does not exist. The solution is here:"
+https://stackoverflow.com/questions/44649449/brew-installation-of-python-3-6-1-ssl-certificate-verify-failed-certificate/44649450#44649450
+
+
 
