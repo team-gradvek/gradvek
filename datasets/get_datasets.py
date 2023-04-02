@@ -31,7 +31,9 @@ def get_datasets(name, project_path, ot_path):
         url = ot_path
 
         current_dir = os.getcwd()
+        print()
         output_dir = f"{current_dir}/{project_path}"
+        print(output_dir)
 
         # Remove any lingering .tmp files from the output directory
         for file in os.listdir(output_dir):
