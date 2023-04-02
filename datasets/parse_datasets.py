@@ -32,7 +32,7 @@ def main():
             print(f"{data_type} {n+1} of {len(files)}")
             # print the first 5 rows of the file
             # Sprint(table.to_pandas().head())
-            
+
             # parse the file and create a neo4j cypher query to insert the data into the database
             # each type will have a different parsing function
             # for example, the disease file will have a different parsing function than the gene file
@@ -54,6 +54,7 @@ def main():
                     # execute the query
 
 # parse a target file and create a cypher query to insert the data into the database
+# This is from the query constructor for targets in gradvek 1.0
 """ ("CREATE (:Target" 
     + " {" + "name:\'" + StringEscapeUtils.escapeEcmaScript (super.toString ()) + "\', "
     + TARGET_ID_STRING + ":\'" + StringEscapeUtils.escapeEcmaScript (mEnsembleId) + "\', "
