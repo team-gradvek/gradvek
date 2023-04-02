@@ -112,6 +112,10 @@ python3 manage.py runserver
 ```
 http://localhost:8000/
 
+## 3. To see API example
+http://localhost:3000/test  
+http://localhost:8000/api/descriptors
+
 # Make file commands
 
 # Errors
