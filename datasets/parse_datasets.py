@@ -11,6 +11,9 @@ input_dir = f"{current_dir}/opentarget"
 for data_type in os.listdir(input_dir):
     # get the path to the directory
     data_type_path = os.path.join(input_dir, data_type)
+    # check if the data_type_path is a directory
+    if not os.path.isdir(data_type_path):
+        continue
     # create the list of files in the directory, filter out non-parquet files
     files = [file for file in os.listdir(data_type_path) if file.endswith(".parquet")]
     # each file in the directory is a parquet file
