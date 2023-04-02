@@ -9,11 +9,11 @@ import posixpath
 # Project path and Open Target path dict
 paths = {
     "diseases": ["opentarget/diseases", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/21.04/output/etl/parquet/diseases/"],
-    # "fda": ["opentarget/fda", ""],
-    # "mechanismOfAction": ["opentarget/mechanismOfAction", ""],
-    # "molecules": ["opentarget/molecule", ""],
-    # "mousePhenotypes": ["opentarget/mousePhenotypes", "ftp.ebi.ac.uk/pub/databases/opentargets/platform/23.02/output/etl/parquet/mousePhenotypes"],
-    # "targets": ["opentarget/targets","ftp.ebi.ac.uk/pub/databases/opentargets/platform/23.02/output/etl/parquet/targets"]
+    "significantAdverseDrugReactions": ["opentarget/significantAdverseDrugReactions", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/fda/significantAdverseDrugReactions/"],
+    "mechanismOfAction": ["opentarget/mechanismOfAction", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/21.04/output/etl/parquet/mechanismOfAction/"],
+    "molecules": ["opentarget/molecule", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/21.04/output/etl/parquet/molecule/"],
+    "mousePhenotypes": ["opentarget/mousePhenotypes", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/21.04/output/etl/parquet/mousePhenotypes/"],
+    "targets": ["opentarget/targets","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/21.04/output/etl/parquet/targets/"]
 }
 
 
@@ -37,7 +37,9 @@ def get_datasets(name, project_path, ot_path):
 
         # Use the opentarget directory as the output directory
         current_dir = os.getcwd()
+        print()
         output_dir = f"{current_dir}/{project_path}"
+        print(output_dir)
 
         # Use wget to retrieve the HTML content of the page
         html_content = wget.download(url, out=output_dir)
