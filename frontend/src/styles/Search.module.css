@@ -1,0 +1,17 @@
+.searchInput input {
+  padding: 20px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  font-size: 20px;
+  width: 100%;
+}
+
+.searchInput .results{
+  background-color: white;
+  padding: 15px;
+  font-size: 18px;
+}
+
+.searchInput .results:hover{
+  background-color: #eee;
+}
