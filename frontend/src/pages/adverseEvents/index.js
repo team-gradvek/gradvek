@@ -2,13 +2,14 @@ import { Box, Button, Tabs, TabList, TabPanels, Tab, TabPanel, Input } from '@ch
 import Head from "next/head";
 import Layout from '../../components/layout'
 import { Heading } from '@chakra-ui/react'
+import ResultsLayout from '@/components/results/layout';
 
 
 
 export default function AEIndex() {
 
  return (
-      <Layout>
+      <ResultsLayout>
         <Head>
           <title>Adverse Events Results</title>
           <meta name="description" content="Gradvek Search Page" />
@@ -33,6 +34,6 @@ export default function AEIndex() {
               </TabPanel>
             </TabPanels>
         </Tabs>
-      </Layout>
+      </ResultsLayout>
  );
 }

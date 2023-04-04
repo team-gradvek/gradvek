@@ -74,7 +74,7 @@ export default function Footer() {
         &copy; {new Date().getFullYear()} Gravek 2.0
       </Text>
       <Button my={4} onClick={toggleColorMode}>
-        {colorMode === "dark" ? "Light mode": "Dark mode"}
+        {colorMode === "light" ? "Dark mode": "Light mode"}
       </Button>
     </Stack>
   </Container>

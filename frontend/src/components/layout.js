@@ -1,10 +1,8 @@
-import { Container, Box, Button, useColorMode } from '@chakra-ui/react'
+import { useColorMode } from '@chakra-ui/react'
 import Footer from './footer'
 import TopNav  from './topnav'
 
-export default function Layout({ children }) {
-  const { colorMode, toggleColorMode } = useColorMode();
-    
+export default function Layout({ children }) {    
     return   (
     <div>
       <TopNav />
