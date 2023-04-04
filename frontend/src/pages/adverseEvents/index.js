@@ -14,9 +14,7 @@ export default function TargetToAEResults() {
           <title>Target to Adverse Events Results</title>
           <meta name="description" content="Gradvek Search Page" />
         </Head>
-        <ResultsLayout>
           <Heading as='h1'>Target to Adverse Events Results</Heading>
         </ResultsLayout>
-      </Layout>
  );
 }
