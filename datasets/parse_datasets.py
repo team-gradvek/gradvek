@@ -68,7 +68,7 @@ def create_cypher_query_targets(table):
     # create a list to store the cypher queries
     queries = []
     # iterate over the rows in the table
-    for index, row in df.iterrows():
+    for _, row in df.iterrows():
         # print(row)
         # create a cypher query
         query = f"CREATE (:Target {{name: '{row['approvedName']}', ensembleId: '{row['id']}', dataset: 'targert_23.04', symbol: '{row['approvedSymbol']}'}})"
