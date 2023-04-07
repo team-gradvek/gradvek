@@ -10,8 +10,6 @@ def main():
     # Set the input directory for the opentarget data
     input_dir = f"{current_dir}/opentarget"
 
-    # TODO: Action, AssociatedWith, Pathway
-
     # Define data_type_query_generators, a dictionary that maps data types to tuples (node_query_generator, edge_query_generator)
     data_type_query_generators = {
         "targets": (create_cypher_query_targets, create_cypher_query_participates),
@@ -22,7 +20,7 @@ def main():
         "diseases": (create_cypher_query_diseases, None)
     }
 
-    # Iterate over each data type in the input directory
+    # Iterate over each data type in the input directory for node query generators
     for data_type in os.listdir(input_dir):
         # Set the data_type_path
         data_type_path = os.path.join(input_dir, data_type)
@@ -30,20 +28,24 @@ def main():
         if not os.path.isdir(data_type_path):
             continue
 
-        # Iterate over query types (node and edge)
-        for query_type in ('node', 'edge'):
-            # Set the generator depending on the query type
-            if query_type == 'node':
-                generator = data_type_query_generators[data_type][0]
-            else:
-                generator = data_type_query_generators[data_type][1]
+        # Run the node query generator for the current data type
+        node_query_generator = data_type_query_generators[data_type][0]
+        if node_query_generator is not None:
+            generate_queries(data_type, data_type_path, node_query_generator)
 
-            # Skip if the generator is None
-            if generator is None:
-                continue
+    # Iterate over each data type in the input directory for edge query generators
+    for data_type in os.listdir(input_dir):
+        # Set the data_type_path
+        data_type_path = os.path.join(input_dir, data_type)
+        # Check if the path is a directory
+        if not os.path.isdir(data_type_path):
+            continue
 
-            # Generate and print queries for the current data type and query type
-            generate_queries(data_type, data_type_path, generator)
+        # Run the edge query generator for the current data type
+        edge_query_generator = data_type_query_generators[data_type][1]
+        if edge_query_generator is not None:
+            generate_queries(data_type, data_type_path, edge_query_generator)
+
 
 def generate_queries(data_type, data_type_path, query_generator):
     if query_generator is None:
