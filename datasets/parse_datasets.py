@@ -1,5 +1,3 @@
-# Parse the parquet files extracting the data, saving it to a json file on the local machine.
-
 import os
 import pyarrow.parquet as pq
 import neo4j
@@ -11,157 +9,111 @@ def main():
     current_dir = os.getcwd()
     input_dir = f"{current_dir}/opentarget"
 
-    # each data type is in a different directory
+    # iterate over each data type directory
     for data_type in os.listdir(input_dir):
-        # get the path to the directory
         data_type_path = os.path.join(input_dir, data_type)
-        # check if the data_type_path is a directory
         if not os.path.isdir(data_type_path):
             continue
-        # create the list of files in the directory, filter out non-parquet files
+
+        # get the list of parquet files in the data type directory
         files = [file for file in os.listdir(data_type_path) if file.endswith(".parquet")]
-        # each file in the directory is a parquet file
+
+        # iterate over each parquet file in the data type directory
         for n, file in enumerate(files):
-            # only run on parquet files
             if not file.endswith(".parquet"):
                 continue
-            # get the path to the file
             file_path = os.path.join(data_type_path, file)
-            # read the file
+
+            # read the parquet file as a pyarrow Table
             table = pq.read_table(file_path)
-            # print the current folder and file and enumerate of files in the folder
+
+            # print progress and first 5 rows of the file
             print(f"{data_type} {n+1} of {len(files)}")
-            # print the first 5 rows of the file
-            # Sprint(table.to_pandas().head())
+            #print(table.to_pandas().head())
 
-            # parse the file and create a neo4j cypher query to insert the data into the database
-            # each type will have a different parsing function
-            # for example, the disease file will have a different parsing function than the gene file
-            # the parsing function will return a list of cypher queries
-            # the list of cypher queries will be executed to insert the data into the database
-
-            # dictionary to choose the correct function foq the data type
-            # add to this as more data types are added
-            cypher_generator_functions = {
+            # generate cypher queries based on the data type
+            # each data type has a different parsing function
+            cypher_generator_functions_from_data = {
                 "targets": create_cypher_query_targets,
-                "fda": create_cypher_query_adverse_events, # looking at ParquetUtils in 1.0, fda/significantAdverseDrugReactions is adverse events
-                "molecule": create_cypher_query_drugs, # looking at ParquetUtils in 1.0, molecule is drugs
-                "mechanismOfAction": create_cypher_query_mechanism_of_action
+                "fda": create_cypher_query_adverse_events,
+                "molecule": create_cypher_query_drugs,
+                "mechanismOfAction": create_cypher_query_mechanism_of_action,
+                "mousePhenotypes": create_cypher_query_mouse_phenotypes,
+                "diseases": create_cypher_query_diseases
             }
 
-            # this if statement is for testing while more cypher functions are being created
-            if data_type in cypher_generator_functions.keys():
-                # get the function from switcher dictionary
-                func = cypher_generator_functions.get(data_type, lambda: "Invalid data type")
-                # execute the function
+            # execute the appropriate parsing function for the data type
+            if data_type in cypher_generator_functions_from_data:
+                func = cypher_generator_functions_from_data[data_type]
                 queries = func(table)
-                # execute the queries
                 for query in queries:
                     print(query)
-                    # execute the query
+                    # execute the query in Neo4j
 
-# parse a target file and create a cypher query to insert the data into the database
-# This is from the query constructor for targets in gradvek 1.0
-""" 
-("CREATE (:Target" 
-    + " {" + "name:\'" + StringEscapeUtils.escapeEcmaScript (super.toString ()) + "\', "
-    + TARGET_ID_STRING + ":\'" + StringEscapeUtils.escapeEcmaScript (mEnsembleId) + "\', "
-    + dataset: StringEscapeUtils.escapeEcmaScript (mFromDatase) + ", "
-    + "symbol:\'" + StringEscapeUtils.escapeEcmaScript (mSymbol) + "\'"
-    + "})"); 
-"""
+    # a second pass is used to create the relationships between the nodes
+    # this include creating
+    # AssociatedWith relationships using the fda data
+    # Participates relationships using the targets data
+    # Action relationships that do not require additional data
+    # Pathway relationships that do not require additional data
+
+
+# parse the targets data and create a list of cypher queries to insert the data into the database
 def create_cypher_query_targets(table):
-    # get the data from the table
     df = table.to_pandas()
-    # create a list to store the cypher queries
     queries = []
-    # iterate over the rows in the table
     for _, row in df.iterrows():
-        # print(row)
-        # create a cypher query
         query = f"CREATE (:Target {{name: '{row['approvedName']}', ensembleId: '{row['id']}', dataset: '{dataset}', symbol: '{row['approvedSymbol']}'}})"
-        # add the cypher query to the list of queries
         queries.append(query)
-    # return the list of cypher queries
     return queries
 
-""" 
-("CREATE (:AdverseEvent " 
-    + " {" + ADVERSE_EVENT_ID_STRING + ":\'" + mMeddraId + "\', "
-    + getDatasetCommandString () + ", "
-    + "adverseEventId:\'" + StringEscapeUtils.escapeEcmaScript (getName ()) + "\'"
-    + "})") 
-"""
+# parse the adverse events data and create a list of cypher queries to insert the data into the database
 def create_cypher_query_adverse_events(table):
-    # get the data from the table
     df = table.to_pandas()
-    # create a list to store the cypher queries
     queries = []
-    # iterate over the rows in the table
     for _, row in df.iterrows():
-        # print(row)
-        # create a cypher query
         query = f"CREATE (:AdverseEvent {{meddraId: '{row['meddraCode']}', dataset: '{dataset}', adverseEventId: '{row['event']}'}})"
-        # add the cypher query to the list of queries
         queries.append(query)
-    # return the list of cypher queries
     return queries
 
-""" 
-("CREATE (:Drug" + " {" + "drugId:\'" + StringEscapeUtils.escapeEcmaScript (getName ()) + "\', "
-    + getDatasetCommandString () + ", "
-    + DRUG_ID_STRING + ":\'" + StringEscapeUtils.escapeEcmaScript (mChemblId) + "\'})")
-"""
+# parse the drugs data and create a list of cypher queries to insert the data into the database
 def create_cypher_query_drugs(table):
-    # get the data from the table
     df = table.to_pandas()
-    # create a list to store the cypher queries
     queries = []
-    # iterate over the rows in the table
     for _, row in df.iterrows():
-        # print(row)
-        # create a cypher query
         query = f"CREATE (:Drug {{drugId: '{row['name']}', dataset: '{dataset}', chemblId: '{row['id']}'}})"
-        # add the cypher query to the list of queries
         queries.append(query)
-    # return the list of cypher queries
     return queries
 
-""" 
-getFrom ().forEach (from -> {
-    getTo ().forEach (to -> {
-        String cmd = "MATCH (from:Drug), (to:Target)\n"
-                + "WHERE from." + DRUG_ID_STRING + "=\'" + from + "\'\n"
-                + "AND to." + TARGET_ID_STRING + "=\'" + to + "\'\n"
-                + "CREATE (from)-[:TARGETS"
-                + " { " 
-                + getDatasetCommandString ()
-                + (jsonMap != null ? (", " + jsonMap) : "")
-                + "} " 
-                + "]->(to)";
-
-        commands.add (cmd.toString());
-    });
-});
-"""
+# parse the mechanism of action data and create a list of cypher queries to insert the data into the database
 def create_cypher_query_mechanism_of_action(table):
-    # get the data from the table
     df = table.to_pandas()
-    # create a list to store the cypher queries
     queries = []
-    # iterate over the rows in the table
     for _, row in df.iterrows():
-        # print(row)
-        # check that chemblIds and targets are not null
         if row['chemblIds'] is None or row['targets'] is None:
             continue
-        # create a cypher query
         for chemblId in row['chemblIds']:
             for target in row['targets']:
-                query = f"MATCH (from:Drug), (to:Target)\nWHERE from.chemblId=\'{chemblId}\'\nAND to.ensembleId=\'{target}\'\nCREATE (from)-[:TARGETS {{dataset: '{dataset}'}}]->(to)"
-                # add the cypher query to the list of queries
+                query = f"MATCH (from:Drug), (to:Target)\nWHERE from.chemblId='{chemblId}'\nAND to.ensembleId='{target}'\nCREATE (from)-[:TARGETS {{dataset: '{dataset}'}}]->(to)"
                 queries.append(query)
-    # return the list of cypher queries
+    return queries
+
+# parse the mouse phenotypes data and create a list of cypher queries to insert the data into the database
+def create_cypher_query_mouse_phenotypes(table):
+    df = table.to_pandas()
+    queries = []
+    for _, row in df.iterrows():
+        query = f"CREATE (:MousePhenotype {{mousePhenotypeLabel: '{row['modelPhenotypeLabel']}', dataset: '{dataset}', mousePhenotypeId: '{row['modelPhenotypeId']}'}})"
+        queries.append(query)
+    return queries
+
+# parse the diseases data and create a list of cypher queries to insert the data into the database
+def create_cypher_query_diseases(table):
+    df = table.to_pandas()
+    queries = []
+    for _, row in df.iterrows():
+        query = f"CREATE (:Disease {{name: '{row['name']}', dataset: '{dataset}', diseaseId: '{row['id']}'}})"
+        queries.append(query)
     return queries
 
 if __name__ == "__main__":
