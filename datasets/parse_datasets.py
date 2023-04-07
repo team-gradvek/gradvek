@@ -10,9 +10,11 @@ def main():
     # Set the input directory for the opentarget data
     input_dir = f"{current_dir}/opentarget"
 
+    # TODO: Action, AssociatedWith, Pathway
+
     # Define data_type_query_generators, a dictionary that maps data types to tuples (node_query_generator, edge_query_generator)
     data_type_query_generators = {
-        "targets": (create_cypher_query_targets, None),
+        "targets": (create_cypher_query_targets, create_cypher_query_participates),
         "fda": (create_cypher_query_adverse_events, None),
         "molecule": (create_cypher_query_drugs, None),
         "mechanismOfAction": (None, create_cypher_query_mechanism_of_action),
@@ -59,7 +61,7 @@ def generate_queries(data_type, data_type_path, query_generator):
         except Exception as e:
             print(f"Error reading file {file}: {e}")
             continue
-        
+
         try:
             # Generate queries for the current table
             queries = query_generator(table)
@@ -124,6 +126,7 @@ def create_cypher_query_diseases(table):
     })
 
 # <TODO> Add function to handle generation of Cypher queries for edge creation similar to how nodes are handled
+
 # Parse the mechanism of action data and create a list of Cypher queries to insert the data into the database
 def create_cypher_query_mechanism_of_action(table):
     # Convert the table to a pandas DataFrame
@@ -138,6 +141,25 @@ def create_cypher_query_mechanism_of_action(table):
                 # Generate a Cypher query for the current mechanism of action relationship
                 query = f"MATCH (from:Drug), (to:Target)\nWHERE from.chemblId='{chemblId}'\nAND to.ensembleId='{target}'\nCREATE (from)-[:TARGETS {{dataset: '{dataset}'}}]->(to)"
                 queries.append(query)
+    return queries
+
+# Parse the targets data and create a list of Cypher queries to add participates relationships to the database
+def create_cypher_query_participates(table):
+    # Convert the table to a pandas DataFrame
+    df = table.to_pandas()
+    queries = []
+    # Iterate over each row in the DataFrame
+    for _, row in df.iterrows():
+        # If either 'id' or 'pathways' fields are missing, skip this row
+        if row['id'] is None or row['pathways'] is None:
+            continue
+        # Iterate over each pathway in the 'pathways' field of the row
+        for pathway in row['pathways']:
+            # Generate a Cypher query for the current Target-Pathway relationship
+            query = f"MATCH (from:Target), (to:Pathway)\nWHERE from.ensembleId='{row['id']}'\nAND to.pathwayId='{pathway['pathwayId']}'\nCREATE (from)-[:PARTICIPATES_IN {{dataset: '{dataset}', pathwayCode: '{pathway['pathway']}', pathwayId: '{pathway['pathwayId']}', topLevelTerm: '{pathway['topLevelTerm']}'}}]->(to)"
+            # Add the generated query to the list of queries
+            queries.append(query)
+    # Return the list of generated queries
     return queries
 
 # Main function call
