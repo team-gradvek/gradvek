@@ -5,8 +5,7 @@ from urllib.parse import urlparse
 from datetime import datetime
 import posixpath
 
-
-# Project path and Open Target path dict
+# Define a dictionary containing the project paths and Open Target paths for different data types
 paths = {
     "diseases": ["opentarget/diseases", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/diseases/"],
     "fda": ["opentarget/fda", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/fda/significantAdverseDrugReactions/"],
@@ -16,39 +15,34 @@ paths = {
     "targets": ["opentarget/targets","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/targets/"]
 }
 
-
 def main():
-
-    print("Start Program... ")
+    print("Starting the program...")
 
     for key, values in paths.items():
         get_datasets(key, values[0], values[1])
 
-    
 def get_datasets(name, project_path, ot_path):
     """
-    Get and download datasets files inside Open Target(OT) directory.
+    Get and download dataset files from the Open Target (OT) directory.
     """
     try:
-        print(f"Start Downloading {name} files... ")
+        print(f"Starting to download {name} files...")
 
-        # Specify the URL
         url = ot_path
 
-        # Use the opentarget directory as the output directory
         current_dir = os.getcwd()
         output_dir = f"{current_dir}/{project_path}"
 
-        # remove any lingering .tmp files from the output directory
+        # Remove any lingering .tmp files from the output directory
         for file in os.listdir(output_dir):
             if file.endswith(".tmp"):
                 os.remove(os.path.join(output_dir, file))
-        
-        # if download.wget already exists, remove it
+
+        # Remove the download.wget file if it already exists
         if os.path.exists(os.path.join(output_dir, "download.wget")):
             os.remove(os.path.join(output_dir, "download.wget"))
 
-        # Use wget to retrieve the HTML content of the page, creates the download.wget file
+        # Download the HTML content of the page using wget
         html_content = wget.download(url, out=output_dir)
 
         # Extract the links to the files on the page
@@ -61,9 +55,10 @@ def get_datasets(name, project_path, ot_path):
                     link = line[start:end]
                     if link.endswith('.parquet'):
                         links.append(url + link)
+
         # Download the files
         for n, link in enumerate(links):
-            print(f"\nDownloading {name} file {n+1} of {len(links)} ")
+            print(f"\nDownloading {name} file {n+1} of {len(links)}")
             filename = os.path.basename(link)
             output_file = os.path.join(output_dir, filename)
             if os.path.exists(output_file):
