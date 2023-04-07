@@ -10,6 +10,8 @@ def main():
     # Set the input directory for the opentarget data
     input_dir = f"{current_dir}/opentarget"
 
+    # TODO: Action, AssociatedWith, Pathway
+
     # Define data_type_query_generators, a dictionary that maps data types to tuples (node_query_generator, edge_query_generator)
     data_type_query_generators = {
         "targets": (create_cypher_query_targets, create_cypher_query_participates),
