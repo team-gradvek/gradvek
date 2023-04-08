@@ -1,6 +1,7 @@
 asgiref==3.6.0
 distlib==0.3.6
 Django==4.1.7
+django-cors-headers==3.14.0
 django-filter==23.1
 djangorestframework==3.14.0
 filelock==3.10.7
