@@ -3,7 +3,6 @@
 [First Pull](#first-pull)  
 [How to run frontend and backend](#how-to-run-the-frontend-and-backend)  
 [Makefile commands](#makefile-commands)  
-[Neo4j and Data Preparation](#neo4j-and-data-preparation)  
 [Errors](#errors)
 
 # First Pull
@@ -113,7 +112,7 @@ python3 manage.py runserver
 ```
 http://localhost:8000/
 
-# Make file commands
+# Makefile commands
 
 ## 1. Start the Neo4j Database
 ```bash
