@@ -1,7 +1,15 @@
 import os
 import pyarrow.parquet as pq
 
+"""
+How to add a new data type:
+1. Have folder for the source of data in the opentarget folder - the name of the folder will be the data type name
+2. Add the data type name to the data_type_query_generators dictionary - the key will be the data type name and the value will be a tuple containing the node query generator and edge query generator for that data type
+3. Add create_cypher_query_<data_type_name> functions for the node and edge query generators as needed for the new type
+"""
+
 # Set dataset name
+# TODO use config file to set this and append data type to this when generating queries
 dataset = "opentarget 23.02"
 
 def main():
@@ -146,7 +154,7 @@ def create_cypher_query_mechanism_of_action(table):
         for chemblId in row['chemblIds']:
             for target in row['targets']:
                 # Generate a Cypher query for the current mechanism of action relationship
-                query = f"MATCH (from:Drug), (to:Target)\nWHERE from.chemblId='{chemblId}'\nAND to.ensembleId='{target}'\nCREATE (from)-[:TARGETS {{dataset: '{dataset}'}}]->(to)"
+                query = f"MATCH (from:Drug), (to:Target)\nWHERE from.chemblId='{chemblId}'\nAND to.ensembleId='{target}'\nCREATE (from)-[:TARGETS {{dataset: '{dataset}', actionType: '{row['actionType']}'}}]->(to)"
                 queries.append(query)
     return queries
 
