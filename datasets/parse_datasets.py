@@ -13,6 +13,7 @@ def main():
     # TODO:
     # Action (edge), Pathway (entity) - appears to not use any data source?
     # Gene (entity), Involves (edge) - these seem to only come from csv
+    # mechanismOfAction (edge) is missing entry data, needs to be updates
 
     # Define data_type_query_generators, a dictionary that maps data types to tuples (node_query_generator, edge_query_generator)
     data_type_query_generators = {
