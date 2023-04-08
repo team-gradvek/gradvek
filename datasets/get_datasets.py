@@ -1,9 +1,5 @@
 import wget
 import os
-import urllib.request
-from urllib.parse import urlparse
-from datetime import datetime
-import posixpath
 
 # Define a dictionary containing the project paths and Open Target paths for different data types
 paths = {
@@ -33,6 +29,10 @@ def get_datasets(name, project_path, ot_path):
         current_dir = os.getcwd()
         print()
         output_dir = f"{current_dir}/{project_path}"
+
+        # Check if the target directory exists; if not, create it
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
 
         # Download the HTML content of the page using wget
         html_content = wget.download(url, out=output_dir)
