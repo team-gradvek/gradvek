@@ -110,27 +110,28 @@ def generate_queries(data_type, data_type_path, query_generator):
 
 
 # Generate Cypher queries for node creation based on a given table, node_label, and properties to columns mapping
-def create_cypher_query_nodes(table, node_label, props_to_columns, batch_size=1000):
+def create_cypher_query_nodes(table, node_label, props_to_columns):
     # Convert the table to a pandas DataFrame
     df = table.to_pandas()
-    # Create a query template for creating a node with the given label and properties
-    query_template = f"UNWIND $props as prop CREATE (:{node_label} {{{', '.join([f'{prop}: prop.{column}' for prop, column in props_to_columns.items()])}, dataset: '{dataset}'}})"
-    # Iterate over each row in the DataFrame and create batches
+
+    # Prepare data for the Cypher query
     data = []
-    queries = []
     for _, row in df.iterrows():
         data.append({column: row[column] for _, column in props_to_columns.items()})
-        if len(data) >= batch_size:
-            queries.append((query_template, {'props': data}))
-            data = []
-    # Add remaining data
-    if data:
-        queries.append((query_template, {'props': data}))
-    return queries
+
+    # APOC query for creating nodes in batch
+    query = f"""
+    CALL apoc.periodic.iterate(
+        'UNWIND $props as prop RETURN prop',
+        'CREATE (:{node_label} {{{', '.join([f"{prop}: prop.{column}" for prop, column in props_to_columns.items()])}, dataset: $dataset}})',
+        {{params: {{props: $data, dataset: $dataset}}, batchSize: 1000, parallel: true}}
+    )
+    """
+    return [(query, {'data': data, 'dataset': dataset})]
 
 # Generate Cypher queries for Target nodes
 def create_cypher_query_targets(table):
-       return create_cypher_query_nodes(table, 'Target', {
+    return create_cypher_query_nodes(table, 'Target', {
         'name': 'approvedName',
         'ensembleId': 'id',
         'symbol': 'approvedSymbol'
@@ -163,6 +164,7 @@ def create_cypher_query_diseases(table):
         'name': 'name',
         'diseaseId': 'id'
     })
+
 
 # Create indexes in the database for the nodes before running edge queries
 def create_indexes():
