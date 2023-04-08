@@ -21,7 +21,6 @@ def main():
     # TODO:
     # Action (edge), Pathway (entity) - appears to not use any data source?
     # Gene (entity), Involves (edge) - these seem to only come from csv
-    # mechanismOfAction (edge) is missing entry data, needs to be updates
 
     # Define data_type_query_generators, a dictionary that maps data types to tuples (node_query_generator, edge_query_generator)
     data_type_query_generators = {
@@ -59,7 +58,10 @@ def main():
         if edge_query_generator is not None:
             generate_queries(data_type, data_type_path, edge_query_generator)
 
-
+# Generate queries for the given data type and path
+# This function takes a data_type, data_type_path, and a query_generator function
+# It iterates through all parquet files in the given path and applies the query_generator function to generate
+# Cypher queries for each file.
 def generate_queries(data_type, data_type_path, query_generator):
     if query_generator is None:
         return
