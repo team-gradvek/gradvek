@@ -2,6 +2,7 @@ import os
 import pyarrow.parquet as pq
 from neo4j import GraphDatabase
 
+# This script imports Open Targets data into a Neo4j database.
 """
 How to add a new data type:
 1. Have folder for the source of data in the opentarget folder - the name of the folder will be the data type name
@@ -112,6 +113,7 @@ def generate_queries(data_type, data_type_path, query_generator):
 def create_cypher_query_nodes(table, node_label, props_to_columns, batch_size=1000):
     # Convert the table to a pandas DataFrame
     df = table.to_pandas()
+    # Create a query template for creating a node with the given label and properties
     query_template = f"UNWIND $props as prop CREATE (:{node_label} {{{', '.join([f'{prop}: prop.{column}' for prop, column in props_to_columns.items()])}, dataset: '{dataset}'}})"
     # Iterate over each row in the DataFrame and create batches
     data = []
@@ -162,7 +164,7 @@ def create_cypher_query_diseases(table):
         'diseaseId': 'id'
     })
 
-# Add a new function to create indexes for the nodes before running edge queries
+# Create indexes in the database for the nodes before running edge queries
 def create_indexes():
     with GraphDatabase.driver(URI, auth=AUTH) as driver:
         driver.verify_connectivity()
@@ -173,7 +175,7 @@ def create_indexes():
             session.run("CREATE INDEX meddraId_index IF NOT EXISTS FOR (a:AdverseEvent) ON (a.meddraId)")
 
 
-# <TODO> Add function to handle generation of Cypher queries for edge creation similar to how nodes are handled
+# TODO Add function to handle generation of Cypher queries for edge creation similar to how nodes are handled
 
 # Parse the mechanism of action data and create a list of Cypher queries to insert the data into the database
 def create_cypher_query_mechanism_of_action(table):
@@ -184,12 +186,13 @@ def create_cypher_query_mechanism_of_action(table):
             continue
         for chemblId in row['chemblIds']:
             for target in row['targets']:
+                 # Append data for each combination of chemblId and target
                  data.append({
                     'chemblId': chemblId,
                     'ensembleId': target,
                     'actionType': row['actionType']
                 })
-
+    # APOC query for creating relationships between Drug and Target nodes
     query = """
     CALL apoc.periodic.iterate(
         'UNWIND $data as item RETURN item',
@@ -208,13 +211,14 @@ def create_cypher_query_participates(table):
         if row['id'] is None or row['pathways'] is None:
             continue
         for pathway in row['pathways']:
+            # Append data for each combination of target and pathway
             data.append({
                 'ensembleId': row['id'],
                 'pathwayId': pathway['pathwayId'],
                 'pathwayCode': pathway['pathway'],
                 'topLevelTerm': pathway['topLevelTerm']
             })
-
+    # APOC query for creating relationships between Target and Pathway nodes
     query = """
     CALL apoc.periodic.iterate(
         'UNWIND $data as item RETURN item',
@@ -232,13 +236,14 @@ def create_cypher_query_associated_with(table):
     for _, row in df.iterrows():
         if row['chembl_id'] is None or row['meddraCode'] is None:
             continue
+        # Append data for each combination of chembl_id and meddraCode
         data.append({
             'chembl_id': row['chembl_id'],
             'meddraCode': row['meddraCode'],
             'critval': row['critval'],
             'llr': row['llr']
         })
-
+    # APOC query for creating relationships between Target and Pathway nodes
     query = """
     CALL apoc.periodic.iterate(
         'UNWIND $data as item RETURN item',
