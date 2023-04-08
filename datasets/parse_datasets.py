@@ -1,5 +1,6 @@
 import os
 import pyarrow.parquet as pq
+from neo4j import GraphDatabase
 
 """
 How to add a new data type:
@@ -11,6 +12,10 @@ How to add a new data type:
 # Set dataset name
 # TODO use config file to set this and append data type to this when generating queries
 dataset = "opentarget 23.02"
+
+# Set the URI and AUTH for the neo4j database
+URI = "bolt://localhost:7687"
+AUTH = ("neo4j", "gradvek1")
 
 def main():
     # Get the current working directory
@@ -45,6 +50,9 @@ def main():
         if node_query_generator is not None:
             generate_queries(data_type, data_type_path, node_query_generator)
 
+    # Create indexes for nodes - this significantly improves performance in edge query generation
+    create_indexes()
+
     # Iterate over each data type in the input directory for edge query generators
     for data_type in os.listdir(input_dir):
         # Set the data_type_path
@@ -69,41 +77,53 @@ def generate_queries(data_type, data_type_path, query_generator):
     # List all parquet files in the data_type_path
     files = [file for file in os.listdir(data_type_path) if file.endswith(".parquet")]
 
-    # Iterate over each file and read its content
-    for n, file in enumerate(files):
-        print(f"Processing {data_type} file {n+1}/{len(files)}")
-        file_path = os.path.join(data_type_path, file)
-        try:
-            table = pq.read_table(file_path)
-        except Exception as e:
-            print(f"Error reading file {file}: {e}")
-            continue
+    # Connect to the neo4j database
+    with GraphDatabase.driver(URI, auth=AUTH) as driver:
+        driver.verify_connectivity()
 
-        try:
-            # Generate queries for the current table
-            queries = query_generator(table)
+        # Iterate over each file and read its content
+        for n, file in enumerate(files):
+            print(f"Processing {data_type} file {n+1}/{len(files)}")
+            file_path = os.path.join(data_type_path, file)
+            try:
+                table = pq.read_table(file_path)
+            except Exception as e:
+                print(f"Error reading file {file}: {e}")
+                continue
 
-            # Print queries for the current file
-            # TODO Replace this with neo4j function to evaluate the cypher queries
-            for query in queries:
-                print(query)
+            try:
+                # Generate queries for the current table
+                queries = query_generator(table)
 
-        except Exception as e:
-            print(f"Error generating queries for file {file}: {e}")
+                # Create a function to execute multiple queries within a single transaction
+                def execute_queries(tx, queries):
+                    for query, params in queries:
+                        tx.run(query, params)
+
+                # Execute the queries concurrently within a single transaction
+                with driver.session() as session:
+                    session.execute_write(execute_queries, queries)
+
+            except Exception as e:
+                print(f"Error generating queries for file {file}: {e}")
+
 
 # Generate Cypher queries for node creation based on a given table, node_label, and properties to columns mapping
-def create_cypher_query_nodes(table, node_label, props_to_columns):
+def create_cypher_query_nodes(table, node_label, props_to_columns, batch_size=1000):
     # Convert the table to a pandas DataFrame
     df = table.to_pandas()
+    query_template = f"UNWIND $props as prop CREATE (:{node_label} {{{', '.join([f'{prop}: prop.{column}' for prop, column in props_to_columns.items()])}, dataset: '{dataset}'}})"
+    # Iterate over each row in the DataFrame and create batches
+    data = []
     queries = []
-    # Iterate over each row in the DataFrame
     for _, row in df.iterrows():
-        # Generate properties string for the Cypher query
-        props = ', '.join([f"{prop}: '{row[column]}'" for prop, column in props_to_columns.items()])
-        props += f", dataset: '{dataset}'"  # Add the dataset constant value here
-        # Create a Cypher query for the current node
-        query = f"CREATE (:{node_label} {{{props}}})"
-        queries.append(query)
+        data.append({column: row[column] for _, column in props_to_columns.items()})
+        if len(data) >= batch_size:
+            queries.append((query_template, {'props': data}))
+            data = []
+    # Add remaining data
+    if data:
+        queries.append((query_template, {'props': data}))
     return queries
 
 # Generate Cypher queries for Target nodes
@@ -142,59 +162,92 @@ def create_cypher_query_diseases(table):
         'diseaseId': 'id'
     })
 
+# Add a new function to create indexes for the nodes before running edge queries
+def create_indexes():
+    with GraphDatabase.driver(URI, auth=AUTH) as driver:
+        driver.verify_connectivity()
+        with driver.session() as session:
+            session.run("CREATE INDEX chemblId_index IF NOT EXISTS FOR (d:Drug) ON (d.chemblId)")
+            session.run("CREATE INDEX ensembleId_index IF NOT EXISTS FOR (t:Target) ON (t.ensembleId)")
+            session.run("CREATE INDEX pathwayId_index IF NOT EXISTS FOR (p:Pathway) ON (p.pathwayId)")
+            session.run("CREATE INDEX meddraId_index IF NOT EXISTS FOR (a:AdverseEvent) ON (a.meddraId)")
+
+
 # <TODO> Add function to handle generation of Cypher queries for edge creation similar to how nodes are handled
 
 # Parse the mechanism of action data and create a list of Cypher queries to insert the data into the database
 def create_cypher_query_mechanism_of_action(table):
-    # Convert the table to a pandas DataFrame
     df = table.to_pandas()
-    queries = []
-    # Iterate over each row in the DataFrame
+    data = []
     for _, row in df.iterrows():
         if row['chemblIds'] is None or row['targets'] is None:
             continue
         for chemblId in row['chemblIds']:
             for target in row['targets']:
-                # Generate a Cypher query for the current mechanism of action relationship
-                query = f"MATCH (from:Drug), (to:Target)\nWHERE from.chemblId='{chemblId}'\nAND to.ensembleId='{target}'\nCREATE (from)-[:TARGETS {{dataset: '{dataset}', actionType: '{row['actionType']}'}}]->(to)"
-                queries.append(query)
-    return queries
+                 data.append({
+                    'chemblId': chemblId,
+                    'ensembleId': target,
+                    'actionType': row['actionType']
+                })
+
+    query = """
+    CALL apoc.periodic.iterate(
+        'UNWIND $data as item RETURN item',
+        'MATCH (from:Drug {chemblId: item.chemblId}), (to:Target {ensembleId: item.ensembleId})
+         CREATE (from)-[:TARGETS {dataset: $dataset, actionType: item.actionType}]->(to)',
+        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+    )
+    """
+    return [(query, {'data': data, 'dataset': dataset})]
 
 # Parse the targets data and create a list of Cypher queries to add participates relationships to the database
 def create_cypher_query_participates(table):
-    # Convert the table to a pandas DataFrame
     df = table.to_pandas()
-    queries = []
-    # Iterate over each row in the DataFrame
+    data = []
     for _, row in df.iterrows():
-        # If either 'id' or 'pathways' fields are missing, skip this row
         if row['id'] is None or row['pathways'] is None:
             continue
-        # Iterate over each pathway in the 'pathways' field of the row
         for pathway in row['pathways']:
-            # Generate a Cypher query for the current Target-Pathway relationship
-            query = f"MATCH (from:Target), (to:Pathway)\nWHERE from.ensembleId='{row['id']}'\nAND to.pathwayId='{pathway['pathwayId']}'\nCREATE (from)-[:PARTICIPATES_IN {{dataset: '{dataset}', pathwayCode: '{pathway['pathway']}', pathwayId: '{pathway['pathwayId']}', topLevelTerm: '{pathway['topLevelTerm']}'}}]->(to)"
-            # Add the generated query to the list of queries
-            queries.append(query)
-    # Return the list of generated queries
-    return queries
+            data.append({
+                'ensembleId': row['id'],
+                'pathwayId': pathway['pathwayId'],
+                'pathwayCode': pathway['pathway'],
+                'topLevelTerm': pathway['topLevelTerm']
+            })
+
+    query = """
+    CALL apoc.periodic.iterate(
+        'UNWIND $data as item RETURN item',
+        'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Pathway {pathwayId: item.pathwayId})
+         CREATE (from)-[:PARTICIPATES_IN {dataset: $dataset, pathwayCode: item.pathwayCode, pathwayId: item.pathwayId, topLevelTerm: item.topLevelTerm}]->(to)',
+        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+    )
+    """
+    return [(query, {'data': data, 'dataset': dataset})]
 
 # Parse the targets data and create a list of Cypher queries to add associatedWith relationships to the database
 def create_cypher_query_associated_with(table):
-    # Convert the table to a pandas DataFrame
     df = table.to_pandas()
-    queries = []
-    # Iterate over each row in the DataFrame
+    data = []
     for _, row in df.iterrows():
-        # If either 'id' or 'pathways' fields are missing, skip this row
         if row['chembl_id'] is None or row['meddraCode'] is None:
             continue
-        # Generate a Cypher query for the current Target-Pathway relationship
-        query = f"MATCH (from:Drug), (to:AdverseEvent)\nWHERE from.chemblId='{row['chembl_id']}'\nAND to.meddraId='{row['meddraCode']}'\nCREATE (from)-[:ASSOCIATED_WITH {{dataset: '{dataset}', critval: '{row['critval']}', llr: '{row['llr']}'}}]->(to)"
-        # Add the generated query to the list of queries
-        queries.append(query)
-    # Return the list of generated queries
-    return queries
+        data.append({
+            'chembl_id': row['chembl_id'],
+            'meddraCode': row['meddraCode'],
+            'critval': row['critval'],
+            'llr': row['llr']
+        })
+
+    query = """
+    CALL apoc.periodic.iterate(
+        'UNWIND $data as item RETURN item',
+        'MATCH (from:Drug {chemblId: item.chembl_id}), (to:AdverseEvent {meddraId: item.meddraCode})
+         CREATE (from)-[:ASSOCIATED_WITH {dataset: $dataset, critval: item.critval, llr: item.llr}]->(to)',
+        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+    )
+    """
+    return [(query, {'data': data, 'dataset': dataset})]
 
 # Main function call
 if __name__ == "__main__":
