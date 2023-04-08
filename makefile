@@ -22,7 +22,7 @@ run-neo4j:
 .PHONY: stop-neo4j
 stop-neo4j:
 	$(info Make: Stopping Neo4j container.)
-	@docker-compose -f $(DOCKER_COMPOSE_FILE) down
+	@docker-compose -f $(DOCKER_COMPOSE_FILE) stop
 
 # Remove Neo4j data and logs without stopping the container
 .PHONY: remove-data-logs
