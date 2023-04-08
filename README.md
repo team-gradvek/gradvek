@@ -1,9 +1,10 @@
 # Installation
 
-[First Pull](https://github.com/team-gradvek/gradvek#first-pull)  
-[How to run frontend and backend](https://github.com/team-gradvek/gradvek#how-to-run-the-frontend-and-backend)  
-[Make file commands](https://github.com/team-gradvek/gradvek#make-file-commands)  
-[Errors](https://github.com/team-gradvek/gradvek#errors)
+[First Pull](#first-pull)  
+[How to run frontend and backend](#how-to-run-the-frontend-and-backend)  
+[Makefile commands](#makefile-commands)  
+[Neo4j and Data Preparation](#neo4j-and-data-preparation)  
+[Errors](#errors)
 
 # First Pull
 
@@ -113,6 +114,38 @@ python3 manage.py runserver
 http://localhost:8000/
 
 # Make file commands
+
+## 1. Start the Neo4j Database
+```bash
+make run-neo4j
+```
+## 2. Stop the Neo4j Database
+```bash
+make stop-neo4j
+```
+
+## 3. Clean the Neo4j Database
+
+```bash
+make clean
+```
+## 4. Get Datasets
+
+To fetch the parquet data sets, run the `get_datasets.py` script in the `datasets` folder. This will download the data sets and save them in the `datasets/opentarget` folder. 
+
+```bash
+make get-datasets
+```
+
+## 5. Send Data to Neo4j
+
+To parse the parquet data sets to insert into the database, run the `parse_datasets.py` script in the `datasets` folder. This will parse the data sets send the appropriate data to the database. 
+
+This must have the Neo4j database running in order to work.
+
+```bash
+make send-data
+```
 
 # Errors
 

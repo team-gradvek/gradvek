@@ -13,6 +13,16 @@ export CURRENT_GID
 .PHONY: run-neo4j
 default: run-neo4j
 
+# Get Datasets
+get-datasets:
+	$(info Make: Fetching datasets.)
+	@python3 get_datasets.py
+
+# Send Data
+send-data:
+	$(info Make: Sending data to the Neo4j database.)
+	@python3 parse_datasets.py
+
 # Run Neo4j with docker-compose
 run-neo4j:
 	$(info Make: Running Neo4j using Docker Compose.)
