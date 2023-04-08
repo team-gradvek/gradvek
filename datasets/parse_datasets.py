@@ -10,12 +10,14 @@ def main():
     # Set the input directory for the opentarget data
     input_dir = f"{current_dir}/opentarget"
 
-    # TODO: Action, AssociatedWith, Pathway
+    # TODO:
+    # Action (edge), Pathway (entity) - appears to not use any data source?
+    # Gene (entity), Involves (edge) - these seem to only come from csv
 
     # Define data_type_query_generators, a dictionary that maps data types to tuples (node_query_generator, edge_query_generator)
     data_type_query_generators = {
         "targets": (create_cypher_query_targets, create_cypher_query_participates),
-        "fda": (create_cypher_query_adverse_events, None),
+        "fda": (create_cypher_query_adverse_events, create_cypher_query_associated_with),
         "molecule": (create_cypher_query_drugs, None),
         "mechanismOfAction": (None, create_cypher_query_mechanism_of_action),
         "mousePhenotypes": (create_cypher_query_mouse_phenotypes, None),
@@ -163,6 +165,23 @@ def create_cypher_query_participates(table):
             query = f"MATCH (from:Target), (to:Pathway)\nWHERE from.ensembleId='{row['id']}'\nAND to.pathwayId='{pathway['pathwayId']}'\nCREATE (from)-[:PARTICIPATES_IN {{dataset: '{dataset}', pathwayCode: '{pathway['pathway']}', pathwayId: '{pathway['pathwayId']}', topLevelTerm: '{pathway['topLevelTerm']}'}}]->(to)"
             # Add the generated query to the list of queries
             queries.append(query)
+    # Return the list of generated queries
+    return queries
+
+# Parse the targets data and create a list of Cypher queries to add associatedWith relationships to the database
+def create_cypher_query_associated_with(table):
+    # Convert the table to a pandas DataFrame
+    df = table.to_pandas()
+    queries = []
+    # Iterate over each row in the DataFrame
+    for _, row in df.iterrows():
+        # If either 'id' or 'pathways' fields are missing, skip this row
+        if row['chembl_id'] is None or row['meddraCode'] is None:
+            continue
+        # Generate a Cypher query for the current Target-Pathway relationship
+        query = f"MATCH (from:Drug), (to:AdverseEvent)\nWHERE from.chemblId='{row['chembl_id']}'\nAND to.meddraId='{row['meddraCode']}'\nCREATE (from)-[:ASSOCIATED_WITH {{dataset: '{dataset}', critval: '{row['critval']}', llr: '{row['llr']}'}}]->(to)"
+        # Add the generated query to the list of queries
+        queries.append(query)
     # Return the list of generated queries
     return queries
 
