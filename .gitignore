@@ -7,3 +7,7 @@ datasets/opentarget/molecule/*.snappy*.parquet*
 datasets/opentarget/mousePhenotypes/*.snappy*.parquet*
 datasets/opentarget/targets/*.snappy*.parquet*
 download*.wget*
+neo4j/data/
+neo4j/logs/
+neo4j/import/
+neo4j/plugins/apoc.jar 
