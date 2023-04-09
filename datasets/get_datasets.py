@@ -12,7 +12,7 @@ The script downloads files in parallel to try and speed up the process, particua
 The ThreadPoolExecutor class from the concurrent.futures module is used to manage threads for parallel downloads.
 The 'max_workers' parameter determines the maximum number of threads used concurrently.
 
-The script has a built-in retry mechanism, enabling it to retry a download if it fails.
+The script has a retry mechanism, enabling it to retry a download if it fails.
 The 'max_retries' parameter determines the maximum number of retries allowed for each download.
 The 'delay' parameter specifies the time (in seconds) to wait before attempting the next retry.
 
