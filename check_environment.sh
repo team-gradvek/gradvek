@@ -24,6 +24,12 @@ command -v npm >/dev/null 2>&1 || {
     exit 1;
 }
 
+# Check for Docker
+command -v docker >/dev/null 2>&1 || {
+    echo >&2 "Docker is required, but it's not installed. Please install Docker and try again.";
+    exit 1;
+}
+
 # Check for required Python packages
 required_python_packages=("wget" "neo4j" "pyarrow")
 missing_python_packages=()
@@ -46,7 +52,7 @@ else
     echo "All required Python packages are present."
 fi
 
-# Install Python-Django dependencies
+# Install Python dependencies
 echo "Installing Python dependencies..."
 cd backend
 pip3 install -r requirements.txt
