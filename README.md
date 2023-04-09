@@ -7,6 +7,12 @@
 
 # First Pull
 
+## 0. Check Environment and Get Dependencies
+Run the check_environment.sh script to check if you have the correct environment and dependencies installed. 
+```bash
+./check_environment.sh
+```
+
 ## 1. (OPTIONAL) Setup python environment 
 Note: If you create a Python env (with a different name), add it to the .gitingore file
 
