@@ -2,12 +2,33 @@ import os
 import pyarrow.parquet as pq
 from neo4j import GraphDatabase
 
-# This script imports Open Targets data into a Neo4j database.
 """
-How to add a new data type:
-1. Have folder for the source of data in the opentarget folder - the name of the folder will be the data type name
-2. Add the data type name to the data_type_query_generators dictionary - the key will be the data type name and the value will be a tuple containing the node query generator and edge query generator for that data type
-3. Add create_cypher_query_<data_type_name> functions for the node and edge query generators as needed for the new type
+Open Targets Neo4j Importer
+
+This script imports Open Targets data into a Neo4j database. It processes various types of data, including targets,
+FDA adverse events, molecules, mechanisms of action, mouse phenotypes, and diseases, and imports them as nodes and
+edges into the database.
+
+The script is designed to read data from the 'opentarget' folder, where each data type should be stored in its own
+subfolder. To add a new data type, create a subfolder with the appropriate name and add the necessary node and edge
+query generators to the 'data_type_query_generators' dictionary.
+
+Neo4j queries are generated and executed for each data type. Nodes are first imported into the database, followed by the
+edges. Node queries use the APOC library for parallelized batch processing, which significantly improves performance.
+
+How the script works:
+
+Iterates over each data type in the input directory for node query generators
+Creates indexes for nodes to improve performance in edge query generation
+Iterates over each data type in the input directory for edge query generators
+To update the script for new data types:
+
+Create a folder for the new data type in the 'opentarget' folder - the folder name will be the data type name
+Add the data type name to the 'data_type_query_generators' dictionary - the key will be the data type name and the
+value will be a tuple containing the node query generator and edge query generator for that data type
+Add 'create_cypher_query_<data_type_name>' functions for the node and edge query generators as needed for the new type
+Important note: This script uses the APOC library for parallelized batch processing of Neo4j queries. Make sure to have
+the APOC plugin installed in your Neo4j instance before running the script.
 """
 
 # Set dataset name
@@ -28,8 +49,11 @@ def main():
     # Action (edge), Pathway (entity) - appears to not use any data source?
     # Gene (entity), Involves (edge) - these seem to only come from csv
 
-    # Define data_type_query_generators, a dictionary that maps data types to tuples (node_query_generator, edge_query_generator)
+    # Define data_type_query_generators, a dictionary that maps data types to query generator tuples. 
+    # Each tuple contains a node_query_generator and an edge_query_generator function for the respective data type.
+    # If no query generator is needed for nodes or edges, use None.
     data_type_query_generators = {
+        # Key: data type name, Value: (node query generator, edge query generator)
         "targets": (create_cypher_query_targets, create_cypher_query_participates),
         "fda": (create_cypher_query_adverse_events, create_cypher_query_associated_with),
         "molecule": (create_cypher_query_drugs, None),
