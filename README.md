@@ -77,9 +77,7 @@ https://stackoverflow.com/questions/29980211/django-1-8-whats-the-difference-bet
 
 ## 4. Run Admin Config
 
-`cd` into `backend` folder  
 
-Create a user:
 `cd` into `backend` folder  
 
 Create a user:
@@ -91,11 +89,6 @@ Run the backend server:
 ```
 python3 manage.py runserver
 ```
-Run the backend server:
-```
-python3 manage.py runserver
-```
-test at : http://localhost:8000/admin/  
 test at : http://localhost:8000/admin/  
 
 
