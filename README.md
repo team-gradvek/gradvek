@@ -8,7 +8,6 @@
 # First Pull
 
 ## 1. (OPTIONAL) Setup python environment 
-## 1. (OPTIONAL) Setup python environment 
 Note: If you create a Python env (with a different name), add it to the .gitingore file
 
 `cd` into `backend` folder
@@ -19,9 +18,6 @@ python3 -m venv env
 source env/bin/activate
 ```
 
-
-## 2. Install Python modules
-Note: if you created a Python env in step 1, install the modules inside the environement. 
 ## 2. Install Python modules
 Note: if you created a Python env in step 1, install the modules inside the environement. 
 To start the env:
@@ -70,8 +66,6 @@ https://docs.djangoproject.com/en/4.1/howto/windows/
 ```
 pip3 install -r requirements.txt
 ```
-
-## 3. Run Django Migration
 ## 3. Run Django Migration
 
 `cd` into `backend` folder
@@ -81,7 +75,6 @@ python3 manage.py migrate
 ```
 https://stackoverflow.com/questions/29980211/django-1-8-whats-the-difference-between-migrate-and-makemigrations
 
-## 4. Run Admin Config
 ## 4. Run Admin Config
 
 `cd` into `backend` folder  
@@ -108,12 +101,8 @@ test at : http://localhost:8000/admin/
 
 ## 5. Create descriptor objects (optional - only to showcase a database example)
 
-## 5. Create descriptor objects (optional - only to showcase a database example)
-
 Log-in to admin and add a few descriptors http://localhost:8000/admin/
 
-
-## 6. Install node_modules
 ## 6. Install node_modules
 
 `cd` into `frontend` folder
@@ -126,7 +115,6 @@ https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 
 # How to run the frontend and backend
 ## 1. Run Frontend
-## 1. Run Frontend
 
 `cd` into frontend folder
 
@@ -135,7 +123,6 @@ npm run dev
 ```
 http://localhost:3000/
 
-## 2.  Run Backend
 ## 2.  Run Backend
 
 `cd` into backend folder
