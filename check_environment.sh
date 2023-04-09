@@ -12,24 +12,46 @@ command -v pip3 >/dev/null 2>&1 || {
     exit 1;
 }
 
-# Check for required Python packages
-required_packages=("wget" "neo4j" "pyarrow")
-missing_packages=()
+# Check for Django
+if ! python3 -c "import django" >/dev/null 2>&1; then
+    echo >&2 "Django is required, but it's not installed. Installing Django using pip3...";
+    pip3 install --user django
+fi
 
-for package in "${required_packages[@]}"; do
+# Check for Node.js (npm)
+command -v npm >/dev/null 2>&1 || {
+    echo >&2 "npm is required, but it's not installed. Please install Node.js (npm) and try again.";
+    exit 1;
+}
+
+# Check for required Python packages
+required_python_packages=("wget" "neo4j" "pyarrow")
+missing_python_packages=()
+
+for package in "${required_python_packages[@]}"; do
     if ! pip3 show "$package" >/dev/null 2>&1; then
-        missing_packages+=("$package")
+        missing_python_packages+=("$package")
     fi
 done
 
-if [ "${#missing_packages[@]}" -gt 0 ]; then
+if [ "${#missing_python_packages[@]}" -gt 0 ]; then
     echo "The following required Python packages are missing:"
-    for package in "${missing_packages[@]}"; do
+    for package in "${missing_python_packages[@]}"; do
         echo "- $package"
     done
 
     echo "Installing missing packages using pip3..."
-    pip3 install --user "${missing_packages[@]}"
+    pip3 install --user "${missing_python_packages[@]}"
 else
-    echo "All required tools and dependencies are present."
+    echo "All required Python packages are present."
 fi
+
+# Install Python-Django dependencies
+echo "Installing Python dependencies..."
+cd backend
+pip3 install -r requirements.txt
+
+# Install Node.js dependencies
+echo "Installing Node.js dependencies..."
+cd ../frontend
+npm install
