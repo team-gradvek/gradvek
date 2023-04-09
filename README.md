@@ -8,7 +8,7 @@
 # First Pull
 
 ## 0. Check Environment and Get Dependencies
-Run the check_environment.sh script to check if you have the correct environment and dependencies installed. 
+Run the check_environment.sh script to check if you have the necessary tools and dependencies in your current environment.
 ```bash
 ./check_environment.sh
 ```
