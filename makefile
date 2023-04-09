@@ -48,3 +48,5 @@ clean:
 	@docker-compose -f $(DOCKER_COMPOSE_FILE) down
 	@rm -rf ./neo4j/data/*
 	@rm -rf ./neo4j/logs/*
+
+# Notes: add something to get dependencies like for pyhton there are wget, neo4j, and pyarrow libraries
