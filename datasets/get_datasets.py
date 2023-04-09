@@ -3,6 +3,22 @@ import os
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+"""
+This script downloads Open Target datasets from the Open Target FTP server.
+The datasets include information about diseases, FDA significant adverse drug reactions, 
+mechanism of action, molecules, mouse phenotypes, and targets.
+
+The script downloads files in parallel to try and speed up the process, particuarly when there are retries.
+The ThreadPoolExecutor class from the concurrent.futures module is used to manage threads for parallel downloads.
+The 'max_workers' parameter determines the maximum number of threads used concurrently.
+
+The script has a built-in retry mechanism, enabling it to retry a download if it fails.
+The 'max_retries' parameter determines the maximum number of retries allowed for each download.
+The 'delay' parameter specifies the time (in seconds) to wait before attempting the next retry.
+
+The 'paths' dictionary stores the local directory paths and corresponding Open Target FTP server paths for each dataset.
+"""
+
 # Define a dictionary containing the project paths and Open Target paths for different data types
 paths = {
     # Key: data type name, Value: [local directory path, Open Target URL path]
