@@ -19,8 +19,9 @@ The 'delay' parameter specifies the time (in seconds) to wait before attempting 
 The 'paths' dictionary stores the local directory paths and corresponding Open Target FTP server paths for each dataset.
 """
 
-# Project path and Open Target path dict
+# Define a dictionary containing the project paths and Open Target paths for different data types
 paths = {
+    # Key: data type name, Value: [local directory path, Open Target URL path]
     "diseases": ["opentarget/diseases", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/diseases/"],
     "fda": ["opentarget/fda", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/fda/significantAdverseDrugReactions/"],
     "mechanismOfAction": ["opentarget/mechanismOfAction", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/mechanismOfAction/"],
@@ -53,22 +54,24 @@ def download_file(link, output_file, max_retries=3, delay=5):
 
 def get_datasets(name, project_path, ot_path, max_retries=3, delay=5, max_workers=5):
     try:
-        print(f"Start Downloading {name} files... ")
+        print(f"Starting to download {name} files...")
 
         url = ot_path
 
-        # Use the opentarget directory as the output directory
         current_dir = os.getcwd()
         output_dir = f"{current_dir}/{project_path}"
 
-        # remove any lingering .tmp files from the output directory
+         # Create the output directory if it doesn't exist
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+        
+        # Remove any leftover .wget files from previous runs
         for file in os.listdir(output_dir):
             if file.endswith(".wget"):
                 os.remove(os.path.join(output_dir, file))
-        
-        # if download.wget already exists, remove it
-        if os.path.exists(os.path.join(output_dir, "download.wget")):
-            os.remove(os.path.join(output_dir, "download.wget"))
+
+        # Download the HTML file containing the list of files to download
+        html_content = wget.download(url, out=output_dir, bar=None)
 
         # Extract the file links from the HTML file
         links = []
@@ -80,12 +83,13 @@ def get_datasets(name, project_path, ot_path, max_retries=3, delay=5, max_worker
                     link = line[start:end]
                     if link.endswith('.parquet'):
                         links.append(url + link)
-        # Download the files
+
+       # Prepare the download tasks for each file link
+        tasks = []
         for n, link in enumerate(links):
             print(f"\nDownloading {name} file {n+1} of {len(links)} ")
             filename = os.path.basename(link)
             output_file = os.path.join(output_dir, filename)
-
             if os.path.exists(output_file):
                 print(f"File {filename} already exists. Skipping...")
             else:
@@ -123,7 +127,7 @@ def get_datasets(name, project_path, ot_path, max_retries=3, delay=5, max_worker
         print("Files downloaded successfully!")
 
     except Exception as e:
-        print("\nDownloading files error: " + str(e))
+        print("Downloading files error: " + str(e))
 
 if __name__ == "__main__":
     main()
