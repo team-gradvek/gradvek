@@ -1,70 +1,76 @@
 import wget
 import os
-import urllib.request
-from urllib.parse import urlparse
-from datetime import datetime
-import posixpath
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
+"""
+This script downloads Open Target datasets from the Open Target FTP server.
+The datasets include information about diseases, FDA significant adverse drug reactions, 
+mechanism of action, molecules, mouse phenotypes, and targets.
+
+The script downloads files in parallel to try and speed up the process, particuarly when there are retries.
+The ThreadPoolExecutor class from the concurrent.futures module is used to manage threads for parallel downloads.
+The 'max_workers' parameter determines the maximum number of threads used concurrently.
+
+The script has a retry mechanism, enabling it to retry a download if it fails.
+The 'max_retries' parameter determines the maximum number of retries allowed for each download.
+The 'delay' parameter specifies the time (in seconds) to wait before attempting the next retry.
+
+The 'paths' dictionary stores the local directory paths and corresponding Open Target FTP server paths for each dataset.
+"""
 
 # Project path and Open Target path dict
-#  Note : add shell script to run  python3 get_datasets.py
 paths = {
-    "diseases": [
-        "opentarget/diseases", 
-        "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/diseases/"],
-    "fda": [
-        "opentarget/fda", 
-        "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/fda/significantAdverseDrugReactions/"],
-    "mechanismOfAction": [
-        "opentarget/mechanismOfAction", 
-        "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/mechanismOfAction/"],
-    "molecules": [
-        "opentarget/molecule", 
-        "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/molecule/"],
-    "mousePhenotypes": [
-        "opentarget/mousePhenotypes", 
-        "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/mousePhenotypes/"],
-    "targets": [
-        "opentarget/targets",
-        "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/targets/"]
+    "diseases": ["opentarget/diseases", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/diseases/"],
+    "fda": ["opentarget/fda", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/fda/significantAdverseDrugReactions/"],
+    "mechanismOfAction": ["opentarget/mechanismOfAction", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/mechanismOfAction/"],
+    "molecules": ["opentarget/molecule", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/molecule/"],
+    "mousePhenotypes": ["opentarget/mousePhenotypes", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/mousePhenotypes/"],
+    "targets": ["opentarget/targets","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/targets/"]
 }
 
-
 def main():
+    print("Starting the program...")
 
-    print("Start Program... ")
-
+    # Iterate through the data types and their respective paths
     for key, values in paths.items():
         get_datasets(key, values[0], values[1])
 
-    
-def get_datasets(name, project_path, ot_path):
-    """
-    Get and download datasets files inside Open Target(OT) directory.
-    """
-    try:
-        print(f"Start downloading {name} files... ")
 
-        # Specify the URL
+def download_file(link, output_file, max_retries=3, delay=5):
+    # Download the specified file with a retry mechanism
+    retries = 0
+    while retries < max_retries:
+        try:
+            wget.download(link, out=output_file)
+            return True
+        except Exception as e:
+            retries += 1
+            if retries == max_retries:
+                return False
+            else:
+                time.sleep(delay)
+
+def get_datasets(name, project_path, ot_path, max_retries=3, delay=5, max_workers=5):
+    try:
+        print(f"Start Downloading {name} files... ")
+
         url = ot_path
 
-        # Use the project opentarget directory as the output directory
+        # Use the opentarget directory as the output directory
         current_dir = os.getcwd()
         output_dir = f"{current_dir}/{project_path}"
 
-        # Remove any lingering .tmp files from the output directory
+        # remove any lingering .tmp files from the output directory
         for file in os.listdir(output_dir):
-            if file.endswith(".tmp"):
+            if file.endswith(".wget"):
                 os.remove(os.path.join(output_dir, file))
         
-        # If download.wget already exists, remove it
+        # if download.wget already exists, remove it
         if os.path.exists(os.path.join(output_dir, "download.wget")):
             os.remove(os.path.join(output_dir, "download.wget"))
 
-        # Use wget to retrieve the HTML content of the page, creates the download.wget file
-        html_content = wget.download(url, out=output_dir)
-
-        # Extract the links to the files on the page
+        # Extract the file links from the HTML file
         links = []
         with open(os.path.join(output_dir, html_content), 'r') as f:
             for line in f:
@@ -74,19 +80,45 @@ def get_datasets(name, project_path, ot_path):
                     link = line[start:end]
                     if link.endswith('.parquet'):
                         links.append(url + link)
-        
         # Download the files
         for n, link in enumerate(links):
-
             print(f"\nDownloading {name} file {n+1} of {len(links)} ")
-
             filename = os.path.basename(link)
             output_file = os.path.join(output_dir, filename)
 
             if os.path.exists(output_file):
                 print(f"File {filename} already exists. Skipping...")
             else:
-                wget.download(link, out=output_file)
+                tasks.append((link, output_file, max_retries, delay))
+
+        # Initialize the count of completed files
+        completed_files = 0
+        # Calculate the total number of files to download
+        total_files = len(tasks)
+        # Create a ThreadPoolExecutor to download files in parallel
+        # The 'max_workers' parameter determines the maximum number of threads that can be used concurrently
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            # Submit each download task to the ThreadPoolExecutor
+            # A future object represents the result of a computation that may not have completed yet
+            # Create a dictionary (futures) that maps each future to its corresponding task (input arguments)
+            futures = {executor.submit(download_file, *task): task for task in tasks}
+            # The 'as_completed' function returns an iterator that yields futures as they complete
+            for future in as_completed(futures):
+                # Get the input arguments (task) of the completed future
+                task = futures[future]
+                # Unpack the task arguments to get the link and output_file
+                link, output_file, _, _ = task
+                # Get the result (True or False) of the completed future
+                success = future.result()
+                # Increment the completed files counter
+                completed_files += 1
+                # Extract the filename from the link
+                filename = os.path.basename(link)
+                # Print the progress and status based on the success of the download
+                if success:
+                    print(f"\n[{completed_files}/{total_files}] Downloaded {name} {filename}")
+                else:
+                    print(f"\n[{completed_files}/{total_files}] Failed to download {name} {filename} after {max_retries} retries.")
 
         print("Files downloaded successfully!")
 

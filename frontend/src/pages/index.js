@@ -2,7 +2,9 @@ import { Box, Button, Tabs, TabList, Card, TabPanels, Tab, TabPanel, Input, Cont
 import Head from "next/head";
 import Layout from '../components/layout'
 import { Heading } from '@chakra-ui/react'
-
+import TargetToAESearch from '@/components/search/targetToAdverseEventSearch';
+import AdverseEventToTargetSearch from '@/components/search/adverseEventToTarget';
+import TargetToTargetSimilaritySearch from '@/components/search/targetToTargetSimilaritySearch';
 
 
 export default function Index() {
@@ -28,22 +30,16 @@ export default function Index() {
         <Tabs isFitted variant='soft-rounded' colorScheme='blue' my='3em' size='lg'> 
           <Card p="4" m="4">
             <TabList>
-              <Tab>Adverse Events</Tab>
+              <Tab>Target to Adverse Event</Tab>
               <Tab>Adverse Event to Target</Tab>
               <Tab>Target to Target</Tab>
             </TabList>
             </Card>
             <Card p="4" mx="4" mt="4">
             <TabPanels>
-              <TabPanel>
-              <Input variant='filled' placeholder='Search by target' size="lg"/>
-              </TabPanel>
-              <TabPanel>
-              <Input variant='filled' placeholder='Search by adverse event' size="lg"/>
-              </TabPanel>
-              <TabPanel>
-              <Input variant='filled' placeholder='Search by target' size="lg" />
-              </TabPanel>
+              <TargetToAESearch />
+              <AdverseEventToTargetSearch />
+              <TargetToTargetSimilaritySearch />
             </TabPanels>
             </Card>
         </Tabs>

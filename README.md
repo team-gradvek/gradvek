@@ -1,11 +1,17 @@
 # Installation
 
-[First Pull](https://github.com/team-gradvek/gradvek#first-pull)  
-[How to run frontend and backend](https://github.com/team-gradvek/gradvek#how-to-run-the-frontend-and-backend)  
-[Make file commands](https://github.com/team-gradvek/gradvek#make-file-commands)  
-[Errors](https://github.com/team-gradvek/gradvek#errors)
+[First Pull](#first-pull)  
+[How to run frontend and backend](#how-to-run-the-frontend-and-backend)  
+[Makefile commands](#makefile-commands)  
+[Errors](#errors)
 
 # First Pull
+
+## 0. Check Environment and Get Dependencies
+Run the check_environment.sh script to check if you have the necessary tools and dependencies in your current environment.
+```bash
+./check_environment.sh
+```
 
 ## 1. (OPTIONAL) Setup python environment 
 Note: If you create a Python env (with a different name), add it to the .gitingore file
@@ -17,7 +23,6 @@ pip3 install virtualenv
 python3 -m venv env
 source env/bin/activate
 ```
-
 
 ## 2. Install Python modules
 Note: if you created a Python env in step 1, install the modules inside the environement. 
@@ -46,13 +51,27 @@ Windows:
 ```
 https://docs.djangoproject.com/en/4.1/howto/windows/
 ```
+Update to Python 3.11  
+```
+https://www.python.org/downloads/
+```
+
+Get Django  
+
+MacOS/Linux:
+```
+ brew install django-completion
+```
+Windows:
+```
+https://docs.djangoproject.com/en/4.1/howto/windows/
+```
 
 `cd` into `backend` folder
 
 ```
 pip3 install -r requirements.txt
 ```
-
 ## 3. Run Django Migration
 
 `cd` into `backend` folder
@@ -63,6 +82,7 @@ python3 manage.py migrate
 https://stackoverflow.com/questions/29980211/django-1-8-whats-the-difference-between-migrate-and-makemigrations
 
 ## 4. Run Admin Config
+
 
 `cd` into `backend` folder  
 
@@ -81,7 +101,6 @@ test at : http://localhost:8000/admin/
 ## 5. Create descriptor objects (optional - only to showcase a database example)
 
 Log-in to admin and add a few descriptors http://localhost:8000/admin/
-
 
 ## 6. Install node_modules
 
@@ -112,7 +131,43 @@ python3 manage.py runserver
 ```
 http://localhost:8000/
 
-# Make file commands
+## 3. To see API example
+http://localhost:3000/test  
+http://localhost:8000/api/descriptors
+
+# Makefile commands
+
+## 1. Start the Neo4j Database
+```bash
+make run-neo4j
+```
+## 2. Stop the Neo4j Database
+```bash
+make stop-neo4j
+```
+
+## 3. Clean the Neo4j Database
+
+```bash
+make clean
+```
+## 4. Get Datasets
+
+To fetch the parquet data sets, run the `get_datasets.py` script in the `datasets` folder. This will download the data sets and save them in the `datasets/opentarget` folder. 
+
+```bash
+make get-datasets
+```
+
+## 5. Send Data to Neo4j
+
+To parse the parquet data sets to insert into the database, run the `parse_datasets.py` script in the `datasets` folder. This will parse the data sets send the appropriate data to the database. 
+
+This must have the Neo4j database running in order to work.
+
+```bash
+make send-data
+```
 
 # Errors
 
