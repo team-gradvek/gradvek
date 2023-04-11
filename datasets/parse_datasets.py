@@ -33,15 +33,34 @@ Important note: This script uses the APOC library for parallelized batch process
 the APOC plugin installed in your Neo4j instance before running the script.
 """
 
-# Set dataset name
-# TODO use config file to set this and append data type to this when generating queries
-dataset = "opentarget 23.02"
+# Dataset name
+dataset = None
+
+def set_dataset_name():
+    global dataset
+    with open("platform.conf", "r") as file:
+        for line in file:
+            # Remove whitespace from the beginning and end of the line
+            stripped_line = line.strip()
+
+            # Check if the line starts with "data_version ="
+            if stripped_line.startswith("data_version ="):
+                # Split the line at the equals sign and take the second part (the value)
+                dataset = stripped_line.split("=")[1].strip()
+
+    # Check if the dataset variable was set
+    if dataset is None:
+        raise ValueError("data_version not found in platform.conf")
+    else:
+        print("Dataset version:", dataset)
 
 # Set the URI and AUTH for the neo4j database
 URI = "bolt://localhost:7687"
 AUTH = ("neo4j", "gradvek1")
 
 def main():
+    # Set the dataset name
+    set_dataset_name()
     # Get the current working directory
     current_dir = os.getcwd()
     # Set the input directory for the opentarget data
