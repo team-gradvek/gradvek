@@ -54,14 +54,15 @@ def main():
     # Define data_type_query_generators, a dictionary that maps data types to lists of query generators.
     # Each list contains multiple node or edge query generator functions for the respective data type.
     data_type_query_generators = {
-        # Key: data type name, Value: [[node query generators], [edge query generators]]
-        "targets": [[create_cypher_query_targets, create_cypher_query_pathways], [create_cypher_query_participates]],
-        "fda": [[create_cypher_query_adverse_events], [create_cypher_query_associated_with]],
-        "molecule": [[create_cypher_query_drugs], []],
-        "mechanismOfAction": [[], [create_cypher_query_mechanism_of_action]],
-        "mousePhenotypes": [[create_cypher_query_mouse_phenotypes], []],
-        "diseases": [[create_cypher_query_diseases], []]
+        # Key: data type name, Value: tuple([node query generators], [edge query generators])
+        "targets": ([create_cypher_query_targets, create_cypher_query_pathways], [create_cypher_query_participates]),
+        "fda": ([create_cypher_query_adverse_events], [create_cypher_query_associated_with]),
+        "molecule": ([create_cypher_query_drugs], []),
+        "mechanismOfAction": ([], [create_cypher_query_mechanism_of_action]),
+        "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], []),
+        "diseases": ([create_cypher_query_diseases], [])
     }
+
 
     # Create indexes for nodes - this significantly improves performance in edge query generation
     create_indexes()
