@@ -38,7 +38,8 @@ the APOC plugin installed in your Neo4j instance before running the script.
 dataset = "opentarget 23.02"
 
 # Set the URI and AUTH for the neo4j database
-URI = "bolt://localhost:7687"
+# URI = "bolt://localhost:7687"
+URI = "bolt://127.0.0.1:7687"
 AUTH = ("neo4j", "gradvek1")
 
 def main():

@@ -1,6 +1,14 @@
 from django.db import models
 
-# Create your models here.
+from neomodel import (
+    StringProperty,
+    StructuredNode,
+    RelationshipTo,
+    RelationshipFrom,
+    Relationship,
+    UniqueIdProperty
+)
+
 
 class Descriptor(models.Model):
     """
@@ -8,6 +16,7 @@ class Descriptor(models.Model):
     """
     descriptor_name = models.CharField(max_length=30)
 
+# For Demo
 class Target(models.Model):
     """
     Targets for Typeahead
@@ -15,9 +24,11 @@ class Target(models.Model):
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=60)
 
+# For Demo
 class AdverseEvent(models.Model):
     """
     Adverse Events for Typeahead
     """
     name = models.CharField(max_length=60)
     description = models.CharField(max_length=60)
+
