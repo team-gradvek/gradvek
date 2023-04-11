@@ -111,7 +111,7 @@ def generate_queries(data_type, data_type_path, query_generator):
 
         # Iterate over each file and read its content
         for n, file in enumerate(files):
-            print(f"Processing {data_type} file {n+1}/{len(files)}")
+            print(f"Processing {query_generator.__name__} file {n+1}/{len(files)}")
             file_path = os.path.join(data_type_path, file)
             try:
                 table = pq.read_table(file_path)
