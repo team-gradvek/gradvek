@@ -128,9 +128,12 @@ def generate_queries(data_type, data_type_path, query_generator):
                     for query, params in queries:
                         tx.run(query, params)
 
-                # Execute the queries concurrently within a single transaction
+                # Execute the queries concurrently within a single transaction, uses the execute_write method if available
                 with driver.session() as session:
-                    session.execute_write(execute_queries, queries)
+                    if hasattr(session, 'execute_write'):
+                        session.execute_write(execute_queries, queries)
+                    else:
+                        session.write_transaction(execute_queries, queries)
 
             except Exception as e:
                 print(f"Error generating queries for file {file}: {e}")
