@@ -48,20 +48,19 @@ def main():
     input_dir = f"{current_dir}/opentarget"
 
     # TODO:
-    # Action (edge), Pathway (entity) - appears to not use any data source?
+    # Action (edge) - appears to not use any data source?
     # Gene (entity), Involves (edge) - these seem to only come from csv
 
-    # Define data_type_query_generators, a dictionary that maps data types to query generator tuples. 
-    # Each tuple contains a node_query_generator and an edge_query_generator function for the respective data type.
-    # If no query generator is needed for nodes or edges, use None.
+    # Define data_type_query_generators, a dictionary that maps data types to lists of query generators.
+    # Each list contains multiple node or edge query generator functions for the respective data type.
     data_type_query_generators = {
-        # Key: data type name, Value: (node query generator, edge query generator)
-        "targets": (create_cypher_query_targets, create_cypher_query_participates),
-        "fda": (create_cypher_query_adverse_events, create_cypher_query_associated_with),
-        "molecule": (create_cypher_query_drugs, None),
-        "mechanismOfAction": (None, create_cypher_query_mechanism_of_action),
-        "mousePhenotypes": (create_cypher_query_mouse_phenotypes, None),
-        "diseases": (create_cypher_query_diseases, None)
+        # Key: data type name, Value: [[node query generators], [edge query generators]]
+        "targets": [[create_cypher_query_targets, create_cypher_query_pathways], [create_cypher_query_participates]],
+        "fda": [[create_cypher_query_adverse_events], [create_cypher_query_associated_with]],
+        "molecule": [[create_cypher_query_drugs], []],
+        "mechanismOfAction": [[], [create_cypher_query_mechanism_of_action]],
+        "mousePhenotypes": [[create_cypher_query_mouse_phenotypes], []],
+        "diseases": [[create_cypher_query_diseases], []]
     }
 
     # Iterate over each data type in the input directory for node query generators
@@ -72,11 +71,11 @@ def main():
         if not os.path.isdir(data_type_path):
             continue
 
-        # Run the node query generator for the current data type
-        node_query_generator = data_type_query_generators[data_type][0]
-        if node_query_generator is not None:
-            generate_queries(data_type, data_type_path, node_query_generator)
-
+         # Run the node query generators for the current data type
+        for node_query_generator in data_type_query_generators[data_type][0]:
+            if node_query_generator is not None:
+                generate_queries(data_type, data_type_path, node_query_generator)
+    
     # Create indexes for nodes - this significantly improves performance in edge query generation
     create_indexes()
 
@@ -88,10 +87,10 @@ def main():
         if not os.path.isdir(data_type_path):
             continue
 
-        # Run the edge query generator for the current data type
-        edge_query_generator = data_type_query_generators[data_type][1]
-        if edge_query_generator is not None:
-            generate_queries(data_type, data_type_path, edge_query_generator)
+        # Run the edge query generators for the current data type
+        for edge_query_generator in data_type_query_generators[data_type][1]:
+            if edge_query_generator is not None:
+                generate_queries(data_type, data_type_path, edge_query_generator)
 
 # Generate queries for the given data type and path
 # This function takes a data_type, data_type_path, and a query_generator function
@@ -140,9 +139,12 @@ def create_cypher_query_nodes(table, node_label, props_to_columns):
     # Convert the table to a pandas DataFrame
     df = table.to_pandas()
 
+    # Remove duplicates
+    deduplicated_df = df.drop_duplicates(subset=list(props_to_columns.values()), keep='first')
+
     # Prepare data for the Cypher query
     data = []
-    for _, row in df.iterrows():
+    for _, row in deduplicated_df.iterrows():
         data.append({column: row[column] for _, column in props_to_columns.items()})
 
     # APOC query for creating nodes in batch
@@ -155,6 +157,7 @@ def create_cypher_query_nodes(table, node_label, props_to_columns):
     """
     return [(query, {'data': data, 'dataset': dataset})]
 
+
 # Generate Cypher queries for Target nodes
 def create_cypher_query_targets(table):
     return create_cypher_query_nodes(table, 'Target', {
@@ -162,6 +165,33 @@ def create_cypher_query_targets(table):
         'ensembleId': 'id',
         'symbol': 'approvedSymbol'
     })
+
+def create_cypher_query_pathways(table):
+    # Convert the table to a pandas DataFrame
+    df = table.to_pandas()
+
+    # Prepare data for the Cypher query
+    data = []
+    for _, row in df.iterrows():
+        if row['pathways'] is None:
+            continue
+        for pathway in row['pathways']:
+            data.append({
+                'pathwayCode': pathway['pathway'],
+                'pathwayId': pathway['pathwayId'],
+                'topLevelTerm': pathway['topLevelTerm']
+            })
+
+    # APOC query for creating Pathway nodes in batch
+    query = """
+    CALL apoc.periodic.iterate(
+        'UNWIND $props as prop RETURN prop',
+        'MERGE (:Pathway {pathwayCode: prop.pathwayCode, pathwayId: prop.pathwayId, topLevelTerm: prop.topLevelTerm, dataset: $dataset})',
+        {params: {props: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+    )
+    """
+    return [(query, {'data': data, 'dataset': dataset})]
+
 
 # Generate Cypher queries for AdverseEvent nodes
 def create_cypher_query_adverse_events(table):
@@ -220,12 +250,12 @@ def create_cypher_query_mechanism_of_action(table):
                     'ensembleId': target,
                     'actionType': row['actionType']
                 })
-    # APOC query for creating relationships between Drug and Target nodes
+    # APOC query for merging relationships between Drug and Target nodes
     query = """
     CALL apoc.periodic.iterate(
         'UNWIND $data as item RETURN item',
         'MATCH (from:Drug {chemblId: item.chemblId}), (to:Target {ensembleId: item.ensembleId})
-         CREATE (from)-[:TARGETS {dataset: $dataset, actionType: item.actionType}]->(to)',
+         MERGE (from)-[:TARGETS {dataset: $dataset, actionType: item.actionType}]->(to)',
         {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
     )
     """
@@ -243,15 +273,14 @@ def create_cypher_query_participates(table):
             data.append({
                 'ensembleId': row['id'],
                 'pathwayId': pathway['pathwayId'],
-                'pathwayCode': pathway['pathway'],
-                'topLevelTerm': pathway['topLevelTerm']
+                'id': pathway['pathwayId']
             })
     # APOC query for creating relationships between Target and Pathway nodes
     query = """
     CALL apoc.periodic.iterate(
         'UNWIND $data as item RETURN item',
         'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Pathway {pathwayId: item.pathwayId})
-         CREATE (from)-[:PARTICIPATES_IN {dataset: $dataset, pathwayCode: item.pathwayCode, pathwayId: item.pathwayId, topLevelTerm: item.topLevelTerm}]->(to)',
+         MERGE (from)-[:PARTICIPATES_IN {dataset: $dataset, id: item.pathwayId}]->(to)',
         {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
     )
     """
@@ -276,7 +305,7 @@ def create_cypher_query_associated_with(table):
     CALL apoc.periodic.iterate(
         'UNWIND $data as item RETURN item',
         'MATCH (from:Drug {chemblId: item.chembl_id}), (to:AdverseEvent {meddraId: item.meddraCode})
-         CREATE (from)-[:ASSOCIATED_WITH {dataset: $dataset, critval: item.critval, llr: item.llr}]->(to)',
+         MERGE (from)-[:ASSOCIATED_WITH {dataset: $dataset, critval: item.critval, llr: item.llr}]->(to)',
         {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
     )
     """
