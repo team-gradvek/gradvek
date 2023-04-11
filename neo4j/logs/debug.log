@@ -1,0 +1,1028 @@
+2023-04-10 22:37:15.312+0000 INFO  [o.n.i.d.DiagnosticsManager] 
+                                                                ********************************************************************************
+                                                                                             [ System diagnostics ]                             
+                                                                ********************************************************************************
+                                                                --------------------------------------------------------------------------------
+                                                                                         [ System memory information ]                          
+                                                                --------------------------------------------------------------------------------
+                                                                Total Physical memory: 7.773GiB
+                                                                Free Physical memory: 2.505GiB
+                                                                Committed virtual memory: 7.075GiB
+                                                                Total swap space: 1024MiB
+                                                                Free swap space: 1024MiB
+                                                                
+                                                                --------------------------------------------------------------------------------
+                                                                                           [ JVM memory information ]                           
+                                                                --------------------------------------------------------------------------------
+                                                                Free  memory: 3.833GiB
+                                                                Total memory: 4.000GiB
+                                                                Max   memory: 4.000GiB
+                                                                Garbage Collector: G1 Young Generation: [G1 Eden Space, G1 Survivor Space, G1 Old Gen]
+                                                                Garbage Collector: G1 Old Generation: [G1 Eden Space, G1 Survivor Space, G1 Old Gen]
+                                                                Memory Pool: CodeHeap 'non-nmethods' (Non-heap memory): committed=2.438MiB, used=1.217MiB, max=5.559MiB, threshold=0B
+                                                                Memory Pool: Metaspace (Non-heap memory): committed=20.75MiB, used=20.45MiB, max=-1B, threshold=0B
+                                                                Memory Pool: CodeHeap 'profiled nmethods' (Non-heap memory): committed=4.875MiB, used=4.834MiB, max=117.2MiB, threshold=0B
+                                                                Memory Pool: Compressed Class Space (Non-heap memory): committed=2.375MiB, used=2.251MiB, max=1.000GiB, threshold=0B
+                                                                Memory Pool: G1 Eden Space (Heap memory): committed=216.0MiB, used=166.0MiB, max=-1B, threshold=?
+                                                                Memory Pool: G1 Old Gen (Heap memory): committed=3.789GiB, used=992.0KiB, max=4.000GiB, threshold=0B
+                                                                Memory Pool: G1 Survivor Space (Heap memory): committed=0B, used=0B, max=-1B, threshold=?
+                                                                Memory Pool: CodeHeap 'non-profiled nmethods' (Non-heap memory): committed=2.438MiB, used=1.129MiB, max=117.2MiB, threshold=0B
+                                                                
+                                                                --------------------------------------------------------------------------------
+                                                                                        [ Operating system information ]                        
+                                                                --------------------------------------------------------------------------------
+                                                                Operating System: Linux; version: 5.15.49-linuxkit; arch: amd64; cpus: 3
+                                                                Max number of file descriptors: 1048576
+                                                                Number of open file descriptors: 193
+                                                                Process id: 6
+                                                                Byte order: LITTLE_ENDIAN
+                                                                Local timezone: Etc/UTC
+                                                                
+                                                                --------------------------------------------------------------------------------
+                                                                                              [ JVM information ]                               
+                                                                --------------------------------------------------------------------------------
+                                                                VM Name: OpenJDK 64-Bit Server VM
+                                                                VM Vendor: Eclipse Adoptium
+                                                                VM Version: 17.0.6+10
+                                                                JIT compiler: HotSpot 64-Bit Tiered Compilers
+                                                                VM Arguments: [-XX:+UseG1GC, -XX:-OmitStackTraceInFastThrow, -XX:+AlwaysPreTouch, -XX:+UnlockExperimentalVMOptions, -XX:+TrustFinalNonStaticFields, -XX:+DisableExplicitGC, -Djdk.nio.maxCachedBufferSize=1024, -Dio.netty.tryReflectionSetAccessible=true, -Djdk.tls.ephemeralDHKeySize=2048, -Djdk.tls.rejectClientInitiatedRenegotiation=true, -XX:FlightRecorderOptions=stackdepth=256, -XX:+UnlockDiagnosticVMOptions, -XX:+DebugNonSafepoints, --add-opens=java.base/java.nio=ALL-UNNAMED, --add-opens=java.base/java.io=ALL-UNNAMED, --add-opens=java.base/sun.nio.ch=ALL-UNNAMED, -Dlog4j2.disable.jmx=true, -Dfile.encoding=UTF-8, -Xms4194304k, -Xmx4194304k]
+                                                                
+                                                                --------------------------------------------------------------------------------
+                                                                                               [ Java classpath ]                               
+                                                                --------------------------------------------------------------------------------
+                                                                 [classpath] /var/lib/neo4j/lib/lucene-backward-codecs-9.5.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/netty-transport-4.1.87.Final.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jetty-io-9.4.50.v20221201.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-cypher-javacc-parser-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jetty-servlet-9.4.50.v20221201.jar
+                                                                 [classpath] /var/lib/neo4j/lib/commons-math3-3.6.1.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-browser-5.4.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jPowerShell-3.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/netty-transport-native-kqueue-4.1.87.Final-osx-x86_64.jar
+                                                                 [classpath] /var/lib/neo4j/lib/mercator_2.13-0.2.1.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jaxb-runtime-2.3.2.jar
+                                                                 [classpath] /var/lib/neo4j/lib/reactive-streams-1.0.4.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-layout-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/netty-codec-http-4.1.87.Final.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-ssl-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-cypher-ast-factory-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-procedure-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-procedure-api-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/cypher-literal-interpreter-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-security-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/javassist-3.25.0-GA.jar
+                                                                 [classpath] /var/lib/neo4j/lib/commons-compress-1.22.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jetty-http-9.4.50.v20221201.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-server-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-concurrent-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jersey-container-servlet-2.34.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-fabric-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-codegen-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jackson-jaxrs-json-provider-2.14.2.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-graph-algo-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/log4j-layout-template-json-2.19.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jettison-1.5.3.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-rewriting-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/conf/*
+                                                                 [classpath] /var/lib/neo4j/lib/shiro-lang-1.11.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/reactor-core-3.5.2.jar
+                                                                 [classpath] /var/lib/neo4j/lib/WMI4Java-1.6.3.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jakarta.xml.bind-api-2.3.2.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-cypher-cache-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/shiro-crypto-core-1.11.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jProcesses-1.6.5.jar
+                                                                 [classpath] /var/lib/neo4j/lib/commons-collections-3.2.2.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-configuration-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/hk2-locator-2.6.1.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-dbms-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-ast-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jersey-common-2.34.jar
+                                                                 [classpath] /var/lib/neo4j/lib/commons-configuration2-2.8.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/zstd-jni-1.5.2-5.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-java-driver-5.5.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-cypher-config-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/eclipse-collections-api-11.1.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/shiro-crypto-cipher-1.11.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jersey-container-servlet-core-2.34.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jansi-2.4.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/commons-text-1.10.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-resource-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-cypher-ir-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-graphdb-api-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/ipaddress-5.4.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/scala-reflect-2.13.10.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jline-terminal-3.21.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/netty-transport-native-kqueue-4.1.87.Final-osx-aarch_64.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jackson-annotations-2.14.2.jar
+                                                                 [classpath] /var/lib/neo4j/lib/lz4-java-1.8.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-csv-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-collections-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jackson-core-2.14.2.jar
+                                                                 [classpath] /var/lib/neo4j/lib/log4j-api-2.19.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-expressions-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jakarta.ws.rs-api-2.1.6.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-bolt-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-consistency-check-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jline-terminal-jansi-3.21.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/hk2-api-2.6.1.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-capabilities-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/shiro-event-1.11.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-util-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/slf4j-api-2.0.6.jar
+                                                                 [classpath] /var/lib/neo4j/lib/istack-commons-runtime-3.0.8.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-lucene-index-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jackson-jaxrs-base-2.14.2.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-cypher-planner-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/netty-resolver-4.1.87.Final.jar
+                                                                 [classpath] /var/lib/neo4j/lib/eclipse-collections-11.1.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jackson-module-jaxb-annotations-2.14.2.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-bootcheck-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-kernel-api-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/commons-io-2.11.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-fulltext-index-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-unsafe-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/lucene-analysis-common-9.5.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-cypher-interpreted-runtime-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-values-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-push-to-cloud-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jakarta.activation-api-1.2.2.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-io-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jakarta.validation-api-2.0.2.jar
+                                                                 [classpath] /var/lib/neo4j/lib/netty-common-4.1.87.Final.jar
+                                                                 [classpath] /var/lib/neo4j/lib/kiama_2.13-2.5.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/magnolia_2.13-0.17.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-cypher-expression-evaluator-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-schema-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jctools-core-4.0.1.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-data-collector-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jakarta.inject-2.6.1.jar
+                                                                 [classpath] /var/lib/neo4j/lib/shiro-config-core-1.11.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/hk2-utils-2.6.1.jar
+                                                                 [classpath] /var/lib/neo4j/lib/stax-ex-1.8.1.jar
+                                                                 [classpath] /var/lib/neo4j/lib/cypher-shell-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/txw2-2.3.2.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-cypher-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/shiro-crypto-hash-1.11.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jetty-security-9.4.50.v20221201.jar
+                                                                 [classpath] /var/lib/neo4j/lib/zstd-proxy-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jetty-util-9.4.50.v20221201.jar
+                                                                 [classpath] /plugins/apoc-5.6.0-extended.jar
+                                                                 [classpath] /var/lib/neo4j/lib/caffeine-3.1.2.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jline-reader-3.21.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-kernel-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/FastInfoset-1.2.16.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-cypher-slotted-runtime-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-wal-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-exceptions-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/netty-tcnative-classes-2.0.56.Final.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jetty-webapp-9.4.50.v20221201.jar
+                                                                 [classpath] /var/lib/neo4j/lib/argparse4j-0.9.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-logging-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-diagnostics-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/commons-logging-1.2.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jna-5.13.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jetty-xml-9.4.50.v20221201.jar
+                                                                 [classpath] /var/lib/neo4j/lib/scala-library-2.13.10.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-front-end-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/server-api-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/lucene-queryparser-9.5.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-common-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/lucene-core-9.5.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-record-storage-engine-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/cypher-ast-factory-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/netty-transport-native-epoll-4.1.87.Final-linux-x86_64.jar
+                                                                 [classpath] /var/lib/neo4j/lib/slf4j-nop-2.0.6.jar
+                                                                 [classpath] /var/lib/neo4j/lib/shiro-cache-1.11.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-native-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/picocli-4.7.1.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-index-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/netty-transport-native-unix-common-4.1.87.Final.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jetty-server-9.4.50.v20221201.jar
+                                                                 [classpath] /var/lib/neo4j/lib/netty-transport-classes-kqueue-4.1.87.Final.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-cypher-planner-spi-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-import-util-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/netty-transport-classes-epoll-4.1.87.Final.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-spatial-index-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-cypher-physical-planning-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-id-generator-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jakarta.annotation-api-1.3.5.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-storage-engine-util-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-cypher-macros-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/netty-handler-4.1.87.Final.jar
+                                                                 [classpath] /var/lib/neo4j/lib/log4j-core-2.19.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/commons-lang3-3.12.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/netty-buffer-4.1.87.Final.jar
+                                                                 [classpath] /var/lib/neo4j/lib/annotations-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jackson-databind-2.14.2.jar
+                                                                 [classpath] /var/lib/neo4j/lib/netty-codec-4.1.87.Final.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-monitoring-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-cypher-runtime-util-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/javax.servlet-api-3.1.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-token-api-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jersey-server-2.34.jar
+                                                                 [classpath] /var/lib/neo4j/lib/commons-beanutils-1.9.4.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-cypher-logical-plans-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/shiro-config-ogdl-1.11.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/shiro-core-1.11.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/netty-transport-native-epoll-4.1.87.Final-linux-aarch_64.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-lock-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-command-line-5.6.0.jar
+                                                                 [classpath] /plugins/apoc.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jersey-client-2.34.jar
+                                                                 [classpath] /var/lib/neo4j/lib/neo4j-import-tool-5.6.0.jar
+                                                                 [classpath] /var/lib/neo4j/lib/jersey-hk2-2.34.jar
+                                                                
+                                                                --------------------------------------------------------------------------------
+                                                                                                [ Library path ]                                
+                                                                --------------------------------------------------------------------------------
+                                                                /usr/java/packages/lib
+                                                                /usr/lib64
+                                                                /lib64
+                                                                /lib
+                                                                /usr/lib
+                                                                
+                                                                --------------------------------------------------------------------------------
+                                                                                             [ System properties ]                              
+                                                                --------------------------------------------------------------------------------
+                                                                jdk.tls.rejectClientInitiatedRenegotiation = true
+                                                                sun.jnu.encoding = ANSI_X3.4-1968
+                                                                sun.arch.data.model = 64
+                                                                user.timezone = Etc/UTC
+                                                                sun.java.launcher = SUN_STANDARD
+                                                                user.country = US
+                                                                sun.boot.library.path = /opt/java/openjdk/lib
+                                                                sun.java.command = org.neo4j.server.CommunityEntryPoint --home-dir=/var/lib/neo4j --config-dir=/var/lib/neo4j/conf --console-mode
+                                                                jdk.debug = release
+                                                                io.netty.tryReflectionSetAccessible = true
+                                                                sun.cpu.endian = little
+                                                                user.home = ?
+                                                                user.language = en
+                                                                file.separator = /
+                                                                jdk.tls.ephemeralDHKeySize = 2048
+                                                                sun.management.compiler = HotSpot 64-Bit Tiered Compilers
+                                                                user.name = ?
+                                                                jdk.nio.maxCachedBufferSize = 1024
+                                                                path.separator = :
+                                                                file.encoding = UTF-8
+                                                                jnidispatch.path = /var/lib/neo4j/?/.cache/JNA/temp/jna13859130946604282821.tmp
+                                                                jna.loaded = true
+                                                                user.dir = /var/lib/neo4j
+                                                                native.encoding = ANSI_X3.4-1968
+                                                                sun.io.unicode.encoding = UnicodeLittle
+                                                                log4j2.disable.jmx = true
+                                                                
+                                                                --------------------------------------------------------------------------------
+                                                                                      [ (IANA) TimeZone database version ]                      
+                                                                --------------------------------------------------------------------------------
+                                                                  TimeZone version: 2022g (available for 603 zone identifiers)
+                                                                
+                                                                --------------------------------------------------------------------------------
+                                                                                            [ Network information ]                             
+                                                                --------------------------------------------------------------------------------
+                                                                Interface eth0:
+                                                                    address: 172.18.0.2
+                                                                Interface lo:
+                                                                    address: 127.0.0.1
+                                                                
+                                                                --------------------------------------------------------------------------------
+                                                                                         [ Native access information ]                          
+                                                                --------------------------------------------------------------------------------
+                                                                Native access details: Linux native access is available.
+                                                                
+                                                                --------------------------------------------------------------------------------
+                                                                                                [ DBMS config ]                                 
+                                                                --------------------------------------------------------------------------------
+                                                                DBMS provided settings:
+                                                                db.tx_log.rotation.retention_policy=100M size
+                                                                dbms.security.procedures.allowlist=apoc.*
+                                                                dbms.security.procedures.unrestricted=apoc.*
+                                                                server.bolt.enabled=true
+                                                                server.default_listen_address=0.0.0.0
+                                                                server.directories.import=/var/lib/neo4j/import
+                                                                server.directories.logs=/logs
+                                                                server.directories.neo4j_home=/var/lib/neo4j
+                                                                server.directories.plugins=/plugins
+                                                                server.http.enabled=true
+                                                                server.https.enabled=false
+                                                                server.jvm.additional=-XX:+UseG1GC
+-XX:-OmitStackTraceInFastThrow
+-XX:+AlwaysPreTouch
+-XX:+UnlockExperimentalVMOptions
+-XX:+TrustFinalNonStaticFields
+-XX:+DisableExplicitGC
+-Djdk.nio.maxCachedBufferSize=1024
+-Dio.netty.tryReflectionSetAccessible=true
+-Djdk.tls.ephemeralDHKeySize=2048
+-Djdk.tls.rejectClientInitiatedRenegotiation=true
+-XX:FlightRecorderOptions=stackdepth=256
+-XX:+UnlockDiagnosticVMOptions
+-XX:+DebugNonSafepoints
+--add-opens=java.base/java.nio=ALL-UNNAMED
+--add-opens=java.base/java.io=ALL-UNNAMED
+--add-opens=java.base/sun.nio.ch=ALL-UNNAMED
+-Dlog4j2.disable.jmx=true
+                                                                server.memory.heap.initial_size=4.00GiB
+                                                                server.memory.heap.max_size=4.00GiB
+                                                                server.memory.pagecache.size=2.00GiB
+                                                                server.windows_service_name=neo4j
+                                                                Directories in use:
+                                                                server.directories.data=/var/lib/neo4j/data
+                                                                server.directories.dumps.root=/var/lib/neo4j/data/dumps
+                                                                server.directories.import=/var/lib/neo4j/import
+                                                                server.directories.lib=/var/lib/neo4j/lib
+                                                                server.directories.licenses=/var/lib/neo4j/licenses
+                                                                server.directories.logs=/logs
+                                                                server.directories.neo4j_home=/var/lib/neo4j
+                                                                server.directories.plugins=/plugins
+                                                                server.directories.run=/var/lib/neo4j/run
+                                                                server.directories.script.root=/var/lib/neo4j/data/scripts
+                                                                server.directories.transaction.logs.root=/var/lib/neo4j/data/transactions
+                                                                
+                                                                --------------------------------------------------------------------------------
+                                                                                                 [ Packaging ]                                  
+                                                                --------------------------------------------------------------------------------
+                                                                Edition: Community
+                                                                Package Type: tar
+                                                                
+2023-04-10 22:37:15.350+0000 INFO  [o.n.d.i.DefaultIdentityModule] Generated new ServerId: ServerId{746986db} (746986db-1e82-494d-acb1-b12ede8596bf)
+2023-04-10 22:37:15.353+0000 INFO  [o.n.d.i.DefaultIdentityModule] This instance is ServerId{746986db} (746986db-1e82-494d-acb1-b12ede8596bf)
+2023-04-10 22:37:16.186+0000 INFO  [o.n.s.CommunityNeoWebServer] ======== Neo4j 5.6.0 ========
+2023-04-10 22:37:16.201+0000 INFO  [o.n.d.d.DatabaseLifecycles] Creating 'DatabaseId{00000000[system]}'.
+2023-04-10 22:37:16.291+0000 INFO  [a.ApocConfig] successfully registered ApocConfig for @Context
+2023-04-10 22:37:16.296+0000 INFO  [a.Pools] successfully registered Pools for @Context
+2023-04-10 22:37:16.300+0000 INFO  [a.ApocConfig] successfully registered ExtendedApocConfig for @Context
+2023-04-10 22:37:16.314+0000 INFO  [a.ApocConfig] from system properties: NEO4J_CONF=/var/lib/neo4j/conf
+2023-04-10 22:37:16.315+0000 INFO  [a.ApocConfig] system property NEO4J_CONF set to /var/lib/neo4j/conf
+2023-04-10 22:37:16.316+0000 INFO  [a.ApocConfig] loading apoc meta config from jar:file:/plugins/apoc-5.6.0-extended.jar!/apoc-config.xml
+2023-04-10 22:37:16.501+0000 INFO  [a.ApocConfig] setting APOC config to default value: apoc.export.file.enabled=false
+2023-04-10 22:37:16.502+0000 INFO  [a.ApocConfig] setting APOC config to default value: apoc.import.file.use_neo4j_config=true
+2023-04-10 22:37:16.504+0000 INFO  [a.ApocConfig] setting APOC config to default value: apoc.trigger.enabled=false
+2023-04-10 22:37:16.508+0000 INFO  [a.ApocConfig] from system properties: NEO4J_CONF=/var/lib/neo4j/conf
+2023-04-10 22:37:16.509+0000 INFO  [a.ApocConfig] system property NEO4J_CONF set to /var/lib/neo4j/conf
+2023-04-10 22:37:16.510+0000 INFO  [a.ApocConfig] loading apoc meta config from jar:file:/plugins/apoc-5.6.0-extended.jar!/apoc-config.xml
+2023-04-10 22:37:16.525+0000 INFO  [a.ApocConfig] setting APOC config to default value: apoc.ttl.schedule=PT1M
+2023-04-10 22:37:16.527+0000 INFO  [a.ApocConfig] setting APOC config to default value: apoc.ttl.enabled=false
+2023-04-10 22:37:16.528+0000 INFO  [a.ApocConfig] setting APOC config to default value: apoc.ttl.limit=1000
+2023-04-10 22:37:16.529+0000 INFO  [a.ApocConfig] setting APOC config to default value: apoc.uuid.enabled=false
+2023-04-10 22:37:16.589+0000 INFO  [o.n.b.BoltServer] Using connector transport epoll
+2023-04-10 22:37:16.647+0000 INFO  [o.n.b.BoltServer] Configured external Bolt connector with listener address /0.0.0.0:7687
+2023-04-10 22:37:16.648+0000 INFO  [o.n.b.BoltServer] Bolt server loaded
+2023-04-10 22:37:16.691+0000 INFO  [o.n.d.d.DatabaseLifecycles] Starting 'DatabaseId{00000000[system]}'.
+2023-04-10 22:37:17.297+0000 INFO  [o.n.i.d.DiagnosticsManager] [system/00000000] 
+                                                                [system/00000000] ********************************************************************************
+                                                                [system/00000000]                               [ Database: system ]                              
+                                                                [system/00000000] ********************************************************************************
+                                                                [system/00000000] --------------------------------------------------------------------------------
+                                                                [system/00000000]                                   [ Version ]                                   
+                                                                [system/00000000] --------------------------------------------------------------------------------
+                                                                [system/00000000] DBMS: community record-aligned-1.1
+                                                                [system/00000000] Kernel version: 5.6.0
+                                                                [system/00000000] 
+                                                                [system/00000000] --------------------------------------------------------------------------------
+                                                                [system/00000000]                                 [ Store files ]                                 
+                                                                [system/00000000] --------------------------------------------------------------------------------
+                                                                [system/00000000] Disk space on partition (Total / Free / Free %): 499963174912 / 147050590208 / 29
+                                                                [system/00000000] Storage files stored on file store: fuse.grpcfuse
+                                                                [system/00000000] Storage files: (filename : modification date - size)
+                                                                [system/00000000]   neostore: 2023-04-10 22:37:17.128+0000 - 8.000KiB
+                                                                [system/00000000]   neostore.counts.db: 2023-04-10 22:37:17.149+0000 - 0B
+                                                                [system/00000000]   neostore.indexstats.db: 2023-04-10 22:37:17.173+0000 - 0B
+                                                                [system/00000000]   neostore.labeltokenstore.db: 2023-04-10 22:37:17.090+0000 - 0B
+                                                                [system/00000000]   neostore.labeltokenstore.db.id: 2023-04-10 22:37:17.087+0000 - 0B
+                                                                [system/00000000]   neostore.labeltokenstore.db.names: 2023-04-10 22:37:17.082+0000 - 8.000KiB
+                                                                [system/00000000]   neostore.labeltokenstore.db.names.id: 2023-04-10 22:37:17.077+0000 - 0B
+                                                                [system/00000000]   neostore.nodestore.db: 2023-04-10 22:37:17.005+0000 - 0B
+                                                                [system/00000000]   neostore.nodestore.db.id: 2023-04-10 22:37:17.002+0000 - 0B
+                                                                [system/00000000]   neostore.nodestore.db.labels: 2023-04-10 22:37:16.994+0000 - 8.000KiB
+                                                                [system/00000000]   neostore.nodestore.db.labels.id: 2023-04-10 22:37:16.971+0000 - 0B
+                                                                [system/00000000]   neostore.propertystore.db: 2023-04-10 22:37:17.046+0000 - 0B
+                                                                [system/00000000]   neostore.propertystore.db.arrays: 2023-04-10 22:37:17.038+0000 - 8.000KiB
+                                                                [system/00000000]   neostore.propertystore.db.arrays.id: 2023-04-10 22:37:17.034+0000 - 0B
+                                                                [system/00000000]   neostore.propertystore.db.id: 2023-04-10 22:37:17.044+0000 - 0B
+                                                                [system/00000000]   neostore.propertystore.db.index: 2023-04-10 22:37:17.021+0000 - 0B
+                                                                [system/00000000]   neostore.propertystore.db.index.id: 2023-04-10 22:37:17.019+0000 - 0B
+                                                                [system/00000000]   neostore.propertystore.db.index.keys: 2023-04-10 22:37:17.013+0000 - 8.000KiB
+                                                                [system/00000000]   neostore.propertystore.db.index.keys.id: 2023-04-10 22:37:17.009+0000 - 0B
+                                                                [system/00000000]   neostore.propertystore.db.strings: 2023-04-10 22:37:17.030+0000 - 8.000KiB
+                                                                [system/00000000]   neostore.propertystore.db.strings.id: 2023-04-10 22:37:17.026+0000 - 0B
+                                                                [system/00000000]   neostore.relationshipgroupstore.db: 2023-04-10 22:37:17.118+0000 - 8.000KiB
+                                                                [system/00000000]   neostore.relationshipgroupstore.db.id: 2023-04-10 22:37:17.107+0000 - 0B
+                                                                [system/00000000]   neostore.relationshipgroupstore.degrees.db: 2023-04-10 22:37:17.164+0000 - 0B
+                                                                [system/00000000]   neostore.relationshipstore.db: 2023-04-10 22:37:17.054+0000 - 0B
+                                                                [system/00000000]   neostore.relationshipstore.db.id: 2023-04-10 22:37:17.051+0000 - 0B
+                                                                [system/00000000]   neostore.relationshiptypestore.db: 2023-04-10 22:37:17.071+0000 - 0B
+                                                                [system/00000000]   neostore.relationshiptypestore.db.id: 2023-04-10 22:37:17.068+0000 - 0B
+                                                                [system/00000000]   neostore.relationshiptypestore.db.names: 2023-04-10 22:37:17.063+0000 - 8.000KiB
+                                                                [system/00000000]   neostore.relationshiptypestore.db.names.id: 2023-04-10 22:37:17.059+0000 - 0B
+                                                                [system/00000000]   neostore.schemastore.db: 2023-04-10 22:37:17.101+0000 - 8.000KiB
+                                                                [system/00000000]   neostore.schemastore.db.id: 2023-04-10 22:37:17.096+0000 - 0B
+                                                                [system/00000000] Storage summary: 
+                                                                [system/00000000]   Total size of store: 72.00KiB
+                                                                [system/00000000]   Total size of mapped files: 72.00KiB
+                                                                [system/00000000] 
+                                                                [system/00000000] --------------------------------------------------------------------------------
+                                                                [system/00000000]                               [ Transaction log ]                               
+                                                                [system/00000000] --------------------------------------------------------------------------------
+                                                                [system/00000000] Transaction log files stored on file store: fuse.grpcfuse
+                                                                [system/00000000] Transaction log metadata:
+                                                                [system/00000000]  - current kernel version used in transactions: V5_0
+                                                                [system/00000000]  - last committed transaction id: 1
+                                                                [system/00000000] Transaction log files:
+                                                                [system/00000000]  - existing transaction log versions: -1--1
+                                                                [system/00000000]  - no transactions found
+                                                                [system/00000000] Checkpoint log files:
+                                                                [system/00000000]  - existing checkpoint log versions: -1--1
+                                                                [system/00000000]  - no checkpoints found
+                                                                [system/00000000] 
+                                                                [system/00000000] --------------------------------------------------------------------------------
+                                                                [system/00000000]                                   [ Id usage ]                                  
+                                                                [system/00000000] --------------------------------------------------------------------------------
+                                                                [system/00000000] ArrayPropertyStore[neostore.nodestore.db.labels]: used=1 high=0
+                                                                [system/00000000] NodeStore[neostore.nodestore.db]: used=0 high=-1
+                                                                [system/00000000] StringPropertyStore[neostore.propertystore.db.index.keys]: used=1 high=0
+                                                                [system/00000000] PropertyIndexStore[neostore.propertystore.db.index]: used=0 high=-1
+                                                                [system/00000000] StringPropertyStore[neostore.propertystore.db.strings]: used=1 high=0
+                                                                [system/00000000] ArrayPropertyStore[neostore.propertystore.db.arrays]: used=1 high=0
+                                                                [system/00000000] PropertyStore[neostore.propertystore.db]: used=0 high=-1
+                                                                [system/00000000] RelationshipStore[neostore.relationshipstore.db]: used=0 high=-1
+                                                                [system/00000000] StringPropertyStore[neostore.relationshiptypestore.db.names]: used=1 high=0
+                                                                [system/00000000] RelationshipTypeStore[neostore.relationshiptypestore.db]: used=0 high=-1
+                                                                [system/00000000] StringPropertyStore[neostore.labeltokenstore.db.names]: used=1 high=0
+                                                                [system/00000000] LabelTokenStore[neostore.labeltokenstore.db]: used=0 high=-1
+                                                                [system/00000000] SchemaStore[neostore.schemastore.db]: used=1 high=0
+                                                                [system/00000000] RelationshipGroupStore[neostore.relationshipgroupstore.db]: used=1 high=0
+                                                                [system/00000000] NeoStore[neostore]: used=-1 high=-1
+                                                                [system/00000000] 
+                                                                [system/00000000] --------------------------------------------------------------------------------
+                                                                [system/00000000]                                   [ Metadata ]                                  
+                                                                [system/00000000] --------------------------------------------------------------------------------
+                                                                [system/00000000] EXTERNAL_STORE_UUID (Database identifier exposed as external store identity. Generated on creation and never updated): 9c3f250f-297e-4a5b-932e-ccabc70815fb
+                                                                [system/00000000] DATABASE_ID (The last used DatabaseId for this database): null
+                                                                [system/00000000] LEGACY_STORE_VERSION (Legacy store format version. This field is used from 5.0 onwards only to distinguish non-migrated pre 5.0 metadata stores.): -3523014627327384477
+                                                                [system/00000000] STORE_ID (Store ID): StoreId{creationTime=1681166237126, random=-4188327126348560190, storageEngineName='record', formatName='aligned', majorVersion=1, minorVersion=1}
+                                                                [system/00000000] 
+2023-04-10 22:37:17.320+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [system/00000000] Requirement `Database unavailable` makes database system unavailable.
+2023-04-10 22:37:17.321+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [system/00000000] DatabaseId{00000000[system]} is unavailable.
+2023-04-10 22:37:17.340+0000 WARN  [o.n.k.i.s.MetaDataStore] [system/00000000] Missing counts store, rebuilding it.
+2023-04-10 22:37:17.347+0000 WARN  [o.n.k.i.s.MetaDataStore] [system/00000000] Counts store rebuild completed.
+2023-04-10 22:37:17.366+0000 INFO  [o.n.k.d.Database] [system/00000000] Starting transaction log [/var/lib/neo4j/data/transactions/system/neostore.transaction.db.0] at version=0
+2023-04-10 22:37:17.380+0000 INFO  [o.n.k.d.Database] [system/00000000] Starting transaction log [/var/lib/neo4j/data/transactions/system/checkpoint.0] at version=0
+2023-04-10 22:37:17.391+0000 INFO  [o.n.k.i.t.l.f.c.CheckpointLogFile] [system/00000000] Scanning log file with version 0 for checkpoint entries
+2023-04-10 22:37:17.454+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [system/00000000] Fulfilling of requirement 'Database unavailable' makes database system available.
+2023-04-10 22:37:17.455+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [system/00000000] DatabaseId{00000000[system]} is ready.
+2023-04-10 22:37:17.741+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [system/00000000] Index population started: [Index( id=2, name='index_f7700477', type='LOOKUP', schema=()-[:<any-types>]-(), indexProvider='token-lookup-1.0' )]
+2023-04-10 22:37:17.806+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [system/00000000] Index creation finished for index [Index( id=2, name='index_f7700477', type='LOOKUP', schema=()-[:<any-types>]-(), indexProvider='token-lookup-1.0' )].
+2023-04-10 22:37:17.819+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [system/00000000] Index population started: [Index( id=1, name='index_343aff4e', type='LOOKUP', schema=(:<any-labels>), indexProvider='token-lookup-1.0' )]
+2023-04-10 22:37:17.838+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [system/00000000] Index creation finished for index [Index( id=1, name='index_343aff4e', type='LOOKUP', schema=(:<any-labels>), indexProvider='token-lookup-1.0' )].
+2023-04-10 22:37:17.936+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.load.LoadXls$XLSSpliterator` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/apache/poi/ss/usermodel/Sheet
+2023-04-10 22:37:17.998+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.load.LoadHtmlBrowser` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/openqa/selenium/TimeoutException
+2023-04-10 22:37:18.033+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.load.LoadXls` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/apache/poi/ss/usermodel/Row
+2023-04-10 22:37:18.040+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.export.xls.ExportXls` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/apache/poi/ss/usermodel/Workbook
+2023-04-10 22:37:18.061+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.data.email.ExtractEmail` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: javax/mail/internet/AddressException
+2023-04-10 22:37:18.062+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.couchbase.CouchbaseConfig$TrancoderConfig` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/couchbase/client/java/codec/Transcoder
+2023-04-10 22:37:18.064+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.couchbase.CouchbaseConnection` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/couchbase/client/core/env/Authenticator
+2023-04-10 22:37:18.065+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.couchbase.CouchbaseConfig$RetryConfig` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/couchbase/client/core/retry/RetryStrategy
+2023-04-10 22:37:18.092+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.couchbase.CouchbaseConfig` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/couchbase/client/java/env/ClusterEnvironment
+2023-04-10 22:37:18.094+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.couchbase.document.CouchbaseUtils` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/couchbase/client/core/msg/kv/MutationToken
+2023-04-10 22:37:18.095+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.couchbase.CouchbaseManager` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/couchbase/client/core/env/PasswordAuthenticator
+2023-04-10 22:37:18.098+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.mongodb.MongoDBUtils$Coll` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/bson/Document
+2023-04-10 22:37:18.100+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.mongodb.MongoDBUtils` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/bson/Document
+2023-04-10 22:37:18.112+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.mongodb.MongoDBColl` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/mongodb/MongoCommandException
+2023-04-10 22:37:18.116+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.mongodb.MongoDbConfig` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/bson/Document
+2023-04-10 22:37:18.139+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.redis.IRedisConnection` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: io/lettuce/core/ScriptOutputType
+2023-04-10 22:37:18.193+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.redis.StringRedisConnection` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: io/lettuce/core/codec/RedisCodec
+2023-04-10 22:37:18.194+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.redis.RedisConnection` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: io/lettuce/core/RedisClient
+2023-04-10 22:37:18.196+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.redis.ByteArrayRedisConnection` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: io/lettuce/core/codec/RedisCodec
+2023-04-10 22:37:18.301+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.nlp.gcp.GCPProcedures` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: kotlin/Pair
+2023-04-10 22:37:18.308+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.nlp.aws.AWSVirtualKeyPhrasesGraph` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/amazonaws/services/comprehend/model/BatchDetectKeyPhrasesResult
+2023-04-10 22:37:18.310+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.nlp.aws.AWSProcedures` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: kotlin/Pair
+2023-04-10 22:37:18.311+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.nlp.aws.AWSVirtualSentimentVirtualGraph` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/amazonaws/services/comprehend/model/BatchDetectSentimentResult
+2023-04-10 22:37:18.312+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.nlp.aws.AWSProcedures$Companion` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/amazonaws/services/comprehend/model/BatchDetectKeyPhrasesResult
+2023-04-10 22:37:18.314+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.nlp.aws.RealAWSClient` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/amazonaws/services/comprehend/model/BatchDetectEntitiesResult
+2023-04-10 22:37:18.316+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.nlp.aws.AWSVirtualEntitiesGraph` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/amazonaws/services/comprehend/model/BatchDetectEntitiesResult
+2023-04-10 22:37:18.317+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.nlp.aws.AWSVirtualSentimentVirtualGraph$Companion` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: kotlin/Pair
+2023-04-10 22:37:18.318+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.nlp.aws.AWSClient` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/amazonaws/services/comprehend/model/BatchDetectEntitiesResult
+2023-04-10 22:37:18.319+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.nlp.aws.DummyAWSClient` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/amazonaws/services/comprehend/model/BatchDetectEntitiesResult
+2023-04-10 22:37:18.333+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.nlp.NLPHelperFunctions` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: kotlin/Pair
+2023-04-10 22:37:18.367+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.util.s3.S3Aws` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/amazonaws/auth/AWSCredentials
+2023-04-10 22:37:18.368+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.util.s3.S3Aws$1` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/amazonaws/services/s3/model/S3ObjectInputStream
+2023-04-10 22:37:18.370+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.util.s3.S3OutputStream$S3UploadManager` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/amazonaws/services/s3/AmazonS3
+2023-04-10 22:37:18.372+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.util.s3.S3URLConnection` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/amazonaws/ClientConfiguration
+2023-04-10 22:37:18.378+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.util.google.cloud.GCStorageURLConnection` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/google/cloud/storage/Storage
+2023-04-10 22:37:18.380+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.util.hdfs.HDFSUtils` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/apache/hadoop/fs/FSDataOutputStream
+2023-04-10 22:37:18.381+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.util.hdfs.HDFSUtils$1` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/apache/hadoop/fs/FSDataInputStream
+2023-04-10 22:37:18.497+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.antlr.v4.gui.TreeViewer$VariableExtentProvide` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/abego/treelayout/NodeExtentProvider
+2023-04-10 22:37:18.499+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.antlr.v4.gui.TreePostScriptGenerator` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/abego/treelayout/Configuration
+2023-04-10 22:37:18.570+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.antlr.v4.gui.TreeViewer` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/abego/treelayout/Configuration
+2023-04-10 22:37:18.585+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.antlr.v4.gui.TreePostScriptGenerator$VariableExtentProvide` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/abego/treelayout/NodeExtentProvider
+2023-04-10 22:37:18.590+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.antlr.v4.unicode.UnicodeDataTemplateController` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/ibm/icu/text/UnicodeSet
+2023-04-10 22:37:18.627+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.antlr.v4.gui.TreeLayoutAdaptor` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/abego/treelayout/TreeForTreeLayout
+2023-04-10 22:37:18.660+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.novell.ldap.DsmlConnection` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/apache/commons/httpclient/HttpException
+2023-04-10 22:37:18.701+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.novell.ldap.LDAPSecureSocketFactory` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/novell/service/security/net/SecureSocket
+2023-04-10 22:37:18.711+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.novell.ldap.spml.NoAuthImpl` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/openspml/client/SpmlClient
+2023-04-10 22:37:18.713+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.novell.ldap.spml.SPMLImpl` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/openspml/client/SpmlClient
+2023-04-10 22:37:18.714+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.novell.ldap.spml.SunIdm` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/openspml/util/SpmlException
+2023-04-10 22:37:18.716+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.novell.ldap.SPMLConnection` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/openspml/util/SpmlException
+2023-04-10 22:37:18.717+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.novell.ldap.SPMLSearchResults` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/openspml/message/SearchResult
+2023-04-10 22:37:18.725+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.novell.ldap.util.HttpRequestCallback` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/apache/commons/httpclient/methods/PostMethod
+2023-04-10 22:37:18.731+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.novell.sasl.client.NMASSaslClient$NmasLdapTransport` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/novell/security/nmas/transport/NMASTransport
+2023-04-10 22:37:18.733+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.novell.sasl.client.NMASSaslClient` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/novell/security/nmas/transport/MAFTransportException
+2023-04-10 22:37:18.877+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `schemacrawler.tools.integration.graph.GraphvizJavaExecutorUtility` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: guru/nidi/graphviz/engine/Format
+2023-04-10 22:37:18.888+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `schemacrawler.tools.integration.freemarker.FreeMarkerRenderer` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: freemarker/cache/TemplateLoader
+2023-04-10 22:37:18.893+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `schemacrawler.tools.integration.mustache.MustacheRenderer` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/github/mustachejava/MustacheFactory
+2023-04-10 22:37:18.895+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `schemacrawler.tools.integration.thymeleaf.ThymeleafRenderer` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/thymeleaf/templateresolver/AbstractConfigurableTemplateResolver
+2023-04-10 22:37:18.898+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `schemacrawler.tools.integration.velocity.VelocityRenderer` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/apache/velocity/exception/ResourceNotFoundException
+2023-04-10 22:37:19.068+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.antlr.runtime.tree.DOTTreeGenerator` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/antlr/stringtemplate/StringTemplate
+2023-04-10 22:37:19.096+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.json.GsonJsonProvider` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/google/gson/JsonElement
+2023-04-10 22:37:19.103+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.json.JakartaJsonProvider$JsonArrayProxy$1` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonValue
+2023-04-10 22:37:19.105+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.json.JakartaJsonProvider$JsonArrayProxy$2` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonValue
+2023-04-10 22:37:19.107+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.json.JakartaJsonProvider$JsonArrayProxy` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonArray
+2023-04-10 22:37:19.109+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.json.JakartaJsonProvider$JsonObjectProxy$1` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonObject
+2023-04-10 22:37:19.110+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.json.JakartaJsonProvider$JsonObjectProxy` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonObject
+2023-04-10 22:37:19.112+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.json.JakartaJsonProvider` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonValue
+2023-04-10 22:37:19.116+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.json.JsonOrgJsonProvider` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/json/JSONException
+2023-04-10 22:37:19.121+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.mapper.GsonMappingProvider$1` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/google/gson/Gson
+2023-04-10 22:37:19.122+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.mapper.GsonMappingProvider$2` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: com/google/gson/Gson
+2023-04-10 22:37:19.123+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.mapper.JakartaMappingProvider$JsonArrayScope` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonValue
+2023-04-10 22:37:19.124+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.mapper.JakartaMappingProvider$JsonObjectScope` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonValue
+2023-04-10 22:37:19.126+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.mapper.JakartaMappingProvider$JsonStructureScope` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonValue
+2023-04-10 22:37:19.127+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.mapper.JakartaMappingProvider$JsonStructureToParserAdapter` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: jakarta/json/stream/JsonParser
+2023-04-10 22:37:19.128+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.mapper.JakartaMappingProvider` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: jakarta/json/bind/JsonbException
+2023-04-10 22:37:19.962+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.apache.commons.logging.impl.AvalonLogger` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/apache/avalon/framework/logger/Logger
+2023-04-10 22:37:19.964+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.apache.commons.logging.impl.Log4JLogger` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/apache/log4j/Priority
+2023-04-10 22:37:19.967+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.apache.commons.logging.impl.LogKitLogger` from plugin jar `/plugins/apoc-5.6.0-extended.jar`: java.lang.NoClassDefFoundError: org/apache/log/Logger
+2023-04-10 22:37:20.573+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.util.google.cloud.GCStorageURLConnection` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: com/google/cloud/storage/Storage
+2023-04-10 22:37:20.574+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.util.s3.S3Aws$1` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: com/amazonaws/services/s3/model/S3ObjectInputStream
+2023-04-10 22:37:20.576+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.util.s3.S3URLConnection` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: com/amazonaws/ClientConfiguration
+2023-04-10 22:37:20.578+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.util.s3.S3OutputStream$S3UploadManager` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: com/amazonaws/services/s3/AmazonS3
+2023-04-10 22:37:20.579+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.util.s3.S3Aws` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: com/amazonaws/auth/AWSCredentials
+2023-04-10 22:37:20.580+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.util.hdfs.HDFSUtils` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: org/apache/hadoop/fs/FSDataOutputStream
+2023-04-10 22:37:20.581+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `apoc.util.hdfs.HDFSUtils$1` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: org/apache/hadoop/fs/FSDataInputStream
+2023-04-10 22:37:20.583+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.antlr.v4.gui.TreeViewer$VariableExtentProvide` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: org/abego/treelayout/NodeExtentProvider
+2023-04-10 22:37:20.585+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.antlr.v4.gui.TreePostScriptGenerator` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: org/abego/treelayout/Configuration
+2023-04-10 22:37:20.587+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.antlr.v4.gui.TreeViewer` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: org/abego/treelayout/Configuration
+2023-04-10 22:37:20.589+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.antlr.v4.gui.TreePostScriptGenerator$VariableExtentProvide` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: org/abego/treelayout/NodeExtentProvider
+2023-04-10 22:37:20.590+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.antlr.v4.unicode.UnicodeDataTemplateController` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: com/ibm/icu/text/UnicodeSet
+2023-04-10 22:37:20.592+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.antlr.v4.gui.TreeLayoutAdaptor` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: org/abego/treelayout/TreeForTreeLayout
+2023-04-10 22:37:21.273+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.antlr.runtime.tree.DOTTreeGenerator` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: org/antlr/stringtemplate/StringTemplate
+2023-04-10 22:37:21.275+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.json.GsonJsonProvider` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: com/google/gson/JsonElement
+2023-04-10 22:37:21.277+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.json.JakartaJsonProvider$JsonArrayProxy$1` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonValue
+2023-04-10 22:37:21.278+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.json.JakartaJsonProvider$JsonArrayProxy$2` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonValue
+2023-04-10 22:37:21.280+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.json.JakartaJsonProvider$JsonArrayProxy` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonArray
+2023-04-10 22:37:21.281+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.json.JakartaJsonProvider$JsonObjectProxy$1` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonObject
+2023-04-10 22:37:21.282+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.json.JakartaJsonProvider$JsonObjectProxy` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonObject
+2023-04-10 22:37:21.284+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.json.JakartaJsonProvider` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonValue
+2023-04-10 22:37:21.286+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.json.JsonOrgJsonProvider` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: org/json/JSONException
+2023-04-10 22:37:21.287+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.mapper.GsonMappingProvider$1` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: com/google/gson/Gson
+2023-04-10 22:37:21.288+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.mapper.GsonMappingProvider$2` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: com/google/gson/Gson
+2023-04-10 22:37:21.288+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.mapper.JakartaMappingProvider$JsonArrayScope` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonValue
+2023-04-10 22:37:21.289+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.mapper.JakartaMappingProvider$JsonObjectScope` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonValue
+2023-04-10 22:37:21.290+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.mapper.JakartaMappingProvider$JsonStructureScope` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: jakarta/json/JsonValue
+2023-04-10 22:37:21.291+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.mapper.JakartaMappingProvider$JsonStructureToParserAdapter` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: jakarta/json/stream/JsonParser
+2023-04-10 22:37:21.292+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `com.jayway.jsonpath.spi.mapper.JakartaMappingProvider` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: jakarta/json/bind/JsonbException
+2023-04-10 22:37:21.378+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `META-INF.versions.9.module-info` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: META-INF/versions/9/module-info is not a class because access_flag ACC_MODULE is set
+2023-04-10 22:37:21.404+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.apache.commons.logging.impl.AvalonLogger` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: org/apache/avalon/framework/logger/Logger
+2023-04-10 22:37:21.405+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.apache.commons.logging.impl.Log4JLogger` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: org/apache/log4j/Priority
+2023-04-10 22:37:21.406+0000 WARN  [o.n.k.a.p.GlobalProcedures] Failed to load `org.apache.commons.logging.impl.LogKitLogger` from plugin jar `/plugins/apoc.jar`: java.lang.NoClassDefFoundError: org/apache/log/Logger
+2023-04-10 22:37:21.554+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [system/00000000] Index population started: [Index( id=3, name='constraint_798238d6', type='RANGE', schema=(:DatabaseName {name, namespace}), indexProvider='range-1.0' )]
+2023-04-10 22:37:21.593+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [system/00000000] Index creation finished for index [Index( id=3, name='constraint_798238d6', type='RANGE', schema=(:DatabaseName {name, namespace}), indexProvider='range-1.0' )].
+2023-04-10 22:37:21.610+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [system/00000000] Index population started: [Index( id=4, name='constraint_8014b60a', type='RANGE', schema=(:Database {name}), indexProvider='range-1.0' )]
+2023-04-10 22:37:21.630+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [system/00000000] Index creation finished for index [Index( id=4, name='constraint_8014b60a', type='RANGE', schema=(:Database {name}), indexProvider='range-1.0' )].
+2023-04-10 22:37:21.661+0000 INFO  [o.n.k.i.a.i.IndexingService] [system/00000000] Constraint Index( id=3, name='constraint_798238d6', type='RANGE', schema=(:Label[1] {PropertyKey[11], PropertyKey[12]}), indexProvider='range-1.0' ) is ONLINE.
+2023-04-10 22:37:21.663+0000 INFO  [o.n.k.i.a.i.IndexingService] [system/00000000] Constraint Index( id=4, name='constraint_8014b60a', type='RANGE', schema=(:Label[2] {PropertyKey[11]}), indexProvider='range-1.0' ) is ONLINE.
+2023-04-10 22:37:21.812+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [system/00000000] Index population started: [Index( id=7, name='constraint_5789ae3', type='RANGE', schema=(:User {name}), indexProvider='range-1.0' )]
+2023-04-10 22:37:21.839+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [system/00000000] Index creation finished for index [Index( id=7, name='constraint_5789ae3', type='RANGE', schema=(:User {name}), indexProvider='range-1.0' )].
+2023-04-10 22:37:21.855+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [system/00000000] Index population started: [Index( id=8, name='constraint_74fad970', type='RANGE', schema=(:User {id}), indexProvider='range-1.0' )]
+2023-04-10 22:37:21.875+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [system/00000000] Index creation finished for index [Index( id=8, name='constraint_74fad970', type='RANGE', schema=(:User {id}), indexProvider='range-1.0' )].
+2023-04-10 22:37:21.883+0000 INFO  [o.n.k.i.a.i.IndexingService] [system/00000000] Constraint Index( id=7, name='constraint_5789ae3', type='RANGE', schema=(:Label[3] {PropertyKey[11]}), indexProvider='range-1.0' ) is ONLINE.
+2023-04-10 22:37:21.884+0000 INFO  [o.n.k.i.a.i.IndexingService] [system/00000000] Constraint Index( id=8, name='constraint_74fad970', type='RANGE', schema=(:Label[3] {PropertyKey[25]}), indexProvider='range-1.0' ) is ONLINE.
+2023-04-10 22:37:21.887+0000 INFO  [o.n.s.s.s.UserSecurityGraphComponent] Initializing system graph model for component 'security-users' with version -1 and status UNINITIALIZED
+2023-04-10 22:37:21.896+0000 INFO  [o.n.s.s.s.UserSecurityGraphComponent] Setting up initial user from `auth.ini` file: neo4j
+2023-04-10 22:37:21.898+0000 INFO  [o.n.s.s.a.CommunitySecurityModule] CREATE USER neo4j PASSWORD ****** CHANGE NOT REQUIRED
+2023-04-10 22:37:21.910+0000 INFO  [o.n.s.s.s.UserSecurityGraphComponent] Setting version for 'security-users' to 4
+2023-04-10 22:37:21.914+0000 INFO  [o.n.s.s.s.UserSecurityGraphComponent] After initialization of system graph model component 'security-users' have version 4 and status CURRENT
+2023-04-10 22:37:21.919+0000 INFO  [o.n.s.s.s.UserSecurityGraphComponent] Performing postInitialization step for component 'security-users' with version 4 and status CURRENT
+2023-04-10 22:37:21.924+0000 INFO  [o.n.d.d.DatabaseLifecycles] Creating 'DatabaseId{6f6ff020[neo4j]}'.
+2023-04-10 22:37:21.930+0000 INFO  [o.n.d.d.DatabaseLifecycles] Starting 'DatabaseId{6f6ff020[neo4j]}'.
+2023-04-10 22:37:21.950+0000 INFO  [o.n.k.i.s.f.RecordFormatSelector] [neo4j/6f6ff020] Selected configured format for store /var/lib/neo4j/data/databases/neo4j: RecordFormat:PageAlignedV5_0[aligned-1.1]
+2023-04-10 22:37:22.082+0000 INFO  [o.n.i.d.DiagnosticsManager] [neo4j/6f6ff020] 
+                                                                [neo4j/6f6ff020] ********************************************************************************
+                                                                [neo4j/6f6ff020]                               [ Database: neo4j ]                               
+                                                                [neo4j/6f6ff020] ********************************************************************************
+                                                                [neo4j/6f6ff020] --------------------------------------------------------------------------------
+                                                                [neo4j/6f6ff020]                                   [ Version ]                                   
+                                                                [neo4j/6f6ff020] --------------------------------------------------------------------------------
+                                                                [neo4j/6f6ff020] DBMS: community record-aligned-1.1
+                                                                [neo4j/6f6ff020] Kernel version: 5.6.0
+                                                                [neo4j/6f6ff020] 
+                                                                [neo4j/6f6ff020] --------------------------------------------------------------------------------
+                                                                [neo4j/6f6ff020]                                 [ Store files ]                                 
+                                                                [neo4j/6f6ff020] --------------------------------------------------------------------------------
+                                                                [neo4j/6f6ff020] Disk space on partition (Total / Free / Free %): 499963174912 / 147050209280 / 29
+                                                                [neo4j/6f6ff020] Storage files stored on file store: fuse.grpcfuse
+                                                                [neo4j/6f6ff020] Storage files: (filename : modification date - size)
+                                                                [neo4j/6f6ff020]   neostore: 2023-04-10 22:37:22.049+0000 - 8.000KiB
+                                                                [neo4j/6f6ff020]   neostore.counts.db: 2023-04-10 22:37:22.052+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.indexstats.db: 2023-04-10 22:37:22.058+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.labeltokenstore.db: 2023-04-10 22:37:22.030+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.labeltokenstore.db.id: 2023-04-10 22:37:22.028+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.labeltokenstore.db.names: 2023-04-10 22:37:22.024+0000 - 8.000KiB
+                                                                [neo4j/6f6ff020]   neostore.labeltokenstore.db.names.id: 2023-04-10 22:37:22.021+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.nodestore.db: 2023-04-10 22:37:21.962+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.nodestore.db.id: 2023-04-10 22:37:21.960+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.nodestore.db.labels: 2023-04-10 22:37:21.956+0000 - 8.000KiB
+                                                                [neo4j/6f6ff020]   neostore.nodestore.db.labels.id: 2023-04-10 22:37:21.953+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.propertystore.db: 2023-04-10 22:37:21.996+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.propertystore.db.arrays: 2023-04-10 22:37:21.990+0000 - 8.000KiB
+                                                                [neo4j/6f6ff020]   neostore.propertystore.db.arrays.id: 2023-04-10 22:37:21.986+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.propertystore.db.id: 2023-04-10 22:37:21.994+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.propertystore.db.index: 2023-04-10 22:37:21.975+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.propertystore.db.index.id: 2023-04-10 22:37:21.973+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.propertystore.db.index.keys: 2023-04-10 22:37:21.970+0000 - 8.000KiB
+                                                                [neo4j/6f6ff020]   neostore.propertystore.db.index.keys.id: 2023-04-10 22:37:21.967+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.propertystore.db.strings: 2023-04-10 22:37:21.983+0000 - 8.000KiB
+                                                                [neo4j/6f6ff020]   neostore.propertystore.db.strings.id: 2023-04-10 22:37:21.980+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.relationshipgroupstore.db: 2023-04-10 22:37:22.045+0000 - 8.000KiB
+                                                                [neo4j/6f6ff020]   neostore.relationshipgroupstore.db.id: 2023-04-10 22:37:22.041+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.relationshipgroupstore.degrees.db: 2023-04-10 22:37:22.055+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.relationshipstore.db: 2023-04-10 22:37:22.003+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.relationshipstore.db.id: 2023-04-10 22:37:22.001+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.relationshiptypestore.db: 2023-04-10 22:37:22.016+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.relationshiptypestore.db.id: 2023-04-10 22:37:22.014+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.relationshiptypestore.db.names: 2023-04-10 22:37:22.011+0000 - 8.000KiB
+                                                                [neo4j/6f6ff020]   neostore.relationshiptypestore.db.names.id: 2023-04-10 22:37:22.007+0000 - 0B
+                                                                [neo4j/6f6ff020]   neostore.schemastore.db: 2023-04-10 22:37:22.038+0000 - 8.000KiB
+                                                                [neo4j/6f6ff020]   neostore.schemastore.db.id: 2023-04-10 22:37:22.034+0000 - 0B
+                                                                [neo4j/6f6ff020] Storage summary: 
+                                                                [neo4j/6f6ff020]   Total size of store: 72.00KiB
+                                                                [neo4j/6f6ff020]   Total size of mapped files: 72.00KiB
+                                                                [neo4j/6f6ff020] 
+                                                                [neo4j/6f6ff020] --------------------------------------------------------------------------------
+                                                                [neo4j/6f6ff020]                               [ Transaction log ]                               
+                                                                [neo4j/6f6ff020] --------------------------------------------------------------------------------
+                                                                [neo4j/6f6ff020] Transaction log files stored on file store: fuse.grpcfuse
+                                                                [neo4j/6f6ff020] Transaction log metadata:
+                                                                [neo4j/6f6ff020]  - current kernel version used in transactions: V5_0
+                                                                [neo4j/6f6ff020]  - last committed transaction id: 1
+                                                                [neo4j/6f6ff020] Transaction log files:
+                                                                [neo4j/6f6ff020]  - existing transaction log versions: -1--1
+                                                                [neo4j/6f6ff020]  - no transactions found
+                                                                [neo4j/6f6ff020] Checkpoint log files:
+                                                                [neo4j/6f6ff020]  - existing checkpoint log versions: -1--1
+                                                                [neo4j/6f6ff020]  - no checkpoints found
+                                                                [neo4j/6f6ff020] 
+                                                                [neo4j/6f6ff020] --------------------------------------------------------------------------------
+                                                                [neo4j/6f6ff020]                                   [ Id usage ]                                  
+                                                                [neo4j/6f6ff020] --------------------------------------------------------------------------------
+                                                                [neo4j/6f6ff020] ArrayPropertyStore[neostore.nodestore.db.labels]: used=1 high=0
+                                                                [neo4j/6f6ff020] NodeStore[neostore.nodestore.db]: used=0 high=-1
+                                                                [neo4j/6f6ff020] StringPropertyStore[neostore.propertystore.db.index.keys]: used=1 high=0
+                                                                [neo4j/6f6ff020] PropertyIndexStore[neostore.propertystore.db.index]: used=0 high=-1
+                                                                [neo4j/6f6ff020] StringPropertyStore[neostore.propertystore.db.strings]: used=1 high=0
+                                                                [neo4j/6f6ff020] ArrayPropertyStore[neostore.propertystore.db.arrays]: used=1 high=0
+                                                                [neo4j/6f6ff020] PropertyStore[neostore.propertystore.db]: used=0 high=-1
+                                                                [neo4j/6f6ff020] RelationshipStore[neostore.relationshipstore.db]: used=0 high=-1
+                                                                [neo4j/6f6ff020] StringPropertyStore[neostore.relationshiptypestore.db.names]: used=1 high=0
+                                                                [neo4j/6f6ff020] RelationshipTypeStore[neostore.relationshiptypestore.db]: used=0 high=-1
+                                                                [neo4j/6f6ff020] StringPropertyStore[neostore.labeltokenstore.db.names]: used=1 high=0
+                                                                [neo4j/6f6ff020] LabelTokenStore[neostore.labeltokenstore.db]: used=0 high=-1
+                                                                [neo4j/6f6ff020] SchemaStore[neostore.schemastore.db]: used=1 high=0
+                                                                [neo4j/6f6ff020] RelationshipGroupStore[neostore.relationshipgroupstore.db]: used=1 high=0
+                                                                [neo4j/6f6ff020] NeoStore[neostore]: used=-1 high=-1
+                                                                [neo4j/6f6ff020] 
+                                                                [neo4j/6f6ff020] --------------------------------------------------------------------------------
+                                                                [neo4j/6f6ff020]                                   [ Metadata ]                                  
+                                                                [neo4j/6f6ff020] --------------------------------------------------------------------------------
+                                                                [neo4j/6f6ff020] EXTERNAL_STORE_UUID (Database identifier exposed as external store identity. Generated on creation and never updated): 16cd7de6-a168-4bad-b059-eb220c278748
+                                                                [neo4j/6f6ff020] DATABASE_ID (The last used DatabaseId for this database): null
+                                                                [neo4j/6f6ff020] LEGACY_STORE_VERSION (Legacy store format version. This field is used from 5.0 onwards only to distinguish non-migrated pre 5.0 metadata stores.): -3523014627327384477
+                                                                [neo4j/6f6ff020] STORE_ID (Store ID): StoreId{creationTime=1681166242050, random=9122517120152335125, storageEngineName='record', formatName='aligned', majorVersion=1, minorVersion=1}
+                                                                [neo4j/6f6ff020] 
+2023-04-10 22:37:22.088+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [neo4j/6f6ff020] Requirement `Database unavailable` makes database neo4j unavailable.
+2023-04-10 22:37:22.088+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [neo4j/6f6ff020] DatabaseId{6f6ff020[neo4j]} is unavailable.
+2023-04-10 22:37:22.096+0000 WARN  [o.n.k.i.s.MetaDataStore] [neo4j/6f6ff020] Missing counts store, rebuilding it.
+2023-04-10 22:37:22.097+0000 WARN  [o.n.k.i.s.MetaDataStore] [neo4j/6f6ff020] Counts store rebuild completed.
+2023-04-10 22:37:22.104+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Starting transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.0] at version=0
+2023-04-10 22:37:22.113+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Starting transaction log [/var/lib/neo4j/data/transactions/neo4j/checkpoint.0] at version=0
+2023-04-10 22:37:22.119+0000 INFO  [o.n.k.i.t.l.f.c.CheckpointLogFile] [neo4j/6f6ff020] Scanning log file with version 0 for checkpoint entries
+2023-04-10 22:37:22.128+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [neo4j/6f6ff020] Fulfilling of requirement 'Database unavailable' makes database neo4j available.
+2023-04-10 22:37:22.132+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [neo4j/6f6ff020] DatabaseId{6f6ff020[neo4j]} is ready.
+2023-04-10 22:37:23.095+0000 INFO  [o.n.k.a.p.GlobalProcedures] Called db.clearQueryCaches(): Query cache already empty.
+2023-04-10 22:37:23.113+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [neo4j/6f6ff020] Index population started: [Index( id=2, name='index_f7700477', type='LOOKUP', schema=()-[:<any-types>]-(), indexProvider='token-lookup-1.0' )]
+2023-04-10 22:37:23.143+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [neo4j/6f6ff020] Index creation finished for index [Index( id=2, name='index_f7700477', type='LOOKUP', schema=()-[:<any-types>]-(), indexProvider='token-lookup-1.0' )].
+2023-04-10 22:37:23.149+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [neo4j/6f6ff020] Index population started: [Index( id=1, name='index_343aff4e', type='LOOKUP', schema=(:<any-labels>), indexProvider='token-lookup-1.0' )]
+2023-04-10 22:37:23.165+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [neo4j/6f6ff020] Index creation finished for index [Index( id=1, name='index_343aff4e', type='LOOKUP', schema=(:<any-labels>), indexProvider='token-lookup-1.0' )].
+2023-04-10 22:37:24.004+0000 INFO  [o.n.b.p.c.c.n.SocketNettyConnector] Bolt enabled on 0.0.0.0:7687.
+2023-04-10 22:37:24.006+0000 INFO  [o.n.b.BoltServer] Bolt server started
+2023-04-10 22:37:24.007+0000 INFO  [o.n.s.A.ServerComponentsLifecycleAdapter] Starting web server
+2023-04-10 22:37:24.639+0000 INFO  [o.n.s.CommunityNeoWebServer] Remote interface available at http://localhost:7474/
+2023-04-10 22:37:24.640+0000 INFO  [o.n.s.A.ServerComponentsLifecycleAdapter] Web server started.
+2023-04-10 22:37:24.645+0000 INFO  [o.n.g.f.DatabaseManagementServiceFactory] id: ABE278D4A1FF178BE0DC5A9409716841F67744492887C359A022BCA8EBE6BE31
+2023-04-10 22:37:24.646+0000 INFO  [o.n.g.f.DatabaseManagementServiceFactory] name: system
+2023-04-10 22:37:24.648+0000 INFO  [o.n.g.f.DatabaseManagementServiceFactory] creationDate: 2023-04-10T22:37:17.126Z
+2023-04-10 22:37:57.226+0000 ERROR [o.n.b.p.c.h.ProtocolHandshakeHandler] Fatal error occurred during protocol handshaking: [id: 0xffa5f0a5, L:/172.18.0.2:7687 - R:/172.18.0.1:44136]
+java.lang.NullPointerException: Cannot read the array length because "array" is null
+	at io.netty.buffer.Unpooled.copiedBuffer(Unpooled.java:363) ~[netty-buffer-4.1.87.Final.jar:4.1.87.Final]
+	at org.neo4j.bolt.protocol.common.handler.DiscoveryResponseHandler.channelRead(DiscoveryResponseHandler.java:58) ~[neo4j-bolt-5.6.0.jar:5.6.0]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:346) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:318) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.handlerRemoved(ByteToMessageDecoder.java:266) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:536) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:468) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:290) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.epoll.AbstractEpollStreamChannel$EpollStreamUnsafe.epollInReady(AbstractEpollStreamChannel.java:800) ~[netty-transport-classes-epoll-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.epoll.EpollEventLoop.processReady(EpollEventLoop.java:499) ~[netty-transport-classes-epoll-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.epoll.EpollEventLoop.run(EpollEventLoop.java:397) ~[netty-transport-classes-epoll-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997) ~[netty-common-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[netty-common-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[netty-common-4.1.87.Final.jar:4.1.87.Final]
+	at java.lang.Thread.run(Thread.java:833) ~[?:?]
+2023-04-10 22:37:57.866+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:37:59.516+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:37:59.525+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:37:59.536+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:37:59.780+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:37:59.860+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:37:59.864+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:38:00.173+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:39:01.704+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:43:14.485+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:43:14.510+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:44:17.512+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:48:23.471+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:48:23.497+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:49:24.494+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:53:55.690+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:53:55.713+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:54:33.089+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:54:37.578+0000 INFO  [o.n.k.i.t.l.c.CheckPointerImpl] [system/00000000] Checkpoint triggered by "Scheduled checkpoint for every 15 minutes threshold" @ txId: 36 checkpoint started...
+2023-04-10 22:54:37.744+0000 INFO  [o.n.k.i.t.l.c.CheckPointerImpl] [system/00000000] Checkpoint triggered by "Scheduled checkpoint for every 15 minutes threshold" @ txId: 36 checkpoint completed in 163ms. Checkpoint flushed 103 pages (0% of total available pages), in 86 IOs. Checkpoint performed with IO limit: unlimited, paused in total 0 times( 0 millis).
+2023-04-10 22:54:37.746+0000 INFO  [o.n.k.i.t.l.p.LogPruningImpl] [system/00000000] No log version pruned. The strategy used was '104857600 size'. 
+2023-04-10 22:59:32.443+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:59:32.473+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 22:59:42.254+0000 INFO  [o.n.k.i.t.l.c.CheckPointerImpl] [neo4j/6f6ff020] Checkpoint triggered by "Scheduled checkpoint for every 15 minutes threshold" @ txId: 3 checkpoint started...
+2023-04-10 22:59:42.354+0000 INFO  [o.n.k.i.t.l.c.CheckPointerImpl] [neo4j/6f6ff020] Checkpoint triggered by "Scheduled checkpoint for every 15 minutes threshold" @ txId: 3 checkpoint completed in 97ms. Checkpoint flushed 74 pages (0% of total available pages), in 57 IOs. Checkpoint performed with IO limit: unlimited, paused in total 0 times( 0 millis).
+2023-04-10 22:59:42.355+0000 INFO  [o.n.k.i.t.l.p.LogPruningImpl] [neo4j/6f6ff020] No log version pruned. The strategy used was '104857600 size'. 
+2023-04-10 23:00:32.474+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:03:04.342+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:03:06.143+0000 ERROR [o.n.b.p.c.h.ProtocolHandshakeHandler] Fatal error occurred during protocol handshaking: [id: 0x1118ae53, L:/172.18.0.2:7687 - R:/172.18.0.1:33138]
+java.lang.NullPointerException: Cannot read the array length because "array" is null
+	at io.netty.buffer.Unpooled.copiedBuffer(Unpooled.java:363) ~[netty-buffer-4.1.87.Final.jar:4.1.87.Final]
+	at org.neo4j.bolt.protocol.common.handler.DiscoveryResponseHandler.channelRead(DiscoveryResponseHandler.java:58) ~[neo4j-bolt-5.6.0.jar:5.6.0]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:346) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:318) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.handlerRemoved(ByteToMessageDecoder.java:266) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:536) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:468) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:290) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.epoll.AbstractEpollStreamChannel$EpollStreamUnsafe.epollInReady(AbstractEpollStreamChannel.java:800) ~[netty-transport-classes-epoll-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.epoll.EpollEventLoop.processReady(EpollEventLoop.java:499) ~[netty-transport-classes-epoll-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.epoll.EpollEventLoop.run(EpollEventLoop.java:397) ~[netty-transport-classes-epoll-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997) ~[netty-common-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[netty-common-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[netty-common-4.1.87.Final.jar:4.1.87.Final]
+	at java.lang.Thread.run(Thread.java:833) ~[?:?]
+2023-04-10 23:03:06.294+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:03:06.777+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:03:06.795+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:03:06.853+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:03:06.937+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:03:06.946+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:03:07.274+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:03:07.333+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:03:26.931+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:05:46.952+0000 INFO  [o.n.c.i.c.CypherQueryCaches] [neo4j/6f6ff020] Discarded stale query from the query cache after 1666 seconds. Reason: NodesAllCardinality changed from 10.0 to 924.0, which is a divergence of 0.9891774891774892 which is greater than threshold 0.5253820720671253. Query id: 397.
+2023-04-10 23:05:47.007+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:05:47.058+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:05:47.070+0000 INFO  [o.n.c.i.c.CypherQueryCaches] [neo4j/6f6ff020] Discarded stale query from the query cache after 1666 seconds. Reason: NodesAllCardinality changed from 10.0 to 1261.0, which is a divergence of 0.9920697858842189 which is greater than threshold 0.5253958426971104. Query id: 407.
+2023-04-10 23:05:56.497+0000 INFO  [o.n.c.i.c.CypherQueryCaches] [neo4j/6f6ff020] Discarded stale query from the query cache after 10 seconds. Reason: NodesAllCardinality changed from 10.0 to 40979.0, which is a divergence of 0.999755972571317 which is greater than threshold 0.7499881949059436. Query id: 918.
+2023-04-10 23:05:56.525+0000 INFO  [o.n.c.i.c.CypherQueryCaches] [neo4j/6f6ff020] Discarded stale query from the query cache after 10 seconds. Reason: NodesAllCardinality changed from 10.0 to 40979.0, which is a divergence of 0.999755972571317 which is greater than threshold 0.7499972906012924. Query id: 920.
+2023-04-10 23:05:56.608+0000 INFO  [o.n.c.i.c.CypherQueryCaches] [neo4j/6f6ff020] Discarded stale query from the query cache after 10 seconds. Reason: NodesAllCardinality changed from 10.0 to 41280.0, which is a divergence of 0.9997577519379846 which is greater than threshold 0.7499934200656675. Query id: 925.
+2023-04-10 23:06:06.953+0000 INFO  [o.n.c.i.c.CypherQueryCaches] [neo4j/6f6ff020] Discarded stale query from the query cache after 19 seconds. Reason: NodesAllCardinality changed from 924.0 to 128945.0, which is a divergence of 0.9928341540967079 which is greater than threshold 0.7480887505488409. Query id: 1677.
+2023-04-10 23:06:07.033+0000 INFO  [o.n.c.i.c.CypherQueryCaches] [neo4j/6f6ff020] Discarded stale query from the query cache after 19 seconds. Reason: NodesAllCardinality changed from 1261.0 to 129556.0, which is a divergence of 0.9902667572323938 which is greater than threshold 0.7480831668121519. Query id: 1685.
+2023-04-10 23:06:24.963+0000 INFO  [o.n.c.i.c.CypherQueryCaches] [neo4j/6f6ff020] Discarded stale query from the query cache after 28 seconds. Reason: NodesAllCardinality changed from 40979.0 to 199413.0, which is a divergence of 0.7945018629678106 which is greater than threshold 0.7464497557626673. Query id: 2807.
+2023-04-10 23:06:36.114+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [neo4j/6f6ff020] Index population started: [Index( id=3, name='chemblId_index', type='RANGE', schema=(:Drug {chemblId}), indexProvider='range-1.0' )]
+2023-04-10 23:06:36.127+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [neo4j/6f6ff020] Index population started: [Index( id=4, name='ensembleId_index', type='RANGE', schema=(:Target {ensembleId}), indexProvider='range-1.0' )]
+2023-04-10 23:06:36.481+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [neo4j/6f6ff020] Index creation finished for index [Index( id=3, name='chemblId_index', type='RANGE', schema=(:Drug {chemblId}), indexProvider='range-1.0' )].
+2023-04-10 23:06:36.522+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [neo4j/6f6ff020] Index population started: [Index( id=5, name='pathwayId_index', type='RANGE', schema=(:Pathway {pathwayId}), indexProvider='range-1.0' )]
+2023-04-10 23:06:36.574+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [neo4j/6f6ff020] Index creation finished for index [Index( id=5, name='pathwayId_index', type='RANGE', schema=(:Pathway {pathwayId}), indexProvider='range-1.0' )].
+2023-04-10 23:06:36.580+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [neo4j/6f6ff020] Index population started: [Index( id=6, name='meddraId_index', type='RANGE', schema=(:AdverseEvent {meddraId}), indexProvider='range-1.0' )]
+2023-04-10 23:06:36.910+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [neo4j/6f6ff020] Index creation finished for index [Index( id=4, name='ensembleId_index', type='RANGE', schema=(:Target {ensembleId}), indexProvider='range-1.0' )].
+2023-04-10 23:06:37.278+0000 INFO  [o.n.k.i.a.i.IndexPopulationJob] [neo4j/6f6ff020] Index creation finished for index [Index( id=6, name='meddraId_index', type='RANGE', schema=(:AdverseEvent {meddraId}), indexProvider='range-1.0' )].
+2023-04-10 23:06:57.153+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.1] version=0, last transaction in previous log=1038, rotation took 49 millis.
+2023-04-10 23:07:07.232+0000 INFO  [o.n.c.i.c.CypherQueryCaches] [neo4j/6f6ff020] Discarded stale query from the query cache after 20 seconds. Reason: CardinalityByLabelsAndRelationshipType(None,None,None) changed from 3.0 to 817796.0, which is a divergence of 0.9999963316034806 which is greater than threshold 0.7480450455958053. Query id: 4704.
+2023-04-10 23:07:10.393+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.2] version=1, last transaction in previous log=1052, rotation took 47 millis, started after 13194 millis.
+2023-04-10 23:07:23.165+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.3] version=2, last transaction in previous log=1063, rotation took 47 millis, started after 12725 millis.
+2023-04-10 23:07:35.931+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.4] version=3, last transaction in previous log=1075, rotation took 46 millis, started after 12720 millis.
+2023-04-10 23:07:47.970+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.5] version=4, last transaction in previous log=1087, rotation took 46 millis, started after 11993 millis.
+2023-04-10 23:08:00.468+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.6] version=5, last transaction in previous log=1099, rotation took 45 millis, started after 12453 millis.
+2023-04-10 23:08:07.000+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:08:07.032+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:08:07.087+0000 INFO  [o.n.c.i.c.CypherQueryCaches] [neo4j/6f6ff020] Discarded stale query from the query cache after 59 seconds. Reason: CardinalityByLabelsAndRelationshipType(None,None,None) changed from 817796.0 to 3587545.0, which is a divergence of 0.7720457861852604 which is greater than threshold 0.7404771667393687. Query id: 4951.
+2023-04-10 23:08:13.503+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.7] version=6, last transaction in previous log=1111, rotation took 44 millis, started after 12991 millis.
+2023-04-10 23:08:27.039+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:08:27.259+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.8] version=7, last transaction in previous log=1122, rotation took 62 millis, started after 13694 millis.
+2023-04-10 23:08:40.099+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.9] version=8, last transaction in previous log=1133, rotation took 58 millis, started after 12781 millis.
+2023-04-10 23:08:53.664+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.10] version=9, last transaction in previous log=1144, rotation took 45 millis, started after 13521 millis.
+2023-04-10 23:09:06.719+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.11] version=10, last transaction in previous log=1155, rotation took 44 millis, started after 13011 millis.
+2023-04-10 23:09:20.688+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.12] version=11, last transaction in previous log=1167, rotation took 45 millis, started after 13924 millis.
+2023-04-10 23:09:34.132+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.13] version=12, last transaction in previous log=1179, rotation took 46 millis, started after 13398 millis.
+2023-04-10 23:09:47.346+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.14] version=13, last transaction in previous log=1190, rotation took 41 millis, started after 13172 millis.
+2023-04-10 23:10:00.147+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.15] version=14, last transaction in previous log=1201, rotation took 40 millis, started after 12761 millis.
+2023-04-10 23:10:13.683+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.16] version=15, last transaction in previous log=1212, rotation took 44 millis, started after 13492 millis.
+2023-04-10 23:10:26.959+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Rotated to transaction log [/var/lib/neo4j/data/transactions/neo4j/neostore.transaction.db.17] version=16, last transaction in previous log=1223, rotation took 44 millis, started after 13233 millis.
+2023-04-10 23:13:01.643+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:13:01.683+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:13:14.484+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:13:14.508+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:13:35.507+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:14:42.477+0000 INFO  [o.n.k.i.t.l.c.CheckPointerImpl] [neo4j/6f6ff020] Checkpoint triggered by "Scheduled checkpoint for every 15 minutes threshold" @ txId: 1436 checkpoint started...
+2023-04-10 23:14:51.314+0000 INFO  [o.n.k.i.t.l.c.CheckPointerImpl] [neo4j/6f6ff020] Checkpoint triggered by "Scheduled checkpoint for every 15 minutes threshold" @ txId: 1436 checkpoint completed in 8s 834ms. Checkpoint flushed 153960 pages (58% of total available pages), in 6333 IOs. Checkpoint performed with IO limit: unlimited, paused in total 0 times( 0 millis).
+2023-04-10 23:14:51.597+0000 INFO  [o.n.k.i.t.l.p.LogPruningImpl] [neo4j/6f6ff020] Pruned log versions 0 through 16. The strategy used was '104857600 size'. 
+2023-04-10 23:18:32.469+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:18:32.495+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:19:32.500+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:23:32.548+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:24:32.494+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:25:32.481+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:29:32.436+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:30:32.466+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:31:34.135+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:34:34.253+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:35:32.636+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:37:32.621+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:40:32.960+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:40:32.994+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:42:34.237+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:45:33.270+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:45:33.306+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:48:32.604+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:50:33.376+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:51:32.602+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:54:32.596+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:56:32.941+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:56:32.966+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-10 23:59:33.226+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:02:33.178+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:02:33.212+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:05:32.692+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:07:53.354+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:07:53.378+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:11:32.551+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:13:32.508+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:13:32.532+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:17:32.519+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:18:32.557+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:19:32.512+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:23:32.501+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:24:32.473+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:25:32.498+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:28:32.686+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:29:32.660+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:30:32.683+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:34:32.680+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:34:32.759+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:36:16.218+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:36:35.710+0000 ERROR [o.n.b.p.c.h.ProtocolHandshakeHandler] Fatal error occurred during protocol handshaking: [id: 0xccafd02e, L:/172.18.0.2:7687 - R:/172.18.0.1:51146]
+java.lang.NullPointerException: Cannot read the array length because "array" is null
+	at io.netty.buffer.Unpooled.copiedBuffer(Unpooled.java:363) ~[netty-buffer-4.1.87.Final.jar:4.1.87.Final]
+	at org.neo4j.bolt.protocol.common.handler.DiscoveryResponseHandler.channelRead(DiscoveryResponseHandler.java:58) ~[neo4j-bolt-5.6.0.jar:5.6.0]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:346) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:318) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.handlerRemoved(ByteToMessageDecoder.java:266) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.decodeRemovalReentryProtection(ByteToMessageDecoder.java:536) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.callDecode(ByteToMessageDecoder.java:468) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:290) ~[netty-codec-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919) ~[netty-transport-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.epoll.AbstractEpollStreamChannel$EpollStreamUnsafe.epollInReady(AbstractEpollStreamChannel.java:800) ~[netty-transport-classes-epoll-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.epoll.EpollEventLoop.processReady(EpollEventLoop.java:499) ~[netty-transport-classes-epoll-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.channel.epoll.EpollEventLoop.run(EpollEventLoop.java:397) ~[netty-transport-classes-epoll-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997) ~[netty-common-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[netty-common-4.1.87.Final.jar:4.1.87.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[netty-common-4.1.87.Final.jar:4.1.87.Final]
+	at java.lang.Thread.run(Thread.java:833) ~[?:?]
+2023-04-11 00:36:35.969+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:36:36.514+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:36:36.528+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:36:36.541+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:36:36.668+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:36:36.695+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:36:36.710+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:36:37.072+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:36:42.029+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:36:48.487+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:41:38.113+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:41:38.138+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:41:58.666+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:47:33.058+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:47:33.083+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:47:33.083+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:51:24.459+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:52:46.624+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:52:46.649+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:52:46.649+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:57:47.736+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:57:47.762+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 00:57:47.762+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:02:50.347+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:02:50.372+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:02:50.372+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:08:11.788+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:08:11.814+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:08:11.816+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:13:32.716+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:13:32.742+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:13:32.742+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:18:52.031+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:18:52.056+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:18:52.058+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:24:32.793+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:24:32.819+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:24:32.819+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:29:33.158+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=neo4j], namespace=null, namedDatabaseId=DatabaseId{6f6ff020[neo4j]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:29:33.184+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:29:33.184+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:30:13.183+0000 INFO  [o.n.p.b.r.GetRoutingTableProcedure] Routing result for database Internal{alias=NormalizedDatabaseName[name=system], namespace=null, namedDatabaseId=DatabaseId{00000000[system]}, primary=true} and routing context Map{address -> String("localhost:7687")} is RoutingResult{routeEndpoints=[localhost:7687], writeEndpoints=[localhost:7687], readEndpoints=[localhost:7687], timeToLiveMillis=300000}
+2023-04-11 01:33:26.656+0000 INFO  [o.n.g.f.DatabaseManagementServiceFactory] Shutdown started
+2023-04-11 01:33:26.677+0000 INFO  [o.n.b.BoltServer] Requested Bolt server shutdown
+2023-04-11 01:33:26.679+0000 INFO  [o.n.b.p.c.c.ConnectionRegistry] Stopping remaining idle connections for connector bolt
+2023-04-11 01:33:26.684+0000 INFO  [o.n.b.p.c.c.ConnectionRegistry] Stopped 13 idling connections for connector bolt
+2023-04-11 01:33:26.690+0000 INFO  [o.n.d.d.DatabaseLifecycles] Stopping 'DatabaseId{6f6ff020[neo4j]}'.
+2023-04-11 01:33:26.692+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [neo4j/6f6ff020] Requirement `Database unavailable` makes database neo4j unavailable.
+2023-04-11 01:33:26.693+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [neo4j/6f6ff020] DatabaseId{6f6ff020[neo4j]} is unavailable.
+2023-04-11 01:33:26.698+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] Waiting for closing transactions.
+2023-04-11 01:33:26.702+0000 INFO  [o.n.k.d.Database] [neo4j/6f6ff020] All transactions are closed.
+2023-04-11 01:33:26.703+0000 INFO  [o.n.k.i.t.l.c.CheckPointerImpl] [neo4j/6f6ff020] Checkpoint triggered by "Database shutdown" @ txId: 1436 checkpoint started...
+2023-04-11 01:33:26.740+0000 INFO  [o.n.k.i.t.l.c.CheckPointerImpl] [neo4j/6f6ff020] Checkpoint triggered by "Database shutdown" @ txId: 1436 checkpoint completed in 36ms. Checkpoint flushed 29 pages (0% of total available pages), in 28 IOs. Checkpoint performed with IO limit: unlimited, paused in total 0 times( 0 millis).
+2023-04-11 01:33:26.746+0000 INFO  [o.n.k.i.t.l.p.LogPruningImpl] [neo4j/6f6ff020] No log version pruned. The strategy used was '104857600 size'. 
+2023-04-11 01:33:26.856+0000 INFO  [o.n.d.d.DatabaseLifecycles] Stopped 'DatabaseId{6f6ff020[neo4j]}' successfully.
+2023-04-11 01:33:26.857+0000 INFO  [o.n.d.d.DatabaseLifecycles] Stopping 'DatabaseId{00000000[system]}'.
+2023-04-11 01:33:26.858+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [system/00000000] Requirement `Database unavailable` makes database system unavailable.
+2023-04-11 01:33:26.859+0000 INFO  [o.n.k.a.DatabaseAvailabilityGuard] [system/00000000] DatabaseId{00000000[system]} is unavailable.
+2023-04-11 01:33:26.861+0000 INFO  [o.n.k.d.Database] [system/00000000] Waiting for closing transactions.
+2023-04-11 01:33:26.864+0000 INFO  [o.n.k.d.Database] [system/00000000] All transactions are closed.
+2023-04-11 01:33:26.865+0000 INFO  [o.n.k.i.t.l.c.CheckPointerImpl] [system/00000000] Checkpoint triggered by "Database shutdown" @ txId: 36 checkpoint started...
+2023-04-11 01:33:26.900+0000 INFO  [o.n.k.i.t.l.c.CheckPointerImpl] [system/00000000] Checkpoint triggered by "Database shutdown" @ txId: 36 checkpoint completed in 33ms. Checkpoint flushed 28 pages (0% of total available pages), in 28 IOs. Checkpoint performed with IO limit: unlimited, paused in total 0 times( 0 millis).
+2023-04-11 01:33:26.900+0000 INFO  [o.n.k.i.t.l.p.LogPruningImpl] [system/00000000] No log version pruned. The strategy used was '104857600 size'. 
+2023-04-11 01:33:26.970+0000 INFO  [o.n.d.d.DatabaseLifecycles] Stopped 'DatabaseId{00000000[system]}' successfully.
+2023-04-11 01:33:26.973+0000 INFO  [o.n.b.BoltServer] Shutting down Bolt server
+2023-04-11 01:33:26.975+0000 INFO  [o.n.b.p.c.c.ConnectionRegistry] Stopping 0 connections for connector bolt
+2023-04-11 01:33:26.977+0000 INFO  [o.n.b.p.c.c.ConnectionRegistry] Stopped all remaining connections for connector bolt
+2023-04-11 01:33:31.700+0000 INFO  [o.n.b.BoltServer] Bolt server has been shut down
