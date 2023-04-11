@@ -63,6 +63,9 @@ def main():
         "diseases": [[create_cypher_query_diseases], []]
     }
 
+    # Create indexes for nodes - this significantly improves performance in edge query generation
+    create_indexes()
+
     # Iterate over each data type in the input directory for node query generators
     for data_type in os.listdir(input_dir):
         # Set the data_type_path
@@ -76,8 +79,6 @@ def main():
             if node_query_generator is not None:
                 generate_queries(data_type, data_type_path, node_query_generator)
     
-    # Create indexes for nodes - this significantly improves performance in edge query generation
-    create_indexes()
 
     # Iterate over each data type in the input directory for edge query generators
     for data_type in os.listdir(input_dir):
@@ -139,24 +140,20 @@ def create_cypher_query_nodes(table, node_label, props_to_columns):
     # Convert the table to a pandas DataFrame
     df = table.to_pandas()
 
-    # Remove duplicates
-    deduplicated_df = df.drop_duplicates(subset=list(props_to_columns.values()), keep='first')
-
     # Prepare data for the Cypher query
     data = []
-    for _, row in deduplicated_df.iterrows():
+    for _, row in df.iterrows():
         data.append({column: row[column] for _, column in props_to_columns.items()})
 
-    # APOC query for creating nodes in batch
+    # APOC query for creating or merging nodes in batch
     query = f"""
     CALL apoc.periodic.iterate(
         'UNWIND $props as prop RETURN prop',
-        'CREATE (:{node_label} {{{', '.join([f"{prop}: prop.{column}" for prop, column in props_to_columns.items()])}, dataset: $dataset}})',
+        'MERGE (:{node_label} {{{', '.join([f"{prop}: prop.{column}" for prop, column in props_to_columns.items()])}, dataset: $dataset}})',
         {{params: {{props: $data, dataset: $dataset}}, batchSize: 1000, parallel: true}}
     )
     """
     return [(query, {'data': data, 'dataset': dataset})]
-
 
 # Generate Cypher queries for Target nodes
 def create_cypher_query_targets(table):
@@ -191,7 +188,6 @@ def create_cypher_query_pathways(table):
     )
     """
     return [(query, {'data': data, 'dataset': dataset})]
-
 
 # Generate Cypher queries for AdverseEvent nodes
 def create_cypher_query_adverse_events(table):
@@ -231,6 +227,8 @@ def create_indexes():
             session.run("CREATE INDEX ensembleId_index IF NOT EXISTS FOR (t:Target) ON (t.ensembleId)")
             session.run("CREATE INDEX pathwayId_index IF NOT EXISTS FOR (p:Pathway) ON (p.pathwayId)")
             session.run("CREATE INDEX meddraId_index IF NOT EXISTS FOR (a:AdverseEvent) ON (a.meddraId)")
+            session.run("CREATE INDEX mousePhenotypeId_index IF NOT EXISTS FOR (a:MousePhenotype) ON (a.mousePhenotypeId)")
+            session.run("CREATE INDEX diseaseId_index IF NOT EXISTS FOR (a:Disease) ON (a.diseaseId)")
 
 
 # TODO Add function to handle generation of Cypher queries for edge creation similar to how nodes are handled
