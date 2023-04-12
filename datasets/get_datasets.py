@@ -212,6 +212,9 @@ def download_latest_conf_file():
 
         print(f"File {output_file} -- saved!")
 
+        # Delete the HTML file
+        os.remove(os.path.join(output_dir, html_content))
+
     except Exception as e:
         print("Downloading file error: " + str(e))
 
