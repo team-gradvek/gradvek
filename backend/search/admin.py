@@ -9,5 +9,11 @@ class DescriptorsAdmin(admin.ModelAdmin):
 
 
 
+class TargetsAdmin(admin.ModelAdmin):
+    list_display = ("name", "description")
+
+class AdverseEventsAdmin(admin.ModelAdmin):
+    list_display = ("name", "description")
+
 # Renders Descriptors class to the admin page
 admin.site.register(Descriptor, DescriptorsAdmin)
