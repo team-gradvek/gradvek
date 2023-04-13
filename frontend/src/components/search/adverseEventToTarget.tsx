@@ -1,8 +1,10 @@
 // Search by Adverse Event to Target
-import { TabPanel, Flex, Text } from '@chakra-ui/react'
+// Data of Interest: https://platform.opentargets.org/disease/MONDO_0005180 
+import { TabPanel, Flex, Text, Center, Button } from '@chakra-ui/react'
 import React, { useState } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import styles from "../../styles/Search.module.css"
+import Link from 'next/link';
 
 // Typeahead URI - DJANGO BACKEND
 const SEARCH_URI = 'http://localhost:8000/api/adverse-events'
@@ -60,7 +62,11 @@ function AdverseEventToTargetSearch() {
             </>
           )}
         />
+        <Center>
+          <Button size="lg" bg="#0F2A37" color="white" mt="5"><Link href="/adverseEventToTarget">Search</Link></Button>
+        </Center>
         </TabPanel>
+        
       );
     };
 

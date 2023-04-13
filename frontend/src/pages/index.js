@@ -45,10 +45,6 @@ export default function Index() {
             </TabPanels>
             </Card>
         </Tabs>
-        <Center>
-          <Button size="lg" bg="#0F2A37" color="white"><Link href="/adverseEvents">Search</Link></Button>
-        </Center>
-
         </Container>
         </Box>
       </Layout>
