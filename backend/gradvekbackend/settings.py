@@ -11,6 +11,17 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import environ
+
+# Initialise environment variables
+env = environ.Env()
+environ.Env.read_env()
+
+from neomodel import config
+config.DATABASE_URL = env("NEO4J_BOLT_URL")
+NEO4J_USERNAME = env("NEO4J_USERNAME")
+NEO4J_PASSWORD = env("NEO4J_PASSWORD")
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-hr#d_z6nfthw)r=0f96mhgfg6pk34-ob%ez+--ci4l$)tro*&b"
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -132,12 +143,17 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     # https://www.django-rest-framework.org/#installation
+    # https://stackoverflow.com/questions/31335736/cannot-apply-djangomodelpermissions-on-a-view-that-does-not-have-queryset-pro
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+
+    ], 
+
 }
 
 # Allow frontend url to access API
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3005',
+    'http://localhost:3000',
 ]
+
+

@@ -10,4 +10,5 @@ download*.wget*
 neo4j/data/
 neo4j/logs/
 neo4j/import/
-neo4j/plugins/apoc.jar 
+neo4j/plugins/
+.env
