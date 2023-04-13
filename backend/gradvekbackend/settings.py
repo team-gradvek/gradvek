@@ -22,6 +22,17 @@ config.DATABASE_URL = env("NEO4J_BOLT_URL")
 NEO4J_USERNAME = env("NEO4J_USERNAME")
 NEO4J_PASSWORD = env("NEO4J_PASSWORD")
 
+import atexit
+from neomodel import db
+
+def close_driver():
+    if db.driver:
+        db.driver.close()
+
+atexit.register(close_driver)
+
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -150,10 +161,3 @@ REST_FRAMEWORK = {
     ], 
 
 }
-
-# Allow frontend url to access API
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
-]
-
-
