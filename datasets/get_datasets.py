@@ -1,8 +1,6 @@
 import wget
 import os
 import time
-import wget
-import os
 from urllib.parse import urlparse
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
