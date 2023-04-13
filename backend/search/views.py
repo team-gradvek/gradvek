@@ -18,6 +18,8 @@ from .utils import (
 
 # Collect Descriptors list from sqlite and format it to send back
 #  to next.js
+
+
 class DescriptorListView(generics.ListAPIView):
     queryset = Descriptor.objects.all()
     serializer_class = DescriptorSerializer
