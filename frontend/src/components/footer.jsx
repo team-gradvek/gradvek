@@ -1,10 +1,7 @@
 import {
   Button,
-  ButtonGroup,
   Container,
   Divider,
-  IconButton,
-  Input,
   Stack,
   Text,
   useColorMode
@@ -32,7 +29,6 @@ export default function Footer() {
               <Button variant="link">Documentation</Button>
               <Button variant="link">Data Management</Button>
               <Button variant="link">API Docs</Button>
-              {/* <Button variant="link">API</Button> */}
             </Stack>
           </Stack>
           

@@ -1,6 +1,6 @@
 import { useColorMode } from '@chakra-ui/react'
-import Footer from './footer'
-import TopNav  from './topnav'
+import Footer from './Footer'
+import TopNav  from './TopNav'
 
 export default function Layout({ children }) {    
     return   (
