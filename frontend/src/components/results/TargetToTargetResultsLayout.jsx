@@ -1,9 +1,6 @@
 import {
   Flex,
-  Stack,
-  Box,
 } from '@chakra-ui/react'
-import { Sidebar } from './Sidebar'
 import TopNav  from '../TopNav'
 
 function TargetToTargetResultsLayout({ children }) {
@@ -19,17 +16,6 @@ function TargetToTargetResultsLayout({ children }) {
       }}
     >
       {children}
-      {/* <TargetToTargetSidebar />
-      <Box p={5} w="100%" bg="#eee">
-        <Stack
-          spacing={{
-            base: '8',
-            lg: '6',
-          }}
-        >
-          {children}
-        </Stack>
-      </Box> */}
     </Flex>
     </>
   )

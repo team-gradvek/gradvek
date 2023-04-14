@@ -1,6 +1,6 @@
 import { Box, Drawer, DrawerContent, DrawerOverlay, Flex, useDisclosure } from '@chakra-ui/react'
 import { Logo } from './Logo'
-import { Sidebar } from './Sidebar'
+import { Sidebar } from './AETargetSidebar'
 import { ToggleButton } from './ToggleButton'
 
 export const Navbar = () => {
