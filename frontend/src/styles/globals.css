@@ -100,6 +100,11 @@ a {
   text-decoration: none;
 }
 
+#target-to-ae-search, #ae-to-target-search, #target-to-target-search {
+  z-index: 1000;
+  border: 1px solid #eee;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

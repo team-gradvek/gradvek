@@ -1,10 +1,7 @@
 import {
   Button,
-  ButtonGroup,
   Container,
   Divider,
-  IconButton,
-  Input,
   Stack,
   Text,
   useColorMode
@@ -32,7 +29,6 @@ export default function Footer() {
               <Button variant="link">Documentation</Button>
               <Button variant="link">Data Management</Button>
               <Button variant="link">API Docs</Button>
-              {/* <Button variant="link">API</Button> */}
             </Stack>
           </Stack>
           
@@ -74,7 +70,7 @@ export default function Footer() {
         &copy; {new Date().getFullYear()} Gravek 2.0
       </Text>
       <Button my={4} onClick={toggleColorMode}>
-        {colorMode === "dark" ? "Light mode": "Dark mode"}
+        {colorMode === "light" ? "Dark mode": "Light mode"}
       </Button>
     </Stack>
   </Container>
