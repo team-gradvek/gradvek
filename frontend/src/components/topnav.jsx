@@ -5,11 +5,8 @@ import {
    Container,
    Flex,
    HStack,
-   IconButton,
-   useBreakpointValue,
    Heading
  } from '@chakra-ui/react'
- import { FiMenu } from 'react-icons/fi'
  import Link from 'next/link'
  import theme from '@/styles/theme'
  
@@ -36,8 +33,6 @@ import {
                     <Button colorScheme='grey' variant="link" key="API"><Link href='/'>API</Link></Button>
                  
                     <Button colorScheme='grey' variant="link" key="Documentation"><Link href='/'>Documentation</Link></Button>
-                  
-                    <Button colorScheme='grey' variant="solid" bg={theme.brand.color} color="white">Sign in</Button>
                 
                  </ButtonGroup>
                </Flex>

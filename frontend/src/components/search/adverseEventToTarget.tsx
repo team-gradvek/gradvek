@@ -63,7 +63,7 @@ function AdverseEventToTargetSearch() {
           )}
         />
         <Center>
-          <Button size="lg" bg="#0F2A37" color="white" mt="5"><Link href="/adverseEventToTarget">Search</Link></Button>
+          <Button size="lg" mt="5" bg='#0069A4' color="white"><Link href="/adverseEventToTarget">Search</Link></Button>
         </Center>
         </TabPanel>
         
