@@ -34,11 +34,9 @@ urlpatterns =  [
     # Add a single gene entity to the database
     path('api/gene/<str:id>/', views.gene, name='gene'),
 
-    # Return an array of all known datasets (both active and inactive)
+    # GET: Return an array of all known datasets (both active and inactive)
+    # POST: Modify the active status of one or more datasets
     path('api/datasets/', DatasetList.as_view(), name='datasets'),
-
-    # Modify the active status of one or more datasets
-    path('api/enable_datasets/', views.enable_datasets, name='enable_datasets'),
 
     # Return an array of adverse events associated with a specific target, optionally filtered by action
     path('api/weight/<str:target>/', views.get_adverse_event, name='get_adverse_event'),

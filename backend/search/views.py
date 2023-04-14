@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse
@@ -15,6 +16,7 @@ from .serializers import DescriptorSerializer, ActionsSerializer
 from .utils import (
     fetch_actions,
     fetch_datasets,
+    update_dataset_status,
 )
 
 # Collect Descriptors list from sqlite and format it to send back
@@ -92,12 +94,24 @@ class DatasetList(APIView):
         # Return the data as a JSON response
         return Response(data)
     
+    """
+    Modify the active status of one or more datasets
+    """
+    def post(self, request):
+        # Parse the JSON request body
+        try:
+            datasets = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
 
-# Modify the active status of one or more datasets
-@require_http_methods(["POST"])
-def enable_datasets(request):
-    # Implement the functionality for modifying the active status of one or more datasets
-    pass
+        # Modify the dataset status
+        for dataset in datasets:
+            dataset_name = dataset.get("dataset")
+            enabled = dataset.get("enabled")
+            if dataset_name and enabled is not None:
+                update_dataset_status(dataset_name, bool(enabled))
+
+        return JsonResponse({}, status=200)
 
 # Return an array of adverse events associated with a specific target, optionally filtered by action
 @require_http_methods(["GET"])

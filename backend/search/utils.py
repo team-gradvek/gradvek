@@ -1,3 +1,4 @@
+from neomodel import db
 from .queries import ACTIONS, DATASETS
 
 
@@ -17,3 +18,7 @@ def fetch_actions():
 
 def fetch_datasets():
     return DATASETS
+
+def update_dataset_status(dataset_name, enabled):
+    query = f"MATCH (d:Dataset {{ dataset: '{dataset_name}' }}) SET d.enabled={enabled}"
+    db.cypher_query(query)

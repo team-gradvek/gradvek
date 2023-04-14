@@ -1,4 +1,5 @@
 import os
+import time
 import pyarrow.parquet as pq
 from neo4j import GraphDatabase
 
@@ -46,7 +47,7 @@ def set_dataset_name():
             # Check if the line starts with "data_version ="
             if stripped_line.startswith("data_version ="):
                 # Split the line at the equals sign and take the second part (the value)
-                data_version = stripped_line.split("=")[1].strip()
+                data_version = stripped_line.split("=")[1].strip().replace('"', '')
 
     # Check if the dataset variable was set
     if data_version is None:
@@ -158,11 +159,29 @@ def generate_queries(data_type, data_type_path, query_generator):
                 print(f"Error generating queries for file {file}: {e}")
 
 
+# Generate Cypher query for Dataset nodes
+def create_dataset_cypher_query(node_label):
+    dataset_name = f"{data_version} {node_label}"
+    enabled = True
+    source = node_label
+    timestamp = round(time.time() * 1000)
+
+    query = f"""
+    MERGE (d:Dataset {{ dataset: '{dataset_name}' }})
+    ON CREATE SET d.enabled = {enabled},
+                  d.source = '{source}',
+                  d.timestamp = {timestamp}
+    RETURN d
+    """
+    return query
+
+
+
 # Generate Cypher queries for node creation based on a given table, node_label, and properties to columns mapping
 def create_cypher_query_nodes(table, node_label, props_to_columns):
     # Convert the table to a pandas DataFrame
     df = table.to_pandas()
-    dataset = data_version + " " + node_label
+    dataset = f"{data_version} {node_label}"
     # Prepare data for the Cypher query
     data = []
     for _, row in df.iterrows():
@@ -176,7 +195,10 @@ def create_cypher_query_nodes(table, node_label, props_to_columns):
         {{params: {{props: $data, dataset: $dataset}}, batchSize: 1000, parallel: true}}
     )
     """
-    return [(query, {'data': data, 'dataset': dataset})]
+    # Include the dataset creation query
+    dataset_query = create_dataset_cypher_query(node_label)
+    # Return a list of queries to be executed
+    return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
 
 # Generate Cypher queries for Target nodes
 def create_cypher_query_targets(table):
@@ -189,7 +211,8 @@ def create_cypher_query_targets(table):
 def create_cypher_query_pathways(table):
     # Convert the table to a pandas DataFrame
     df = table.to_pandas()
-    dataset = data_version + " " + "Pathway"
+    node_label = 'Pathway'
+    dataset = f"{data_version} {node_label}"
     # Prepare data for the Cypher query
     data = []
     for _, row in df.iterrows():
@@ -210,7 +233,10 @@ def create_cypher_query_pathways(table):
         {params: {props: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
     )
     """
-    return [(query, {'data': data, 'dataset': dataset})]
+    # Include the dataset creation query
+    dataset_query = create_dataset_cypher_query(node_label)
+    # Return a list of queries to be executed
+    return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
 
 # Generate Cypher queries for AdverseEvent nodes
 def create_cypher_query_adverse_events(table):
@@ -241,6 +267,7 @@ def create_cypher_query_diseases(table):
     })
 
 
+
 # Create indexes in the database for the nodes before running edge queries
 def create_indexes():
     with GraphDatabase.driver(URI, auth=AUTH) as driver:
@@ -252,6 +279,7 @@ def create_indexes():
             session.run("CREATE INDEX meddraId_index IF NOT EXISTS FOR (a:AdverseEvent) ON (a.meddraId)")
             session.run("CREATE INDEX mousePhenotypeId_index IF NOT EXISTS FOR (a:MousePhenotype) ON (a.mousePhenotypeId)")
             session.run("CREATE INDEX diseaseId_index IF NOT EXISTS FOR (a:Disease) ON (a.diseaseId)")
+            session.run("CREATE INDEX dataset_index IF NOT EXISTS FOR (a:Dataset) ON (a.dataset)")
 
 
 # TODO Add function to handle generation of Cypher queries for edge creation similar to how nodes are handled
@@ -259,7 +287,8 @@ def create_indexes():
 # Parse the mechanism of action data and create a list of Cypher queries to insert the data into the database
 def create_cypher_query_mechanism_of_action(table):
     df = table.to_pandas()
-    dataset = data_version + " " + "MechanismOfAction"
+    node_label = 'MechanismOfAction'
+    dataset = f"{data_version} {node_label}"
     data = []
     for _, row in df.iterrows():
         if row['chemblIds'] is None or row['targets'] is None:
@@ -281,12 +310,16 @@ def create_cypher_query_mechanism_of_action(table):
         {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
     )
     """
-    return [(query, {'data': data, 'dataset': dataset})]
+    # Include the dataset creation query
+    dataset_query = create_dataset_cypher_query(node_label)
+    # Return a list of queries to be executed
+    return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
 
 # Parse the targets data and create a list of Cypher queries to add participates relationships to the database
 def create_cypher_query_participates(table):
     df = table.to_pandas()
-    dataset = data_version + " " + "Participates"
+    node_label = 'Participates'
+    dataset = f"{data_version} {node_label}"
     data = []
     for _, row in df.iterrows():
         if row['id'] is None or row['pathways'] is None:
@@ -307,12 +340,16 @@ def create_cypher_query_participates(table):
         {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
     )
     """
-    return [(query, {'data': data, 'dataset': dataset})]
+    # Include the dataset creation query
+    dataset_query = create_dataset_cypher_query(node_label)
+    # Return a list of queries to be executed
+    return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
 
 # Parse the targets data and create a list of Cypher queries to add associatedWith relationships to the database
 def create_cypher_query_associated_with(table):
     df = table.to_pandas()
-    dataset = data_version + " " + "AssociatedWith"
+    node_label = 'AssociatedWith'
+    dataset = f"{data_version} {node_label}"
     data = []
     for _, row in df.iterrows():
         if row['chembl_id'] is None or row['meddraCode'] is None:
@@ -333,7 +370,10 @@ def create_cypher_query_associated_with(table):
         {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
     )
     """
-    return [(query, {'data': data, 'dataset': dataset})]
+    # Include the dataset creation query
+    dataset_query = create_dataset_cypher_query(node_label)
+    # Return a list of queries to be executed
+    return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
 
 # Main function call
 if __name__ == "__main__":
