@@ -36,21 +36,3 @@ function WeightSlider( props ) {
 
 
 export default WeightSlider;
-
-
-
-{/* <Text fontSize="lg" color="on-accent-muted" fontWeight="medium">
-            Weights
-          </Text>
-          <p>Gene</p>
-          <WeightSlider />
-          <p>Protein</p>
-          <WeightSlider />
-          <p>GWAS</p>
-          <WeightSlider />
-          <p>Phenotype</p>
-          <WeightSlider />
-          <p>Reactome</p>
-          <WeightSlider />
-          <p>Signor</p>
-          <WeightSlider /> */}

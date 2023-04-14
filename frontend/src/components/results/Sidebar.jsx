@@ -7,13 +7,11 @@ import {
 } from '@chakra-ui/react'
 import { Actions } from './filters/Actions'
 import WeightSlider from './filters/Weights'
+import theme from '@/styles/theme'
 
 export const Sidebar = () => (
-  <Flex as="section" minH="100vh" bg="bg-canvas">
+  <Flex as="section" minH="100vh">
     <Flex
-      flex="1"
-      bg="bg-surface"
-      boxShadow="sm"
       maxW={{
         base: 'full',
         sm: 'xs',
@@ -33,7 +31,7 @@ export const Sidebar = () => (
             base: '5',
             sm: '6',
           }}
-          minW={200}
+          minW={250}
           paddingBottom={10}
           shouldWrapChildren
         >

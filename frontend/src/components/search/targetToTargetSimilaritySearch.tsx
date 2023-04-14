@@ -62,7 +62,7 @@ function TargetToTargetSimilaritySearch() {
           )}
         />
         <Center>
-          <Button size="lg" bg="#0F2A37" color="white" mt="5"><Link href="/adverseEvents">Search</Link></Button>
+          <Button size="lg" bg="#0F2A37" color="white" mt="5"><Link href="/targetToTarget">Search</Link></Button>
         </Center>
         </TabPanel>
       );

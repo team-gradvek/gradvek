@@ -12,7 +12,7 @@ console.log(filteredActions)
 export const Actions = (props) => {
 
   return (
-  <Stack spacing={[1, 2]} direction={['column']}>
+  <Stack spacing={[2]} direction={['column']}>
     <Text fontSize="lg" color="on-accent-muted" fontWeight="medium">
       Actions
     </Text>
