@@ -6,15 +6,11 @@ import DataTable from '@/components/results/DataTable'
 import theme from '@/styles/theme';
 import { TargetToTargetSidebar } from '@/components/results/TargetToTargetSidebar';
 
-// @TODO add the top 10 targets on the right side of the top
-// Filters include descriptors here
-// Filters includ antagonist, etc
-export default function TargetToAEResults() {
+export default function TargetToTargetResults() {
  return (
       <TargetToTargetResultsLayout>
         <Head>
           <title>Target to Target Results</title>
-          <meta name="description" content="Gradvek Search Page" />
         </Head>
 
         <Box display='flex' w="100%">
@@ -71,7 +67,6 @@ export default function TargetToAEResults() {
           <DataTable/>
           </Box>
         </Box>
-
 
         </Box>
 
