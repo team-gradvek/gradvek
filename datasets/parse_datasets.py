@@ -35,7 +35,7 @@ the APOC plugin installed in your Neo4j instance before running the script.
 
 # Set dataset name
 # TODO use config file to set this and append data type to this when generating queries
-dataset = "opentarget 23.02"
+data_version = "opentarget 23.02"
 
 # Set the URI and AUTH for the neo4j database
 URI = "bolt://localhost:7687"
@@ -143,7 +143,7 @@ def generate_queries(data_type, data_type_path, query_generator):
 def create_cypher_query_nodes(table, node_label, props_to_columns):
     # Convert the table to a pandas DataFrame
     df = table.to_pandas()
-
+    dataset = data_version + " " + node_label
     # Prepare data for the Cypher query
     data = []
     for _, row in df.iterrows():
@@ -170,7 +170,7 @@ def create_cypher_query_targets(table):
 def create_cypher_query_pathways(table):
     # Convert the table to a pandas DataFrame
     df = table.to_pandas()
-
+    dataset = data_version + " " + "Pathway"
     # Prepare data for the Cypher query
     data = []
     for _, row in df.iterrows():
@@ -240,6 +240,7 @@ def create_indexes():
 # Parse the mechanism of action data and create a list of Cypher queries to insert the data into the database
 def create_cypher_query_mechanism_of_action(table):
     df = table.to_pandas()
+    dataset = data_version + " " + "MechanismOfAction"
     data = []
     for _, row in df.iterrows():
         if row['chemblIds'] is None or row['targets'] is None:
@@ -266,6 +267,7 @@ def create_cypher_query_mechanism_of_action(table):
 # Parse the targets data and create a list of Cypher queries to add participates relationships to the database
 def create_cypher_query_participates(table):
     df = table.to_pandas()
+    dataset = data_version + " " + "Participates"
     data = []
     for _, row in df.iterrows():
         if row['id'] is None or row['pathways'] is None:
@@ -291,6 +293,7 @@ def create_cypher_query_participates(table):
 # Parse the targets data and create a list of Cypher queries to add associatedWith relationships to the database
 def create_cypher_query_associated_with(table):
     df = table.to_pandas()
+    dataset = data_version + " " + "AssociatedWith"
     data = []
     for _, row in df.iterrows():
         if row['chembl_id'] is None or row['meddraCode'] is None:

@@ -1,4 +1,4 @@
-from .queries import ACTIONS
+from .queries import ACTIONS, DATASETS
 
 
 # from .models import (
@@ -14,3 +14,6 @@ from .queries import ACTIONS
 
 def fetch_actions():
     return ACTIONS
+
+def fetch_datasets():
+    return DATASETS
