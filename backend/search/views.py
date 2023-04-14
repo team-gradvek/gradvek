@@ -83,9 +83,14 @@ class DatasetList(APIView):
     def get(self, request):
         # Retrieve all Dataset objects from the Neo4j database
         datasets = fetch_datasets()
-
+        data = { 
+            'response': {
+                'status': '200',
+                'data': datasets,
+            },
+        }
         # Return the data as a JSON response
-        return Response(datasets, status=status.HTTP_200_OK)
+        return Response(data)
     
 
 # Modify the active status of one or more datasets

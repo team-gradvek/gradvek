@@ -25,4 +25,4 @@ unique_datasets = db.cypher_query(
 )[0]
 
 # Create a list of dictionaries containing unique dataset values
-DATASETS = unique_datasets
+DATASETS = [dataset for subset in unique_datasets for dataset in subset]
