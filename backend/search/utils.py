@@ -27,8 +27,6 @@ def update_dataset_status(dataset_name, enabled):
     db.cypher_query(query)
 
 # Function to return all api routes from the URL patterns
-
-
 def get_all_routes(urlpatterns, prefix=''):
     routes = []
     for entry in urlpatterns:
