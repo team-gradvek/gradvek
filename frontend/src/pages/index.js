@@ -18,7 +18,6 @@ export default function Index() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Box bg={theme.brand.color}>
-        {/* <Box className='gradient-bg'> */}
         <Container color='white' w='100%' maxWidth='1366px' py='10' px='10em'>
 
         <Center>

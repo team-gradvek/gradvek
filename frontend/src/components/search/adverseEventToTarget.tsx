@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import styles from "../../styles/Search.module.css"
 import Link from 'next/link';
+import theme from '@/styles/theme';
 
 // Typeahead URI - DJANGO BACKEND
 const SEARCH_URI = 'http://localhost:8000/api/adverse-events'
@@ -63,7 +64,7 @@ function AdverseEventToTargetSearch() {
           )}
         />
         <Center>
-          <Button size="lg" mt="5" bg='#0069A4' color="white"><Link href="/adverseEventToTarget">Search</Link></Button>
+          <Button size="lg" mt="5" bg={theme.brand.secondary} color="white"><Link href="/adverseEventToTarget">Search</Link></Button>
         </Center>
         </TabPanel>
         
