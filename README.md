@@ -173,7 +173,7 @@ make send-data
 
 ## How to resolve  SSL: CERTIFICATE_VERIFY_FAILED error 
 https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
-
+```
 "Once upon a time I stumbled with this issue. If you're using macOS go to Macintosh HD > Applications > Python3.6 folder (or whatever version of python you're using) > double click on "Install Certificates.command" file. :D"
-
+```
 
