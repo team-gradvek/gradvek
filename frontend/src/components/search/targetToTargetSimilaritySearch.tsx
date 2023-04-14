@@ -1,7 +1,10 @@
-import { TabPanel, Flex, Text } from '@chakra-ui/react'
+// Search by Target to Adverse Event
+// Data of Interest: https://platform.opentargets.org/target/ENSG00000151577
+import { TabPanel, Flex, Text, Center, Button } from '@chakra-ui/react'
 import React, { useState } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import styles from "../../styles/Search.module.css"
+import Link from 'next/link';
 
 // Typeahead URI - DJANGO BACKEND
 const SEARCH_URI = 'http://localhost:8000/api/targets'
@@ -58,6 +61,9 @@ function TargetToTargetSimilaritySearch() {
             </>
           )}
         />
+        <Center>
+          <Button size="lg" bg="#0F2A37" color="white" mt="5"><Link href="/targetToTarget">Search</Link></Button>
+        </Center>
         </TabPanel>
       );
     };

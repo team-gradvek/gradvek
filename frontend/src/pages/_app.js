@@ -1,13 +1,7 @@
 // pages/_app.js
-import '@/styles/globals.css'
-import { ChakraProvider, extendTheme } from '@chakra-ui/react'
-
-const config = {
-  initialColorMode: 'dark'
-}
-
-const theme = extendTheme({config})
-
+import { ChakraProvider } from '@chakra-ui/react'
+import { theme } from '../styles/theme'
+import '../styles/globals.css'
 
 
 function App({ Component, pageProps }) {
