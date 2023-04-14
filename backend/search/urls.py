@@ -5,7 +5,8 @@ from . import views
 
 app_name = "search"
 from .views import (
-    GetActions
+    GetActions,
+    DatasetList
 )
 
 
@@ -34,7 +35,7 @@ urlpatterns =  [
     path('api/gene/<str:id>/', views.gene, name='gene'),
 
     # Return an array of all known datasets (both active and inactive)
-    path('api/datasets/', views.datasets, name='datasets'),
+    path('api/datasets/', DatasetList.as_view(), name='datasets'),
 
     # Modify the active status of one or more datasets
     path('api/enable_datasets/', views.enable_datasets, name='enable_datasets'),

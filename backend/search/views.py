@@ -14,6 +14,7 @@ from .serializers import DescriptorSerializer, ActionsSerializer
 
 from .utils import (
     fetch_actions,
+    fetch_datasets,
 )
 
 # Collect Descriptors list from sqlite and format it to send back
@@ -74,11 +75,18 @@ def gene(request, id):
     # Implement the functionality for adding a single gene entity to the database
     pass
 
-# Return an array of all known datasets (both active and inactive)
-@require_http_methods(["GET"])
-def datasets(request):
-    # Implement the functionality for returning an array of all known datasets
-    pass
+class DatasetList(APIView):
+    """
+    Return an array of all known datasets (both active and inactive).
+    """
+
+    def get(self, request):
+        # Retrieve all Dataset objects from the Neo4j database
+        datasets = fetch_datasets()
+
+        # Return the data as a JSON response
+        return Response(datasets, status=status.HTTP_200_OK)
+    
 
 # Modify the active status of one or more datasets
 @require_http_methods(["POST"])

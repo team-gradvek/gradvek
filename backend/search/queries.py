@@ -14,3 +14,15 @@ actions = db.cypher_query(
 
 ACTIONS = sorted([action for action in actions])
 # ACTIONS = {key: value for key, value in zip(key, value)}
+
+
+# This Cypher query retrieves distinct dataset values from all nodes in the Neo4j database
+unique_datasets = db.cypher_query(
+    '''
+    MATCH (n)  # Match all nodes
+    RETURN DISTINCT n.dataset  # Return distinct dataset values from nodes
+    '''
+)[0]
+
+# Create a list of dictionaries containing unique dataset values
+DATASETS = [{"dataset": ds[0]} for ds in unique_datasets]
