@@ -28,7 +28,7 @@ export default function TargetToTargetResults() {
             <Card>
               <CardBody>
                 <Stack spacing='3'>
-                  <Heading size='lg' color={theme.brand.blue}>Input: DRD3</Heading>
+                  <Heading size='lg' color={theme.brand.color}>Input: DRD3</Heading>
                     <Divider />
                     <Heading size='sm'>Description</Heading>
                   <Text>
@@ -42,24 +42,6 @@ export default function TargetToTargetResults() {
               </CardBody>
             </Card>
             </Box>
-            {/* <Box w="50%" bg="#eee" boxShadow='xl'>  
-            <Card>
-              <CardBody>
-                <Stack spacing='3'>
-                  <Heading size='lg' color={theme.brand.blue}>DRD3</Heading>
-                    <Divider />
-                    <Heading size='sm'>Description</Heading>
-                  <Text>
-                  Dopamine receptor whose activity is mediated by G proteins which inhibit adenylyl cyclase. Promotes cell proliferation.
-                  </Text>
-                    <Divider />
-                  <Text color='gray' fontSize='sm'>
-                  ID: 10029282
-                  </Text>
-                </Stack>
-              </CardBody>
-            </Card>
-            </Box> */}
           </Box>
           {/* Search Results Table */}
           <Box w='100%' mb='5'>

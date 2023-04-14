@@ -11,7 +11,7 @@ export const theme = extendTheme({
     body: `'Fira CodeVariable', -apple-system, system-ui, sans-serif`,
   }, 
   brand: {
-    blue: "#3D7692",
+    color: "#256068",
   },
   gradvekTheme,
 });

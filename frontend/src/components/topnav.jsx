@@ -26,7 +26,7 @@ import {
          >
            <HStack spacing="10" justify="space-between">
            <Link href="/">
-            <Heading color={theme.brand.blue}>Gradvek</Heading>
+            <Heading color={theme.brand.color}>Gradvek</Heading>
             </Link>
                <Flex justify="right" flex="1">
                  <ButtonGroup variant="link" spacing="8">
@@ -37,7 +37,7 @@ import {
                  
                     <Button colorScheme='grey' variant="link" key="Documentation"><Link href='/'>Documentation</Link></Button>
                   
-                    <Button colorScheme='grey' variant="solid" bg={theme.brand.blue} color="white">Sign in</Button>
+                    <Button colorScheme='grey' variant="solid" bg={theme.brand.color} color="white">Sign in</Button>
                 
                  </ButtonGroup>
                </Flex>

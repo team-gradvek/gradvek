@@ -28,7 +28,7 @@ export default function TargetToAEResults() {
             <Card>
               <CardBody>
                 <Stack spacing='3'>
-                  <Heading size='lg' color={theme.brand.blue}>Input: DRD3</Heading>
+                  <Heading size='lg' color={theme.brand.color}>Input: DRD3</Heading>
                     <Divider />
                     <Heading size='sm'>Description</Heading>
                   <Text>

@@ -18,7 +18,7 @@ export default function Index() {
           <meta name="description" content="Gradvek Search Page" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Box bg={theme.brand.blue}>
+        <Box bg={theme.brand.color}>
         <Container color='white' w='100%' maxWidth='1366px' py='10' px='10em'>
 
         <Center>
