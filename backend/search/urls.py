@@ -1,24 +1,24 @@
+from .views import (
+    GetActions,
+    Datasets,
+    RoutesListAPIView,
+)
 from django.urls import path
 
 from . import views
 
 
 app_name = "search"
-from .views import (
-    GetActions,
-    Datasets,
-    RoutesListAPIView,
-)
 
 
-urlpatterns =  [
+urlpatterns = [
     # Return the list of routes in the Django site
     path('api/routes/', RoutesListAPIView.as_view(), name='api-routes-list'),
-    
+
     path("api/actions", GetActions.as_view(), name='get_actions'),
     # path("api/actions", views.ActionListView.as_view(), name = "actions"),
 
-    path("api/descriptors", views.DescriptorListView.as_view(), name = "descriptors"),
+    path("api/descriptors", views.DescriptorListView.as_view(), name="descriptors"),
 
     # Trying to copy paths from gradvek 1.0
 
@@ -43,15 +43,20 @@ urlpatterns =  [
     path('api/datasets/', Datasets.as_view(), name='datasets'),
 
     # Return an array of adverse events associated with a specific target, optionally filtered by action
-    path('api/weight/<str:target>/', views.get_adverse_event, name='get_adverse_event'),
+    path('api/weight/<str:target>/',
+         views.get_adverse_event, name='get_adverse_event'),
 
     # Return an array of weights of adverse events associated with a specific target, optionally filtered by action
-    path('api/weight/<str:target>/<str:ae>/', views.get_weights_target_ae, name='get_weights_target_ae'),
+    path('api/weight/<str:target>/<str:ae>/',
+         views.get_weights_target_ae, name='get_weights_target_ae'),
 
     # Return an array of Cytoscape entities representing paths from a target to one or all adverse events associated with it, optionally filtered by drug and action
-    path('api/ae/path/<str:target>/', views.get_paths_target_ae_drug_view, name='get_paths_target_ae'),
-    path('api/ae/path/<str:target>/<str:ae>/', views.get_paths_target_ae_drug_view, name='get_paths_target_ae_ae'),
-    path('api/ae/path/<str:target>/<str:ae>/<str:drug_id>/', views.get_paths_target_ae_drug_view, name='get_paths_target_ae_drug'),
+    path('api/ae/path/<str:target>/',
+         views.get_paths_target_ae_drug_view, name='get_paths_target_ae'),
+    path('api/ae/path/<str:target>/<str:ae>/',
+         views.get_paths_target_ae_drug_view, name='get_paths_target_ae_ae'),
+    path('api/ae/path/<str:target>/<str:ae>/<str:drug_id>/',
+         views.get_paths_target_ae_drug_view, name='get_paths_target_ae_drug'),
 
     # Return an array of Cytoscape entities representing paths from a target to one or all adverse events associated with it, optionally filtered by drug and action
     path('api/count/<str:type_string>/', views.count, name='count'),

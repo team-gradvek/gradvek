@@ -1,6 +1,6 @@
 import json
 from django.shortcuts import render
-from django.urls import URLPattern, URLResolver, get_resolver
+from django.urls import get_resolver
 from django.views import View
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
@@ -17,39 +17,23 @@ from .serializers import DescriptorSerializer, ActionsSerializer
 from .utils import (
     fetch_actions,
     fetch_datasets,
+    get_all_routes,
     update_dataset_status,
 )
 
-# Function to return all api routes from the URL patterns
-def get_all_routes(urlpatterns, prefix=''):
-    routes = []
-    for entry in urlpatterns:
-        if isinstance(entry, URLResolver):
-            # Combine the current prefix with the entry's pattern, removing the '^' at the beginning
-            new_prefix = prefix + entry.pattern.regex.pattern.lstrip('^')
-            # Recursively process the nested URL patterns
-            routes.extend(get_all_routes(entry.url_patterns, new_prefix))
-        elif isinstance(entry, URLPattern):
-            # Combine the current prefix with the entry's pattern, removing the '^' at the beginning
-            pattern = prefix + entry.pattern.regex.pattern.lstrip('^')
-            pattern = pattern.replace('\\\\', '\\')  # Replace double backslashes with single ones
-            pattern = pattern.rstrip('\\Z')  # Remove the '\\Z' at the end of the pattern
-            routes.append({
-                'path': pattern,
-                'name': entry.name
-            })
-    return routes
-
-
 # API view to list all routes in the Django site
+
+
 class RoutesListAPIView(generics.GenericAPIView):
     # Override the get_queryset method to return None, as we don't deal with a queryset
     def get_queryset(self):
         return None
     # Override the GET method to return the list of routes
+
     def get(self, request, *args, **kwargs):
         resolver = get_resolver(None)  # Get the project's URL resolver
-        routes = get_all_routes(resolver.url_patterns)  # Extract all routes from the URL patterns
+        # Extract all routes from the URL patterns
+        routes = get_all_routes(resolver.url_patterns)
         return Response(routes)  # Return the list of routes as a JSON response
 
 # Collect Descriptors list from sqlite and format it to send back
@@ -66,10 +50,11 @@ class DescriptorListView(generics.ListAPIView):
 #     # queryset = Action.objects.all()
 #     serializer_class = ActionsSerializer(actions, many=True)
 
+
 class GetActions(APIView):
     def get(self, request):
         actions = fetch_actions()
-        data = { 
+        data = {
             'response': {
                 'status': '200',
                 'data': actions,
@@ -80,35 +65,44 @@ class GetActions(APIView):
 
 # Trying to copy paths from gradvek 1.0
 
-#Upload one or more entities in a comma-separated file
+# Upload one or more entities in a comma-separated file
 @require_http_methods(["POST"])
 def upload_csv(request):
     # Implement the functionality for uploading a CSV
     pass
 
 # Return the content of a previously uploaded comma-separated file
+
+
 @require_http_methods(["GET"])
 def get_csv(request, file_id):
     # Implement the functionality for retrieving the content of a CSV
     pass
 
 # Clear out the database
+
+
 @require_http_methods(["POST"])
 def clear(request):
     # Implement the functionality for clearing out the database
     pass
 
 # Initialize entities (all or of the specified type) from the OpenTargets store
+
+
 @require_http_methods(["POST"])
 def init_type(request, type_string=None):
     # Implement the functionality for initializing entities from the OpenTargets store
     pass
 
 # Add a single gene entity to the database
+
+
 @require_http_methods(["POST"])
 def gene(request, id):
     # Implement the functionality for adding a single gene entity to the database
     pass
+
 
 class Datasets(APIView):
     """
@@ -118,7 +112,7 @@ class Datasets(APIView):
     def get(self, request):
         # Retrieve all Dataset objects from the Neo4j database
         datasets = fetch_datasets()
-        data = { 
+        data = {
             'response': {
                 'status': '200',
                 'data': datasets,
@@ -126,10 +120,11 @@ class Datasets(APIView):
         }
         # Return the data as a JSON response
         return Response(data)
-    
+
     """
     Modify the active status of one or more datasets
     """
+
     def post(self, request):
         # Parse the JSON request body
         try:
@@ -147,42 +142,56 @@ class Datasets(APIView):
         return JsonResponse({}, status=200)
 
 # Return an array of adverse events associated with a specific target, optionally filtered by action
+
+
 @require_http_methods(["GET"])
 def get_adverse_event(request, target):
     # Implement the functionality for returning an array of adverse events associated with a specific target
     pass
 
 # Return an array of weights of adverse events associated with a specific target, optionally filtered by action
+
+
 @require_http_methods(["GET"])
 def get_weights_target_ae(request, target, ae):
     # Implement the functionality for returning an array of weights of adverse events associated with a specific target
     pass
 
 # Return an array of Cytoscape entities representing paths from a target to one or all adverse events associated with it, optionally filtered by drug and action
+
+
 @require_http_methods(["GET"])
 def get_paths_target_ae_drug_view(request, target, ae=None, drug_id=None):
     # Implement the functionality for returning an array of Cytoscape entities representing paths from a target to adverse events
     pass
 
 # Return an array of Cytoscape entities representing paths from a target to one or all adverse events associated with it, optionally filtered by drug and action
+
+
 @require_http_methods(["GET"])
 def count(request, type_string):
     # Implement the functionality for counting entities by type
     pass
 
 # Health check
+
+
 @require_http_methods(["GET"])
 def info(request):
     # Implement the functionality for a health check
     pass
 
 # Return an array of suggested entities in response to a hint (beginning of the name)
+
+
 @require_http_methods(["GET"])
 def suggest_hint(request, hint):
     # Implement the functionality for returning an array of suggested entities in response to a hint
     pass
 
 # Return an array of all actions in the database
+
+
 @require_http_methods(["GET"])
 def actions(request, target=None):
     # Implement the functionality for returning an array of all actions or actions for the specified target
