@@ -1,10 +1,12 @@
 import { Box, Button, Tabs, TabList, Card, TabPanels, Tab, TabPanel, Input, Container, Center, Text } from '@chakra-ui/react'
 import Head from "next/head";
-import Layout from '../components/layout'
+import Layout from '../components/GlobalLayout'
 import { Heading } from '@chakra-ui/react'
 import TargetToAESearch from '@/components/search/targetToAdverseEventSearch';
 import AdverseEventToTargetSearch from '@/components/search/adverseEventToTarget';
 import TargetToTargetSimilaritySearch from '@/components/search/targetToTargetSimilaritySearch';
+import Link from 'next/link'
+import theme from '@/styles/theme';
 
 
 export default function Index() {
@@ -16,15 +18,15 @@ export default function Index() {
           <meta name="description" content="Gradvek Search Page" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Box bg='#47819d'>
-        <Container color='white' w='100%' maxWidth='1366px' py='10em' px='10em'>
+        <Box bg={theme.brand.color}>
+        <Container color='white' w='100%' maxWidth='1366px' py='10' px='10em'>
 
         <Center>
           <Heading as='h1' m='1em' >Search</Heading>
         </Center>
 
         <Center>
-         <Text fontSize='2xl'>An open source tool to designed to help scientists identify novel targets </Text>
+         <Text fontSize='2xl'>An open source tool designed to identify novel targets and adverse events in drug research </Text>
         </Center>
         
         <Tabs isFitted variant='soft-rounded' colorScheme='blue' my='3em' size='lg'> 
@@ -43,10 +45,6 @@ export default function Index() {
             </TabPanels>
             </Card>
         </Tabs>
-        <Center>
-          <Button size="lg" bg="#0F2A37" color="white">Search</Button>
-        </Center>
-
         </Container>
         </Box>
       </Layout>
