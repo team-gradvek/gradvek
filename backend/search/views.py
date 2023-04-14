@@ -1,5 +1,6 @@
 import json
 from django.shortcuts import render
+from django.urls import URLPattern, URLResolver, get_resolver
 from django.views import View
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
@@ -18,6 +19,38 @@ from .utils import (
     fetch_datasets,
     update_dataset_status,
 )
+
+# Function to return all api routes from the URL patterns
+def get_all_routes(urlpatterns, prefix=''):
+    routes = []
+    for entry in urlpatterns:
+        if isinstance(entry, URLResolver):
+            # Combine the current prefix with the entry's pattern, removing the '^' at the beginning
+            new_prefix = prefix + entry.pattern.regex.pattern.lstrip('^')
+            # Recursively process the nested URL patterns
+            routes.extend(get_all_routes(entry.url_patterns, new_prefix))
+        elif isinstance(entry, URLPattern):
+            # Combine the current prefix with the entry's pattern, removing the '^' at the beginning
+            pattern = prefix + entry.pattern.regex.pattern.lstrip('^')
+            pattern = pattern.replace('\\\\', '\\')  # Replace double backslashes with single ones
+            pattern = pattern.rstrip('\\Z')  # Remove the '\\Z' at the end of the pattern
+            routes.append({
+                'path': pattern,
+                'name': entry.name
+            })
+    return routes
+
+
+# API view to list all routes in the Django site
+class RoutesListAPIView(generics.GenericAPIView):
+    # Override the get_queryset method to return None, as we don't deal with a queryset
+    def get_queryset(self):
+        return None
+    # Override the GET method to return the list of routes
+    def get(self, request, *args, **kwargs):
+        resolver = get_resolver(None)  # Get the project's URL resolver
+        routes = get_all_routes(resolver.url_patterns)  # Extract all routes from the URL patterns
+        return Response(routes)  # Return the list of routes as a JSON response
 
 # Collect Descriptors list from sqlite and format it to send back
 #  to next.js

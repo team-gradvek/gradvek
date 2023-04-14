@@ -6,11 +6,15 @@ from . import views
 app_name = "search"
 from .views import (
     GetActions,
-    Datasets
+    Datasets,
+    RoutesListAPIView,
 )
 
 
 urlpatterns =  [
+    # Return the list of routes in the Django site
+    path('api/routes/', RoutesListAPIView.as_view(), name='api-routes-list'),
+    
     path("api/actions", GetActions.as_view(), name='get_actions'),
     # path("api/actions", views.ActionListView.as_view(), name = "actions"),
 
