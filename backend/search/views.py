@@ -77,7 +77,7 @@ def gene(request, id):
     # Implement the functionality for adding a single gene entity to the database
     pass
 
-class DatasetList(APIView):
+class Datasets(APIView):
     """
     Return an array of all known datasets (both active and inactive).
     """
