@@ -5,7 +5,6 @@ import { Heading } from '@chakra-ui/react'
 import TargetToAESearch from '@/components/search/targetToAdverseEventSearch';
 import AdverseEventToTargetSearch from '@/components/search/adverseEventToTarget';
 import TargetToTargetSimilaritySearch from '@/components/search/targetToTargetSimilaritySearch';
-import Link from 'next/link'
 import theme from '@/styles/theme';
 
 
@@ -32,9 +31,9 @@ export default function Index() {
         <Tabs isFitted variant='soft-rounded' colorScheme='blue' my='3em' size='lg'> 
           <Card p="4" m="4">
             <TabList>
-              <Tab>Target to Adverse Event</Tab>
-              <Tab>Adverse Event to Target</Tab>
-              <Tab>Target to Target</Tab>
+              <Tab _selected={{ color: 'white', bg: '#0069A4' }}>Target to Adverse Event</Tab>
+              <Tab _selected={{ color: 'white', bg: '#0069A4' }}>Adverse Event to Target</Tab>
+              <Tab _selected={{ color: 'white', bg: '#0069A4' }}>Target to Target</Tab>
             </TabList>
             </Card>
             <Card p="4" mx="4" mt="4">
