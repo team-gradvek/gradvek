@@ -44,6 +44,10 @@ class DescriptorListView(generics.ListAPIView):
 #     # queryset = fetch_actions()
 #     # queryset = Action.objects.all()
 #     serializer_class = ActionsSerializer(actions, many=True)
+
+
+
+
 class GetActions(APIView):
     def get(self, request):
         actions = fetch_actions()
