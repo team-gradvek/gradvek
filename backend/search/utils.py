@@ -60,18 +60,17 @@ def get_all_routes(urlpatterns, prefix=''):
 
 def get_entity_count(entity_type):
     # Check if the entity_type is a relationship type or a node label, case-insensitively
-    rel_query = f"MATCH ()-[r]->() WHERE type(r) =~ '(?i){entity_type}' RETURN COUNT(r) LIMIT 1"
-    node_query = f"MATCH (n) WHERE any(label in labels(n) WHERE label =~ '(?i){entity_type}') RETURN COUNT(n) LIMIT 1"
+    rel_query = f"MATCH ()-[r]->() WHERE type(r) =~ '(?i){entity_type}' RETURN COUNT(r)"
+    node_query = f"MATCH (n) WHERE any(label in labels(n) WHERE label =~ '(?i){entity_type}') RETURN COUNT(n)"
 
     rel_count, _ = db.cypher_query(rel_query)
     node_count, _ = db.cypher_query(node_query)
 
     if rel_count[0][0] > 0:  # The entity_type is a relationship type
-        count_query = f"MATCH ()-[r]->() WHERE type(r) =~ '(?i){entity_type}' RETURN COUNT(r)"
+        count = rel_count
     elif node_count[0][0] > 0:  # The entity_type is a node label
-        count_query = f"MATCH (n) WHERE any(label in labels(n) WHERE label =~ '(?i){entity_type}') RETURN COUNT(n)"
+        count = node_count
     else:
         raise ValueError(f"Invalid entity type: {entity_type}")
-
-    count, _ = db.cypher_query(count_query)
+    
     return count[0][0]
