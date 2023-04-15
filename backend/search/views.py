@@ -27,7 +27,6 @@ class RoutesListAPIView(generics.GenericAPIView):
     def get_queryset(self):
         return None
     # Override the GET method to return the list of routes
-
     def get(self, request, *args, **kwargs):
         resolver = get_resolver(None)  # Get the project's URL resolver
         # Extract all routes from the URL patterns
