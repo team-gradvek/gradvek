@@ -1,4 +1,5 @@
 from .views import (
+    CountAllView,
     GetActions,
     Datasets,
     RoutesListAPIView,
@@ -60,7 +61,8 @@ urlpatterns = [
          views.get_paths_target_ae_drug_view, name='get_paths_target_ae_drug'),
 
     # Return an array of Cytoscape entities representing paths from a target to one or all adverse events associated with it, optionally filtered by drug and action
-    path('api/count/<str:type_string>/', CountView.as_view(), name='count'),
+    path('api/count/', CountAllView.as_view(), name='count_all'),
+    path('api/count/<str:type_string>/', CountView.as_view(), name='count_entity'),
 
     # Health check
     path('api/info/', views.info, name='info'),

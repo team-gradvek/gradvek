@@ -31,8 +31,8 @@ def update_dataset_status(dataset_name, enabled):
     query = f"MATCH (d:Dataset {{ dataset: '{dataset_name}' }}) SET d.enabled={enabled}"
     db.cypher_query(query)
 
-# Function to return all api routes from the URL patterns
 def get_all_routes(urlpatterns, prefix=''):
+    # Function to return all api routes from the URL patterns
     routes = []
     for entry in urlpatterns:
         if isinstance(entry, URLResolver):
@@ -74,3 +74,30 @@ def get_entity_count(entity_type):
         raise ValueError(f"Invalid entity type: {entity_type}")
     
     return count[0][0]
+
+def count_all_entities():
+    # Get all unique node labels
+    node_labels_query = "CALL db.labels()"
+    
+    # Get all unique relationship types
+    rel_types_query = "CALL db.relationshipTypes()"
+
+    # Execute the Cypher queries and retrieve the results
+    node_labels, _ = db.cypher_query(node_labels_query)
+    rel_types, _ = db.cypher_query(rel_types_query)
+
+    entity_counts = []
+
+    # Count instances for each node label
+    for label in node_labels:
+        count_query = f"MATCH (n:{label[0]}) RETURN COUNT(n)"
+        count, _ = db.cypher_query(count_query)
+        entity_counts.append((label[0], count[0][0]))
+
+    # Count instances for each relationship type
+    for rel_type in rel_types:
+        count_query = f"MATCH ()-[r:{rel_type[0]}]->() RETURN COUNT(r)"
+        count, _ = db.cypher_query(count_query)
+        entity_counts.append((rel_type[0], count[0][0]))
+
+    return entity_counts

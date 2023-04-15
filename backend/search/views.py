@@ -15,6 +15,7 @@ from .serializers import DescriptorSerializer, ActionsSerializer
 
 
 from .utils import (
+    count_all_entities,
     fetch_actions,
     fetch_datasets,
     get_all_routes,
@@ -145,14 +146,30 @@ def get_paths_target_ae_drug_view(request, target, ae=None, drug_id=None):
     # Implement the functionality for returning an array of Cytoscape entities representing paths from a target to adverse events
     pass
 
-# Return an array of Cytoscape entities representing paths from a target to one or all adverse events associated with it, optionally filtered by drug and action
 class CountView(APIView):
+    """
+    CountView handles GET requests to return the count of a specific entity type.
+    """
+
     def get(self, request, type_string, *args, **kwargs):
         try:
             num_entities = get_entity_count(type_string)
             return Response(num_entities, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+
+class CountAllView(APIView):
+    """
+    CountAllView handles GET requests to return the count of all entity types and relationships.
+    """
+
+    def get(self, request, *args, **kwargs):
+        try:
+            counts = count_all_entities()
+            return Response({"counts": counts}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
 
 # Health check
 @require_http_methods(["GET"])
