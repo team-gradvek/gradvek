@@ -1,3 +1,4 @@
+import re
 from django.urls import URLPattern, URLResolver
 from neomodel import db
 from .queries import ACTIONS, DATASETS
@@ -27,25 +28,33 @@ def update_dataset_status(dataset_name, enabled):
     db.cypher_query(query)
 
 # Function to return all api routes from the URL patterns
-
-
 def get_all_routes(urlpatterns, prefix=''):
     routes = []
     for entry in urlpatterns:
         if isinstance(entry, URLResolver):
-            # Combine the current prefix with the entry's pattern, removing the '^' at the beginning
-            new_prefix = prefix + entry.pattern.regex.pattern.lstrip('^')
-            # Recursively process the nested URL patterns
+            new_prefix = prefix + entry.pattern.describe().lstrip('^')
             routes.extend(get_all_routes(entry.url_patterns, new_prefix))
         elif isinstance(entry, URLPattern):
-            # Combine the current prefix with the entry's pattern, removing the '^' at the beginning
-            pattern = prefix + entry.pattern.regex.pattern.lstrip('^')
-            # Replace double backslashes with single ones
+            pattern = prefix + entry.pattern.describe().lstrip('^')
             pattern = pattern.replace('\\\\', '\\')
-            # Remove the '\\Z' at the end of the pattern
             pattern = pattern.rstrip('\\Z')
+            # Replace regex patterns with more readable path format
+            pattern = re.sub(r'\(\?P<([^>]+)>([^<]+)\)', r'<\1:\2>', pattern)
+            # Remove the extra triple quotes if present
+            pattern = pattern.strip("'''")
+            # Remove the `[name=...]` part from the path
+            pattern = re.sub(r"\[name='[^']+']", '', pattern).strip()
+            # Remove the extra single quotes
+            pattern = re.sub(r"''", '', pattern)
+            # Remove the single quote at the end of the path
+            pattern = pattern.rstrip("'")
             routes.append({
                 'path': pattern,
                 'name': entry.name
             })
     return routes
+
+
+
+
+
