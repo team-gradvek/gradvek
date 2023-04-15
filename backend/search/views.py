@@ -18,6 +18,7 @@ from .utils import (
     fetch_actions,
     fetch_datasets,
     get_all_routes,
+    get_entity_count,
     update_dataset_status,
 )
 
@@ -145,10 +146,13 @@ def get_paths_target_ae_drug_view(request, target, ae=None, drug_id=None):
     pass
 
 # Return an array of Cytoscape entities representing paths from a target to one or all adverse events associated with it, optionally filtered by drug and action
-@require_http_methods(["GET"])
-def count(request, type_string):
-    # Implement the functionality for counting entities by type
-    pass
+class CountView(APIView):
+    def get(self, request, type_string, *args, **kwargs):
+        try:
+            num_entities = get_entity_count(type_string)
+            return Response(num_entities, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
 
 # Health check
 @require_http_methods(["GET"])
