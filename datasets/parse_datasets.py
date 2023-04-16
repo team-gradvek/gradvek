@@ -332,6 +332,30 @@ def create_cypher_query_associated_with(table):
     """
     return [(query, {'data': data, 'dataset': dataset})]
 
+# Parse the targets data and create a list of Cypher queries to add associatedWith relationships to the database
+def create_cypher_query_associated_mouse_phenotypes(table):
+    df = table.to_pandas()
+    data = []
+    for _, row in df.iterrows():
+        if row['targetFromSourceId'] is None or row['modelPhenotypeId'] is None:
+            continue
+        # Append data for each combination of chembl_id and meddraCode
+        data.append({
+            'targetFromSourceId': row['targetFromSourceId'],
+            'modelPhenotypeId': row['modelPhenotypeId'],
+            'weight': 1
+        })
+    # APOC query for creating relationships between Target and Pathway nodes
+    query = """
+    CALL apoc.periodic.iterate(
+        'UNWIND $data as item RETURN item',
+        'MATCH (from:Target {targetFromSourceId: item.targetFromSourceId}), (to:MousePhenotype {modelPhenotypeId: item.modelPhenotypeId})
+         MERGE (from)-[:MOUSE_PHENOTYPE {dataset: $dataset, weight: item.weight}]->(to)',
+        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+    )
+    """
+    return [(query, {'data': data, 'dataset': dataset})]
+
 # Main function call
 if __name__ == "__main__":
     main()
