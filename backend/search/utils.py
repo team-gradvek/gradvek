@@ -99,3 +99,74 @@ def count_all_entities():
         entity_counts.append((rel_type[0], count[0][0]))
 
     return entity_counts
+
+def get_weights_by_target(target, adverse_event=None, action_types=None, drug=None, count=None):
+    # Find active datasets
+    enabled_datasets_query = "MATCH (nd:Dataset {enabled: true}) WITH COLLECT(nd.dataset) AS enabledSets"
+
+    # Construct the TARGETS segment of the query
+    target_query = f"""
+        MATCH (nd:Drug)-[rt:TARGETS]-(nt:Target)
+        WHERE nd.dataset IN enabledSets
+            AND rt.dataset IN enabledSets
+            AND nt.dataset IN enabledSets
+            AND toUpper(nt.symbol) = '{target.upper()}'
+    """
+
+    if drug:
+        target_query += f" AND nd.drug_id = '{drug}'"
+
+    if action_types:
+        action_types_str = ", ".join([f"'{action_type}'" for action_type in action_types])
+        target_query += f" AND rt.actionType IN [{action_types_str}]"
+
+    target_query += " WITH enabledSets, COLLECT(nd) AS targetingDrugs"
+
+    # Construct the ASSOCIATED_WITH segment of the query
+    associated_query = f"""
+        MATCH (nae:AdverseEvent)-[raw:ASSOCIATED_WITH]-(nd:Drug)
+        WHERE nae.dataset IN enabledSets
+            AND raw.dataset IN enabledSets
+            AND nd.dataset IN enabledSets
+            AND nd in targetingDrugs
+    """
+
+    if adverse_event:
+        associated_query += f" AND nae.adverse_event_id = '{adverse_event}'"
+
+    if drug:
+        associated_query += f" AND nd.drug_id = '{drug}'"
+
+    # Define the return clause based on whether an adverse event is provided
+    if adverse_event:
+        return_query = " RETURN nd, sum(toFloat(raw.llr))"
+    else:
+        return_query = " RETURN nae, sum(toFloat(raw.llr))"
+
+    return_query += " ORDER BY sum(toFloat(raw.llr)) desc"
+
+    if count:
+        return_query += f" LIMIT {count}"
+
+    # Combine all query segments
+    cypher_query = f"{enabled_datasets_query}{target_query}{associated_query}{return_query}"
+
+     # Run the Cypher query and retrieve the results
+    results, _ = db.cypher_query(cypher_query)
+
+    # Format the results to match the Java version
+    formatted_results = []
+
+    for res in results:
+        entry = {
+            "llr": res[1],
+            "id": res[0]["meddraId"],
+            "type": "AdverseEvent",
+            "meddraId": res[0]["meddraId"],
+            "name": res[0]["adverseEventId"],
+            "dataset": res[0]["dataset"].replace(" ", ""),
+            "datasetCommandString": f"dataset: '{res[0]['dataset']}'"
+        }
+        formatted_results.append(entry)
+
+    return formatted_results

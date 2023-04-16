@@ -22,6 +22,7 @@ from .utils import (
     fetch_datasets,
     get_all_routes,
     get_entity_count,
+    get_weights_by_target,
     update_dataset_status,
 )
 
@@ -138,10 +139,27 @@ class Datasets(APIView):
         return JsonResponse({}, status=200)
 
 # Return an array of adverse events associated with a specific target, optionally filtered by action
-@require_http_methods(["GET"])
-def get_adverse_event(request, target):
-    # Implement the functionality for returning an array of adverse events associated with a specific target
-    pass
+class GetAdverseEventByTargetView(APIView):
+    def get(self, request, target, ae=None):
+        # Extract query parameters
+        action_types = request.query_params.get('action_types')
+        drug = request.query_params.get('drug')
+        count = request.query_params.get('count')
+
+        # Convert action_types to a list if provided
+        if action_types:
+            action_types = action_types.split(',')
+
+        # Convert count to an integer if provided
+        if count:
+            count = int(count)
+
+        # Call the helper function to get the results
+        result = get_weights_by_target(target, ae, action_types, drug, count)
+
+        # Return the result as a JSON response
+        return Response(result, status=status.HTTP_200_OK)
+
 
 # Return an array of weights of adverse events associated with a specific target, optionally filtered by action
 @require_http_methods(["GET"])
