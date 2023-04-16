@@ -51,13 +51,47 @@ def set_dataset_name():
 
     # Check if the dataset variable was set
     if data_version is None:
-        raise ValueError("data_version not found in platform.conf")
+        raise ValueError("data_version not found in platform.conf.")
     else:
-        print("Dataset version:", data_version)
+        print("Dataset version in platform.conf file:", data_version)
 
 # Set the URI and AUTH for the neo4j database
 URI = "bolt://localhost:7687"
 AUTH = ("neo4j", "gradvek1")
+
+def update_check():
+    #Find first entry in neo4j and get the dataset version from it
+    try:
+        with GraphDatabase.driver(URI, auth=AUTH) as driver:
+            driver.verify_connectivity()
+            with driver.session() as session:
+                result = session.run("MATCH (n) RETURN n LIMIT 1")
+
+                # Check if there is any result
+                if result.peek():
+                    # Get the dataset from the first entry
+                    dataset = result.peek()['n']['dataset']
+                    # Get the dataset version from that entry
+                    first_7_digits = dataset[:7]
+                    print("Neo4J Dataset version:", first_7_digits)
+
+        #close neo4j driver
+        driver.close()
+
+        #If the dataset version from the entry in neo4j matches that from our conf file, there's no need to update the neo4j db
+        if first_7_digits == data_version:
+            print("Data in neo4j is already up to date")
+            return False
+        else:
+            print("Data version in neo4j doesnt match the data version in conf file. Clearing neo4j db and reloading db")
+            clear_neo4j_database()
+            return True
+        
+    except Exception as e:
+       print("Didnt find neo4j entry or dataset version. Reloading data")
+       clear_neo4j_database()
+       return True
+
 
 def main():
     # Set the dataset name
@@ -67,52 +101,57 @@ def main():
     # Set the input directory for the opentarget data
     input_dir = f"{current_dir}/opentarget"
 
-    # TODO:
-    # Action (edge) - appears to not use any data source?
-    # Gene (entity), Involves (edge) - these seem to only come from csv
+    if update_check():
+        clear_neo4j_database()
+        # TODO:
+        # Action (edge) - appears to not use any data source?
+        # Gene (entity), Involves (edge) - these seem to only come from csv
 
-    # Define data_type_query_generators, a dictionary that maps data types to lists of query generators.
-    # Each list contains multiple node or edge query generator functions for the respective data type.
-    data_type_query_generators = {
-        # Key: data type name, Value: tuple([node query generators], [edge query generators])
-        "targets": ([create_cypher_query_targets, create_cypher_query_pathways], [create_cypher_query_participates]),
-        "fda": ([create_cypher_query_adverse_events], [create_cypher_query_associated_with]),
-        "molecule": ([create_cypher_query_drugs], []),
-        "mechanismOfAction": ([], [create_cypher_query_mechanism_of_action]),
-        "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], []),
-        "diseases": ([create_cypher_query_diseases], [])
-    }
+        # Define data_type_query_generators, a dictionary that maps data types to lists of query generators.
+        # Each list contains multiple node or edge query generator functions for the respective data type.
+        data_type_query_generators = {
+            # Key: data type name, Value: tuple([node query generators], [edge query generators])
+            "targets": ([create_cypher_query_targets, create_cypher_query_pathways], [create_cypher_query_participates]),
+            "fda": ([create_cypher_query_adverse_events], [create_cypher_query_associated_with]),
+            "molecule": ([create_cypher_query_drugs], []),
+            "mechanismOfAction": ([], [create_cypher_query_mechanism_of_action]),
+            "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], []),
+            "diseases": ([create_cypher_query_diseases], [])
+        }
 
 
-    # Create indexes for nodes - this significantly improves performance in edge query generation
-    create_indexes()
+        # Create indexes for nodes - this significantly improves performance in edge query generation
+        create_indexes()
 
-    # Iterate over each data type in the input directory for node query generators
-    for data_type in os.listdir(input_dir):
-        # Set the data_type_path
-        data_type_path = os.path.join(input_dir, data_type)
-        # Check if the path is a directory
-        if not os.path.isdir(data_type_path):
-            continue
+        # Iterate over each data type in the input directory for node query generators
+        for data_type in os.listdir(input_dir):
+            # Set the data_type_path
+            data_type_path = os.path.join(input_dir, data_type)
+            # Check if the path is a directory
+            if not os.path.isdir(data_type_path):
+                continue
 
-         # Run the node query generators for the current data type
-        for node_query_generator in data_type_query_generators[data_type][0]:
-            if node_query_generator is not None:
-                generate_queries(data_type, data_type_path, node_query_generator)
-    
+            # Run the node query generators for the current data type
+            for node_query_generator in data_type_query_generators[data_type][0]:
+                if node_query_generator is not None:
+                    generate_queries(data_type, data_type_path, node_query_generator)
+        
 
-    # Iterate over each data type in the input directory for edge query generators
-    for data_type in os.listdir(input_dir):
-        # Set the data_type_path
-        data_type_path = os.path.join(input_dir, data_type)
-        # Check if the path is a directory
-        if not os.path.isdir(data_type_path):
-            continue
+        # Iterate over each data type in the input directory for edge query generators
+        for data_type in os.listdir(input_dir):
+            # Set the data_type_path
+            data_type_path = os.path.join(input_dir, data_type)
+            # Check if the path is a directory
+            if not os.path.isdir(data_type_path):
+                continue
 
-        # Run the edge query generators for the current data type
-        for edge_query_generator in data_type_query_generators[data_type][1]:
-            if edge_query_generator is not None:
-                generate_queries(data_type, data_type_path, edge_query_generator)
+            # Run the edge query generators for the current data type
+            for edge_query_generator in data_type_query_generators[data_type][1]:
+                if edge_query_generator is not None:
+                    generate_queries(data_type, data_type_path, edge_query_generator)
+
+    else:
+        print("Data up to date. Will not update neo4j db")  
 
 # Generate queries for the given data type and path
 # This function takes a data_type, data_type_path, and a query_generator function
@@ -374,6 +413,18 @@ def create_cypher_query_associated_with(table):
     dataset_query = create_dataset_cypher_query(node_label)
     # Return a list of queries to be executed
     return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
+
+def clear_neo4j_database():
+    URI = "bolt://localhost:7687"
+    AUTH = ("neo4j", "gradvek1")
+    # Connect to Neo4j database
+    driver = GraphDatabase.driver(URI, auth=AUTH)
+    with driver.session() as session:
+        # Delete all nodes and relationships in the database
+        session.run("MATCH (n) DETACH DELETE n")
+
+    # Close the Neo4j driver
+    driver.close()
 
 # Main function call
 if __name__ == "__main__":

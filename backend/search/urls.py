@@ -72,7 +72,7 @@ urlpatterns = [
     path('api/actions/', views.actions, name='actions'),
 
     # Return an array of actions for the specified target
-    path('api/actions/<str:target>/', views.actions, name='actions_target')
+    path('api/actions/<str:target>/', views.actions, name='actions_target'),
 
     # TODO Add some paths for retrieving similarity information?
 
@@ -85,7 +85,7 @@ urlpatterns = [
     # path('api/csv/<str:file_id>/', views.get_csv, name='get_csv'),
 
     # # Clear out the database
-    # path('api/clear/', views.clear, name='clear'),
+    path('api/clear/', views.clear, name='clear'),
 
     # # Initialize entities (all or of the specified type) from the OpenTargets store
     # path('api/init/', views.init_type, name='init_all'),

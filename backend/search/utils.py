@@ -3,6 +3,7 @@ import string
 from django.urls import URLPattern, URLResolver
 from neomodel import db
 from .queries import ACTIONS, DATASETS
+from neo4j import GraphDatabase
 
 
 # from .models import (
@@ -108,8 +109,17 @@ def get_entity_count(entity_type):
     return results[0][0]
 
 
+def clear_neo4j_database():
+    URI = "bolt://localhost:7687"
+    AUTH = ("neo4j", "gradvek1")
+    # Connect to Neo4j database
+    driver = GraphDatabase.driver(URI, auth=AUTH)
+    with driver.session() as session:
+        # Delete all nodes and relationships in the database
+        session.run("MATCH (n) DETACH DELETE n")
 
-
+    # Close the Neo4j driver
+    driver.close()
 
 
 
