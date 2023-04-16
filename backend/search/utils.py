@@ -1,7 +1,10 @@
 import re
 import string
 from django.urls import URLPattern, URLResolver
-from neomodel import db
+from neomodel import db, config
+from neomodel import NodeSet
+from neomodel.core import NodeMeta
+from neomodel.relationship import RelationshipMeta
 from .queries import ACTIONS, DATASETS
 
 
@@ -28,8 +31,8 @@ def update_dataset_status(dataset_name, enabled):
     query = f"MATCH (d:Dataset {{ dataset: '{dataset_name}' }}) SET d.enabled={enabled}"
     db.cypher_query(query)
 
-# Function to return all api routes from the URL patterns
 def get_all_routes(urlpatterns, prefix=''):
+    # Function to return all api routes from the URL patterns
     routes = []
     for entry in urlpatterns:
         if isinstance(entry, URLResolver):
@@ -56,61 +59,45 @@ def get_all_routes(urlpatterns, prefix=''):
     return routes
 
 def get_entity_count(entity_type):
-    # Convert the input entity_type to lowercase for comparison
-    entity_type = entity_type.lower()
+    # Check if the entity_type is a relationship type or a node label, case-insensitively
+    rel_query = f"MATCH ()-[r]->() WHERE type(r) =~ '(?i){entity_type}' RETURN COUNT(r)"
+    node_query = f"MATCH (n) WHERE any(label in labels(n) WHERE label =~ '(?i){entity_type}') RETURN COUNT(n)"
 
-    # Define a mapping from lowercase entity types to their correct formats
-    entity_type_mapping = {
-        'adverseevent': 'AdverseEvent',
-        'drug': 'Drug',
-        'gene': 'Gene',
-        'target': 'Target',
-        'mousephenotype': 'MousePhenotype',
-        'pathway': 'Pathway',
-        'dataset': 'Dataset',
-        'associatedwith': 'AssociatedWith',
-        'mechanismofaction': 'MechanismOfAction',
-        'action': 'Action',
-        'involves': 'Involves',
-        'participates': 'Participates',
-    }
+    rel_count, _ = db.cypher_query(rel_query)
+    node_count, _ = db.cypher_query(node_query)
 
-    # Map the user input to the correct entity_type format
-    entity_type = entity_type_mapping.get(entity_type)
-    if entity_type is None:
-        raise ValueError(f"Invalid entity type: {entity_type}")
-
-    # Define a set of simple entity types
-    simple_entities = {
-        'AdverseEvent', 'Drug', 'Gene', 'Target', 'MousePhenotype', 'Pathway', 'Dataset'
-    }
-
-    # Define a dictionary of relation entity types with the related node labels
-    relation_entities = {
-        'AssociatedWith': ("Drug", "AdverseEvent"),
-        'MechanismOfAction': ("Drug", "Target"),
-        'Action': ("Drug", "Target"),
-        'Involves': ("Target", "Gene"),
-        'Participates': ("Target", "Pathway"),
-    }
-
-    # Check if the entity_type is a simple entity or a relation entity, and build the corresponding Cypher query
-    if entity_type in simple_entities:
-        query = f"MATCH (n:{entity_type}) RETURN COUNT(n)"
-    elif entity_type in relation_entities:
-        node1, node2 = relation_entities[entity_type]
-        query = f"MATCH (:{node1})-[n]->(:{node2}) RETURN COUNT(n)"
+    if rel_count[0][0] > 0:  # The entity_type is a relationship type
+        count = rel_count
+    elif node_count[0][0] > 0:  # The entity_type is a node label
+        count = node_count
     else:
         raise ValueError(f"Invalid entity type: {entity_type}")
+    
+    return count[0][0]
 
-    # Execute the Cypher query and return the count of the requested entity type
-    results, _ = db.cypher_query(query)
-    return results[0][0]
+def count_all_entities():
+    # Get all unique node labels
+    node_labels_query = "CALL db.labels()"
+    
+    # Get all unique relationship types
+    rel_types_query = "CALL db.relationshipTypes()"
 
+    # Execute the Cypher queries and retrieve the results
+    node_labels, _ = db.cypher_query(node_labels_query)
+    rel_types, _ = db.cypher_query(rel_types_query)
 
+    entity_counts = []
 
+    # Count instances for each node label
+    for label in node_labels:
+        count_query = f"MATCH (n:{label[0]}) RETURN COUNT(n)"
+        count, _ = db.cypher_query(count_query)
+        entity_counts.append((label[0], count[0][0]))
 
+    # Count instances for each relationship type
+    for rel_type in rel_types:
+        count_query = f"MATCH ()-[r:{rel_type[0]}]->() RETURN COUNT(r)"
+        count, _ = db.cypher_query(count_query)
+        entity_counts.append((rel_type[0], count[0][0]))
 
-
-
-
+    return entity_counts
