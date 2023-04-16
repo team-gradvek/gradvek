@@ -4,6 +4,7 @@ from .views import (
     Datasets,
     RoutesListAPIView,
     CountView,
+    GetAdverseEventByTargetView,
 )
 from django.urls import path
 
@@ -45,12 +46,10 @@ urlpatterns = [
     path('api/datasets/', Datasets.as_view(), name='datasets'),
 
     # Return an array of adverse events associated with a specific target, optionally filtered by action
-    path('api/weight/<str:target>/',
-         views.get_adverse_event, name='get_adverse_event'),
+    path('api/weight/<str:target>/', GetAdverseEventByTargetView.as_view(), name='get_adverse_event'),
 
     # Return an array of weights of adverse events associated with a specific target, optionally filtered by action
-    path('api/weight/<str:target>/<str:ae>/',
-         views.get_weights_target_ae, name='get_weights_target_ae'),
+    path('api/weight/<str:target>/<str:ae>/', GetAdverseEventByTargetView.as_view(), name='get_weights_target_ae'),
 
     # Return an array of Cytoscape entities representing paths from a target to one or all adverse events associated with it, optionally filtered by drug and action
     path('api/ae/path/<str:target>/',
