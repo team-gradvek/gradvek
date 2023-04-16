@@ -7,6 +7,8 @@ from neomodel.core import NodeMeta
 from neomodel.relationship import RelationshipMeta
 from .queries.actions import get_actions
 from .queries.datasets import DATASETS
+from neo4j import GraphDatabase
+
 
 
 
@@ -184,3 +186,15 @@ def get_weights_by_target(target, adverse_event=None, action_types=None, drug=No
 
     # Return the list of formatted results
     return formatted_results
+
+def clear_neo4j_database():
+    URI = "bolt://localhost:7687"
+    AUTH = ("neo4j", "gradvek1")
+    # Connect to Neo4j database
+    driver = GraphDatabase.driver(URI, auth=AUTH)
+    with driver.session() as session:
+        # Delete all nodes and relationships in the database
+        session.run("MATCH (n) DETACH DELETE n")
+
+    # Close the Neo4j driver
+    driver.close()

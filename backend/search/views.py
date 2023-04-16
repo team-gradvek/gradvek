@@ -10,7 +10,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import serializers
 from rest_framework.renderers import JSONRenderer
-
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse, JsonResponse
 
 from .models import Descriptor, Action
 from .serializers import DescriptorSerializer, ActionsSerializer
@@ -24,6 +25,7 @@ from .utils import (
     get_entity_count,
     get_weights_by_target,
     update_dataset_status,
+    clear_neo4j_database
 )
 
 # API view to list all routes in the Django site
@@ -88,10 +90,17 @@ def get_csv(request, file_id):
     pass
 
 # Clear out the database
+@csrf_exempt
 @require_http_methods(["POST"])
 def clear(request):
     # Implement the functionality for clearing out the database
-    pass
+    try:
+        clear_neo4j_database()
+        return HttpResponse('Neo4J DB cleared', status=200)
+
+    except Exception as e:
+        return HttpResponse('Internal Server Error', status=500)
+
 
 # Initialize entities (all or of the specified type) from the OpenTargets store
 @require_http_methods(["POST"])
