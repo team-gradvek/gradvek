@@ -5,13 +5,10 @@ from neomodel import db, config
 from neomodel import NodeSet
 from neomodel.core import NodeMeta
 from neomodel.relationship import RelationshipMeta
-from .queries import ACTIONS, DATASETS
+from .queries.actions import get_actions
+from .queries.datasets import DATASETS
 
 
-# from .models import (
-#     Drug,
-
-# )
 
 # # For easily access each of the model classes programmatically, create a key-value map.
 # MODEL_ENTITIES = {
@@ -19,7 +16,8 @@ from .queries import ACTIONS, DATASETS
 
 # }
 
-def fetch_actions():
+def fetch_actions(target):
+    ACTIONS = get_actions(target)
     return ACTIONS
 
 

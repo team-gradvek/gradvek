@@ -1,20 +1,5 @@
 from neomodel import db
 
-
-actions = db.cypher_query(
-    '''
-    MATCH (:Drug)-[rt:TARGETS]-(:Target) 
-    WITH DISTINCT rt.actionType AS actType 
-    OPTIONAL MATCH (:Drug)-[rt2:TARGETS {actionType: actType}]-(nt:Target) 
-    RETURN actType, COUNT(rt2) 
-    ORDER BY actType
-    '''
-
-)[0]
-
-ACTIONS = sorted([action for action in actions])
-
-
 # This Cypher query retrieves distinct dataset values from all nodes in the Neo4j database
 unique_datasets = db.cypher_query(
     '''

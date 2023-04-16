@@ -16,9 +16,11 @@ app_name = "search"
 urlpatterns = [
     # Return the list of routes in the Django site
     path('api/routes/', RoutesListAPIView.as_view(), name='api-routes-list'),
+    
+    # Return an array of actions for the specified target
+    path("api/actions/", GetActions.as_view(), name='get_actions'),
+    path('api/actions/<str:target>/', GetActions.as_view(), name='get_actions_target'),
 
-    path("api/actions", GetActions.as_view(), name='get_actions'),
-    #path("api/actions", views.ActionListView.as_view(), name = "actions"),
 
     path("api/descriptors", views.DescriptorListView.as_view(), name="descriptors"),
 
@@ -70,11 +72,7 @@ urlpatterns = [
     # Return an array of suggested entities in response to a hint (beginning of the name)
     path('api/suggest/<str:hint>/', views.suggest_hint, name='suggest_hint'),
 
-    # Return an array of all actions in the database
-    path('api/actions/', views.actions, name='actions'),
 
-    # Return an array of actions for the specified target
-    path('api/actions/<str:target>/', views.actions, name='actions_target')
 
     # TODO Add some paths for retrieving similarity information?
 
