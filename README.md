@@ -81,7 +81,7 @@ python3 manage.py migrate
 ```
 https://stackoverflow.com/questions/29980211/django-1-8-whats-the-difference-between-migrate-and-makemigrations
 
-## 4. Run Admin Config
+## 4. (OPTIONAL) Run Admin Config
 
 
 `cd` into `backend` folder  
@@ -98,7 +98,7 @@ python3 manage.py runserver
 test at : http://localhost:8000/admin/  
 
 
-## 5. Create descriptor objects (optional - only to showcase a database example)
+## 5. (OPTIONAL) Create descriptor objects (optional - only to showcase a database example)
 
 Log-in to admin and add a few descriptors http://localhost:8000/admin/
 
@@ -111,6 +111,18 @@ Browse to the `frontend` folder and install modules
 npm i
 ```
 https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+
+## 7. Add .env file inside Django project
+
+Add `.env` file inside `backend/gradvekbackend` dir
+```
+SECRET_KEY=
+NEO4J_USERNAME=
+NEO4J_PASSWORD=
+NEO4J_BOLT_URL=
+```
+
+Secret keys are inside https://github.com/team-gradvek/env
 
 # How to run the frontend and backend
 ## 1. Run Frontend

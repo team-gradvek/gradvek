@@ -8,6 +8,8 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import serializers
+from rest_framework.renderers import JSONRenderer
 
 
 from .models import Descriptor, Action
@@ -39,14 +41,6 @@ class RoutesListAPIView(generics.GenericAPIView):
 class DescriptorListView(generics.ListAPIView):
     queryset = Descriptor.objects.all()
     serializer_class = DescriptorSerializer
-
-# class ActionListView(generics.ListAPIView):
-#     actions = fetch_actions()
-#     # queryset = fetch_actions()
-#     # queryset = Action.objects.all()
-#     serializer_class = ActionsSerializer(actions, many=True)
-
-
 
 
 class GetActions(APIView):

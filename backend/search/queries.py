@@ -9,11 +9,10 @@ actions = db.cypher_query(
     RETURN actType, COUNT(rt2) 
     ORDER BY actType
     '''
+
 )[0]
 
-
 ACTIONS = sorted([action for action in actions])
-# ACTIONS = {key: value for key, value in zip(key, value)}
 
 
 # This Cypher query retrieves distinct dataset values from all nodes in the Neo4j database

@@ -17,4 +17,5 @@ class ActionsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Action
-        fields = ["action", "count"]
+        fields = ["action"]
+        # fields = ["action", "count"]
