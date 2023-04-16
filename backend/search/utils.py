@@ -56,6 +56,50 @@ def get_all_routes(urlpatterns, prefix=''):
             })
     return routes
 
+def get_entity_count(entity_type):
+    # Check if the entity_type is a relationship type or a node label, case-insensitively
+    rel_query = f"MATCH ()-[r]->() WHERE type(r) =~ '(?i){entity_type}' RETURN COUNT(r)"
+    node_query = f"MATCH (n) WHERE any(label in labels(n) WHERE label =~ '(?i){entity_type}') RETURN COUNT(n)"
+
+    rel_count, _ = db.cypher_query(rel_query)
+    node_count, _ = db.cypher_query(node_query)
+
+    if rel_count[0][0] > 0:  # The entity_type is a relationship type
+        count = rel_count
+    elif node_count[0][0] > 0:  # The entity_type is a node label
+        count = node_count
+    else:
+        raise ValueError(f"Invalid entity type: {entity_type}")
+
+    return count[0][0]
+
+def count_all_entities():
+    # Get all unique node labels
+    node_labels_query = "CALL db.labels()"
+
+    # Get all unique relationship types
+    rel_types_query = "CALL db.relationshipTypes()"
+
+    # Execute the Cypher queries and retrieve the results
+    node_labels, _ = db.cypher_query(node_labels_query)
+    rel_types, _ = db.cypher_query(rel_types_query)
+
+    entity_counts = []
+
+    # Count instances for each node label
+    for label in node_labels:
+        count_query = f"MATCH (n:{label[0]}) RETURN COUNT(n)"
+        count, _ = db.cypher_query(count_query)
+        entity_counts.append((label[0], count[0][0]))
+
+    # Count instances for each relationship type
+    for rel_type in rel_types:
+        count_query = f"MATCH ()-[r:{rel_type[0]}]->() RETURN COUNT(r)"
+        count, _ = db.cypher_query(count_query)
+        entity_counts.append((rel_type[0], count[0][0]))
+
+    return entity_counts
+
 # Define the get_weights_by_target function, which retrieves a list of adverse events
 # and their associated log likelihood ratios (llr) for a given protein target.
 def get_weights_by_target(target, adverse_event=None, action_types=None, drug=None, count=None):
