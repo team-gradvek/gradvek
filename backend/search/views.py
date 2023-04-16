@@ -8,21 +8,22 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import serializers
+from rest_framework.renderers import JSONRenderer
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
-
-
-
 
 from .models import Descriptor, Action
 from .serializers import DescriptorSerializer, ActionsSerializer
 
 
 from .utils import (
+    count_all_entities,
     fetch_actions,
     fetch_datasets,
     get_all_routes,
     get_entity_count,
+    get_weights_by_target,
     update_dataset_status,
     clear_neo4j_database
 )
@@ -45,14 +46,18 @@ class DescriptorListView(generics.ListAPIView):
     queryset = Descriptor.objects.all()
     serializer_class = DescriptorSerializer
 
-# class ActionListView(generics.ListAPIView):
-#     actions = fetch_actions()
-#     # queryset = fetch_actions()
-#     # queryset = Action.objects.all()
-#     serializer_class = ActionsSerializer(actions, many=True)
+# Return an array of all actions in the database
 class GetActions(APIView):
-    def get(self, request):
-        actions = fetch_actions()
+    def get(self, request,  *args, **kwargs):
+
+        # Check if a target is in the requested path
+        try: 
+            target = self.kwargs["target"]
+        # Else save as empty string
+        except:
+            target = ""
+
+        actions = fetch_actions(target)
         data = {
             'response': {
                 'status': '200',
@@ -60,6 +65,9 @@ class GetActions(APIView):
             },
         }
         return Response(data)
+
+# Return an array of actions for the specified target
+#actions/{target}
 
 
 # Trying to copy paths from gradvek 1.0
@@ -140,10 +148,27 @@ class Datasets(APIView):
         return JsonResponse({}, status=200)
 
 # Return an array of adverse events associated with a specific target, optionally filtered by action
-@require_http_methods(["GET"])
-def get_adverse_event(request, target):
-    # Implement the functionality for returning an array of adverse events associated with a specific target
-    pass
+class GetAdverseEventByTargetView(APIView):
+    def get(self, request, target, ae=None):
+        # Extract query parameters
+        action_types = request.query_params.get('action_types')
+        drug = request.query_params.get('drug')
+        count = request.query_params.get('count')
+
+        # Convert action_types to a list if provided
+        if action_types:
+            action_types = action_types.split(',')
+
+        # Convert count to an integer if provided
+        if count:
+            count = int(count)
+
+        # Call the helper function to get the results
+        result = get_weights_by_target(target, ae, action_types, drug, count)
+
+        # Return the result as a JSON response
+        return Response(result, status=status.HTTP_200_OK)
+
 
 # Return an array of weights of adverse events associated with a specific target, optionally filtered by action
 @require_http_methods(["GET"])
@@ -157,14 +182,30 @@ def get_paths_target_ae_drug_view(request, target, ae=None, drug_id=None):
     # Implement the functionality for returning an array of Cytoscape entities representing paths from a target to adverse events
     pass
 
-# Return an array of Cytoscape entities representing paths from a target to one or all adverse events associated with it, optionally filtered by drug and action
 class CountView(APIView):
+    """
+    CountView handles GET requests to return the count of a specific entity type.
+    """
+
     def get(self, request, type_string, *args, **kwargs):
         try:
             num_entities = get_entity_count(type_string)
             return Response(num_entities, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+
+class CountAllView(APIView):
+    """
+    CountAllView handles GET requests to return the count of all entity types and relationships.
+    """
+
+    def get(self, request, *args, **kwargs):
+        try:
+            counts = count_all_entities()
+            return Response({"counts": counts}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
 
 # Health check
 @require_http_methods(["GET"])

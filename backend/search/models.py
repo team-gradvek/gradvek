@@ -19,6 +19,6 @@ class Descriptor(models.Model):
 
 
 class Action(models.Model):
-    action = models.CharField(max_length=30)
-    count = models.IntegerField()
+    action = models.CharField(max_length=30, null=True, blank=True)
+    count = models.IntegerField( null=True, blank=True)
 
