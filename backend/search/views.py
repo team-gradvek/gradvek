@@ -44,8 +44,11 @@ class DescriptorListView(generics.ListAPIView):
     queryset = Descriptor.objects.all()
     serializer_class = DescriptorSerializer
 
-# Return an array of all actions in the database
+
 class GetActions(APIView):
+    """
+    Return an array of all actions or specific to a target
+    """
     def get(self, request,  *args, **kwargs):
 
         # Check if a target is in the requested path
@@ -54,7 +57,7 @@ class GetActions(APIView):
         # Else save as empty string
         except:
             target = ""
-
+        # Get cypher query results
         actions = fetch_actions(target)
         data = {
             'response': {
@@ -63,6 +66,8 @@ class GetActions(APIView):
             },
         }
         return Response(data)
+ 
+        
 
 # Return an array of actions for the specified target
 #actions/{target}
@@ -196,6 +201,7 @@ class CountAllView(APIView):
             return Response({"counts": counts}, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+
 
 
 # Health check

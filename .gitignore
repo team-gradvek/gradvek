@@ -12,3 +12,4 @@ neo4j/logs/
 neo4j/import/
 neo4j/plugins/
 .env
+.vscode

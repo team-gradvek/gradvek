@@ -3,6 +3,7 @@ from neomodel import db
 
 def get_actions(target):
 
+    # Change cyper query if target symbol
     if target == "":
         cmd_filter = ""
     else:

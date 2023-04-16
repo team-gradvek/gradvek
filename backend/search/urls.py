@@ -63,6 +63,7 @@ urlpatterns = [
 
     # Return an array of Cytoscape entities representing paths from a target to one or all adverse events associated with it, optionally filtered by drug and action
     path('api/count/', CountAllView.as_view(), name='count_all'),
+#     path('api/count/', CountView.as_view(), name='count_all'),
     path('api/count/<str:type_string>/', CountView.as_view(), name='count_entity'),
 
     # Health check
