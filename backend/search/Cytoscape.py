@@ -71,6 +71,6 @@ class Relationship(CytoscapeEntity):
         return {
             "id": self.id,
             "group": self.group,
-            "classes": self.classes,
-            "data": self.data
+            "data": self.data,
+            "classes": self.classes
         }

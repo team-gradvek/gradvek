@@ -113,8 +113,6 @@ def count_all_entities():
 
 # Define the get_weights_by_target function, which retrieves a list of adverse events
 # and their associated log likelihood ratios (llr) for a given protein target.
-
-
 def get_weights_by_target(target, adverse_event=None, action_types=None, drug=None, count=None):
     # Find active datasets and store them in the enabledSets variable.
     enabled_datasets_query = "MATCH (nd:Dataset {enabled: true}) WITH COLLECT(nd.dataset) AS enabledSets"
@@ -277,7 +275,7 @@ def get_paths_target_ae_drug(target, action_types=None, adverse_event=None, drug
     # Combine all query segments to form the final Cypher query.
     cypher_query = f"{target_query} UNION {path_query} UNION {drug_target_query}"
 
-    print(cypher_query)
+    # print(cypher_query) #debugging
 
     # Run the Cypher query and retrieve the results.
     results, _ = db.cypher_query(cypher_query)
@@ -302,6 +300,7 @@ def get_cytoscape_entities_as_json(paths):
             if primary_label == "AdverseEvent":
                 node_class = "adverse-event"
 
+            # print(node) #debugging
             # Convert node properties to a dictionary with appropriate keys.
             data_map = {key: str(node._properties.get(source, ''))
                         for key, source in Node.NODE_PROPERTY_MAP.get(primary_label, [])}
@@ -328,7 +327,7 @@ def get_cytoscape_entities_as_json(paths):
                 "arrow": "vee",
                 "action": relationship.type.replace("_", " ")
             })
-
+            # print(relationship) #debugging
             relationship_class = relationship.type.lower().replace("_", "-")
             entities_involved[relationship_id] = Relationship(
                 relationship_id, relationship_class, data_map)
