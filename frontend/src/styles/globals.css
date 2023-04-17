@@ -105,6 +105,17 @@ a {
   border: 1px solid #eee;
 }
 
+.gradient-bg{
+  background: #256068;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #061700, #256068);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #061700, #256068); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+.capitalize{
+  text-transform: capitalize;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

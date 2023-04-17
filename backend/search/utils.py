@@ -13,6 +13,9 @@ from py2neo import Path
 from .Cytoscape import Node, Relationship
 from .queries.actions import get_actions
 from .queries.datasets import DATASETS
+from neo4j import GraphDatabase
+
+
 
 
 # # For easily access each of the model classes programmatically, create a key-value map.
@@ -201,6 +204,17 @@ def get_weights_by_target(target, adverse_event=None, action_types=None, drug=No
     # Return the list of formatted results
     return formatted_results
 
+def clear_neo4j_database():
+    URI = "bolt://localhost:7687"
+    AUTH = ("neo4j", "gradvek1")
+    # Connect to Neo4j database
+    driver = GraphDatabase.driver(URI, auth=AUTH)
+    with driver.session() as session:
+        # Delete all nodes and relationships in the database
+        session.run("MATCH (n) DETACH DELETE n")
+
+    # Close the Neo4j driver
+    driver.close()
 
 # This function finds paths between the given target, adverse events, and drugs. 
 # It returns the results as a list of paths.

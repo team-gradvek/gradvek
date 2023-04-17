@@ -1,4 +1,3 @@
-import { useColorMode } from '@chakra-ui/react'
 import Footer from './Footer'
 import TopNav  from './TopNav'
 

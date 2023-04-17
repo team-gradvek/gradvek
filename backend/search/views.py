@@ -10,7 +10,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import serializers
 from rest_framework.renderers import JSONRenderer
-
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse, JsonResponse
 
 from .models import Descriptor, Action
 from .serializers import DescriptorSerializer, ActionsSerializer
@@ -26,6 +27,7 @@ from .utils import (
     get_paths_target_ae_drug,
     get_weights_by_target,
     update_dataset_status,
+    clear_neo4j_database
 )
 
 # API view to list all routes in the Django site
@@ -46,8 +48,11 @@ class DescriptorListView(generics.ListAPIView):
     queryset = Descriptor.objects.all()
     serializer_class = DescriptorSerializer
 
-# Return an array of all actions in the database
+
 class GetActions(APIView):
+    """
+    Return an array of all actions or specific to a target
+    """
     def get(self, request,  *args, **kwargs):
 
         # Check if a target is in the requested path
@@ -56,7 +61,7 @@ class GetActions(APIView):
         # Else save as empty string
         except:
             target = ""
-
+        # Get cypher query results
         actions = fetch_actions(target)
         data = {
             'response': {
@@ -65,6 +70,8 @@ class GetActions(APIView):
             },
         }
         return Response(data)
+ 
+        
 
 # Return an array of actions for the specified target
 #actions/{target}
@@ -85,10 +92,17 @@ def get_csv(request, file_id):
     pass
 
 # Clear out the database
+@csrf_exempt
 @require_http_methods(["POST"])
 def clear(request):
     # Implement the functionality for clearing out the database
-    pass
+    try:
+        clear_neo4j_database()
+        return HttpResponse('Neo4J DB cleared', status=200)
+
+    except Exception as e:
+        return HttpResponse('Internal Server Error', status=500)
+
 
 # Initialize entities (all or of the specified type) from the OpenTargets store
 @require_http_methods(["POST"])
@@ -211,6 +225,7 @@ class CountAllView(APIView):
             return Response({"counts": counts}, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+
 
 
 # Health check

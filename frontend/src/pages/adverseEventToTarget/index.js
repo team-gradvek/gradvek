@@ -1,10 +1,57 @@
-import { Box, Card, CardBody, Stack, Divider, Text, Flex } from '@chakra-ui/react'
+import { Box, Card, CardBody, Stack, Divider, Text, Heading } from '@chakra-ui/react'
 import Head from "next/head";
-import { Heading } from '@chakra-ui/react'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import DataTable from '@/components/results/DataTable'
 import theme from '@/styles/theme';
-import { AETargetSidebar } from '@/components/results/AETargetSidebar';
+import { Actions } from '@/components/results/filters/Actions';
+import { WeightSlider } from '@/components/results/filters/WeightSlider';
+import { Descriptors } from '@/components/results/filters/Descriptors';
+import { actionsData } from '@/components/data/FetchActionsData';
+import { ResultsSidebar } from '@/components/results/ResultsSidebar';
+import { events } from '@/components/data/FetchAdverseEventData';
+
+const checkboxData = [
+  {
+    name: 'Gene',
+  },
+  {
+    name: 'Protein'
+  },
+  {
+    name: 'GWAS'
+  },
+  {
+    name: 'Phenotype'
+  },
+  {
+    name: 'Reactome'
+  },
+  {
+    name: 'Signor'
+  },
+  {
+    name: 'IntAct'    
+  }
+]
+
+const columns = [
+  {
+    id: 1,
+    name: 'Adverse Event'
+  }, 
+  {
+    id: 2,
+    name: 'Associated Drugs'
+  }, 
+  {
+    id: 3,
+    name: 'Weights'
+  },
+  {
+    id: 4,
+    name: 'Dataset'
+  }
+]
 
 
 export default function TargetToAEResults() {
@@ -16,7 +63,21 @@ export default function TargetToAEResults() {
         <Box display='flex' w="100%">
       
         <Box w="25%" minW='250px'>
-          <AETargetSidebar />
+        <ResultsSidebar>
+            <Divider />
+            <Descriptors 
+              title = 'Descriptors'
+              checkboxArray = {checkboxData} />
+            <Divider />
+            <Actions 
+              title = 'Actions'
+              checkboxArray = {actionsData} />
+            <Divider />
+            <WeightSlider
+              title='Adverse Event Name'
+              range={{min: '0', mid: '50', max: '100'}} 
+              initial={{ min: '25', max: '75'}}/>
+          </ResultsSidebar>
         </Box>
         <Box p={5} w="75%" bg="#eee">
 
@@ -45,11 +106,13 @@ export default function TargetToAEResults() {
           </Box>
           {/* Search Results Table */}
           <Box w='100%' mb='5'>
-          <Heading size='md' mb={4}>Targets Associated with Adverse Event</Heading>
-          <DataTable/>
+          <DataTable
+          title="Targets from Adverse Event" 
+          columns={columns}
+          data={events}
+          />
           </Box>
         </Box>
-
         </Box>
       </ResultsLayout>
         

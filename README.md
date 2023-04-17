@@ -98,11 +98,7 @@ python3 manage.py runserver
 test at : http://localhost:8000/admin/  
 
 
-## 5. (OPTIONAL) Create descriptor objects (optional - only to showcase a database example)
-
-Log-in to admin and add a few descriptors http://localhost:8000/admin/
-
-## 6. Install node_modules
+## 5. Install node_modules
 
 `cd` into `frontend` folder
 
@@ -112,7 +108,7 @@ npm i
 ```
 https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 
-## 7. Add .env file inside Django project
+## 6. Add .env file inside Django project
 
 Add `.env` file inside `backend/gradvekbackend` dir
 ```
@@ -143,9 +139,6 @@ python3 manage.py runserver
 ```
 http://localhost:8000/
 
-## 3. To see API example
-http://localhost:3000/test  
-http://localhost:8000/api/descriptors
 
 # Makefile commands
 
@@ -188,4 +181,6 @@ https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-fai
 ```
 "Once upon a time I stumbled with this issue. If you're using macOS go to Macintosh HD > Applications > Python3.6 folder (or whatever version of python you're using) > double click on "Install Certificates.command" file. :D"
 ```
+## Neo4j/Docker Connection Errors
+https://stackoverflow.com/questions/42397751/neo4j-in-docker-max-heap-size-causes-hard-crash-137/42398497#42398497
 

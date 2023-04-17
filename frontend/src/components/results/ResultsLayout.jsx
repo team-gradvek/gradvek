@@ -1,6 +1,7 @@
 import {
   Flex,
 } from '@chakra-ui/react'
+import Footer from '../Footer';
 import TopNav  from '../TopNav'
 
 function ResultsLayout({ children }) {
@@ -17,6 +18,7 @@ function ResultsLayout({ children }) {
     >
     {children}
     </Flex>
+    <Footer />
     </>
     )
   }

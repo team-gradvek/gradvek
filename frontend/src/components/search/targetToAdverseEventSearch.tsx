@@ -5,9 +5,11 @@ import React, { useState } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import styles from "../../styles/Search.module.css"
 import Link from 'next/link';
+import theme from '@/styles/theme';
 
 // Typeahead URI - DJANGO BACKEND
-const SEARCH_URI = 'http://localhost:8000/api/targets'
+const SEARCH_URI =  process.env.NEXT_PUBLIC_HOST + '/api/targets'
+console.log(SEARCH_URI)
 
 // Typeahead Async Search
 function TargetToAESearch() {
@@ -62,7 +64,7 @@ function TargetToAESearch() {
           )}
         />
         <Center>
-          <Button size="lg" bg="#0F2A37" color="white" mt="5"><Link href="/adverseEvents">Search</Link></Button>
+          <Button size="lg" bg={theme.brand.secondary} color="white" mt="5"><Link href="/adverseEvents">Search</Link></Button>
         </Center>
         </TabPanel>
       );
