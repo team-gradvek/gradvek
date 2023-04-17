@@ -269,11 +269,19 @@ def get_paths_target_ae_drug(target, action_types=None, adverse_event=None, drug
     # Filter the results based on the drug parameter, if provided.
     if drug:
         drug_target_query += f" AND nd.drug_id = '{drug}'"
-
+        
     drug_target_query += " RETURN path"
 
-    # Combine all query segments to form the final Cypher query.
-    cypher_query = f"{target_query} UNION {path_query} UNION {drug_target_query}"
+    # Construct a query to find the target itself, in case no other paths are found.
+    single_target_query = f"""
+        {enabled_datasets_query}
+        MATCH path=(nt:Target)
+        WHERE nt.dataset IN enabledSets
+            AND toUpper(nt.symbol) = '{target.upper()}'
+        RETURN path
+    """
+
+    cypher_query = f"{target_query} UNION {path_query} UNION {drug_target_query} UNION {single_target_query}"
 
     # print(cypher_query) #debugging
 
@@ -283,18 +291,22 @@ def get_paths_target_ae_drug(target, action_types=None, adverse_event=None, drug
     return results
 
 
+
 # This function processes the list of paths and converts them to a format that is
 # compatible with the Cytoscape library, which is used for visualizing the graph.
 def get_cytoscape_entities_as_json(paths):
+    # Initialize a dictionary to store the entities involved in the paths.
     entities_involved = {}
 
-    # This helper function processes nodes in the graph.
+    # Helper function to process nodes in the graph. It checks if the node is already
+    # in the entities_involved dictionary, and if not, adds it with the appropriate properties.
     def process_node(node):
         node_id = node.id * 2  # map to even numbers
         if node_id not in entities_involved:
             primary_label = "Unknown"
             if node.labels:
-                primary_label = sorted(list(node.labels))[0]
+                primary_label = next(iter(node.labels))
+
 
             node_class = primary_label.lower()
             if primary_label == "AdverseEvent":
@@ -310,7 +322,8 @@ def get_cytoscape_entities_as_json(paths):
 
             entities_involved[node_id] = Node(node_id, node_class, data_map)
 
-    # This helper function processes relationships in the graph.
+    # Helper function to process relationships in the graph. It checks if the relationship is already
+    # in the entities_involved dictionary, and if not, adds it with the appropriate properties.
     def process_relationship(relationship):
         relationship_id = relationship.id * 2 + 1  # map to odd numbers
         if relationship_id not in entities_involved:
@@ -340,5 +353,5 @@ def get_cytoscape_entities_as_json(paths):
         for relationship in path.relationships:
             process_relationship(relationship)
 
-    # Convert the processed entities to a list of dictionaries and return it.
+    # Process all nodes and relationships in the paths.
     return [entity.to_dict() for entity in entities_involved.values()]

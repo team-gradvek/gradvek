@@ -54,13 +54,12 @@ urlpatterns = [
     # Return an array of weights of adverse events associated with a specific target, optionally filtered by action
     path('api/weight/<str:target>/<str:ae>/', GetAdverseEventByTargetView.as_view(), name='get_weights_target_ae'),
 
-    # Return an array of Cytoscape entities representing paths from a target to one or all adverse events associated with it, optionally filtered by drug and action
-    path('api/ae/path/<str:target>/',
-         GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae'),
-    path('api/ae/path/<str:target>/<str:ae>/',
-         GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae_ae'),
-    path('api/ae/path/<str:target>/<str:ae>/<str:drug_id>/',
-         GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae_drug'),
+    # These paths define API routes for querying paths from a target to one or all adverse events
+    # associated with it, optionally filtered by drug and action.
+    path('api/ae/path/<str:target>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae'),
+    path('api/ae/path/<str:target>/<str:ae>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae_ae'),
+    path('api/ae/path/<str:target>/<str:ae>/<str:drug_id>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae_drug'),
+
 
     # Return an array of Cytoscape entities representing paths from a target to one or all adverse events associated with it, optionally filtered by drug and action
     path('api/count/', CountAllView.as_view(), name='count_all'),

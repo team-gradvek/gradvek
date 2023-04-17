@@ -190,17 +190,26 @@ def get_paths_target_ae_drug_view(request, target, ae=None, drug_id=None):
     pass
 
 class GetAdverseEventTargetPath(APIView):
+    # This function finds paths between the given target, adverse events, and drugs. 
+    # It returns the results as a list of paths.
     def get(self, request, target, ae=None, drug_id=None):
+        # Get the list of action types from the request's query parameters, if any.
         actions = request.GET.getlist('action_types')
         actions = actions if actions else None
+        
+        # Get the count parameter from the request's query parameters, if any, and convert it to an integer.
         count = request.GET.get('count', None)
         if count:
             count = int(count)
 
+        # Retrieve Cytoscape entities representing paths from a target to one or all adverse events.
+        # The target, action types, adverse event, and drug_id are used as filters for the query.
         entities = get_paths_target_ae_drug(target, actions, ae, drug_id, count)
         result = get_cytoscape_entities_as_json(entities)
 
+        # Return the JSON representation of the resulting entities.
         return JsonResponse(result, safe=False)
+
     
 class CountView(APIView):
     """

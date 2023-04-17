@@ -35,25 +35,29 @@ paths = {
 def main():
     print("Starting the program...")
     try:
-        #Check current directory for conf file to determine the version of open targets for the current files
+        # Check current directory for conf file to determine the version of open targets for the current files
         current_data_date = get_open_targets_version_from_file("platform.conf")
 
-        #Download latest conf file
+        # Download latest conf file
         download_latest_conf_file()
         latest_data_date = get_open_targets_version_from_file("newplatform.conf")
 
-        #If the current open targets files are newer then the current downloaded ones
+        # If the current open targets files are newer than the current downloaded ones
         if latest_data_date > current_data_date:
             print("Files being updated")
-            #Delete existing parquet files
+            # Delete existing parquet files
             delete_existing_file()
-            #Download new data
+            # Download new data
             for key, values in paths.items():
                 get_datasets(key, values[0], values[1])
+
+        # If the current open targets files are up to date, validate the existing files
         else: 
             if os.path.exists('newplatform.conf'):
                 os.remove('newplatform.conf')
-            print("Files are already up to date")
+            print("Files are already up to date")            
+            for key, values in paths.items():
+                get_datasets(key, values[0], values[1])
 
     except Exception as e:
         print("Couldn't validate latest open targets version and update data." + str(e))
@@ -69,9 +73,12 @@ def download_file(link, output_file, max_retries=3, delay=5):
         except Exception as e:
             retries += 1
             if retries == max_retries:
+                print(f"Failed to download {link} due to error: {e}")
                 return False
             else:
+                print(f"Retrying {link} after error: {e}")
                 time.sleep(delay)
+
 
 def get_datasets(name, project_path, ot_path, max_retries=3, delay=5, max_workers=5):
     try:
@@ -241,56 +248,6 @@ def delete_existing_file():
                     print("Deleted" + filename)
             except Exception as e:
                 print(f"Error deleting file {file_path}: {e}")
-
-def get_datasets(name, project_path, ot_path):
-    """
-    Get and download dataset files from the Open Target (OT) directory.
-    """
-    try:
-        print(f"Starting to download {name} files...")
-
-        url = ot_path
-
-        current_dir = os.getcwd()
-        output_dir = f"{current_dir}/{project_path}"
-
-        # Remove any lingering .tmp files from the output directory
-        for file in os.listdir(output_dir):
-            if file.endswith(".tmp"):
-                os.remove(os.path.join(output_dir, file))
-
-        # Remove the download.wget file if it already exists
-        if os.path.exists(os.path.join(output_dir, "download.wget")):
-            os.remove(os.path.join(output_dir, "download.wget"))
-
-        # Download the HTML content of the page using wget
-        html_content = wget.download(url, out=output_dir)
-
-        # Extract the links to the files on the page
-        links = []
-        with open(os.path.join(output_dir, html_content), 'r') as f:
-            for line in f:
-                if 'href' in line:
-                    start = line.find('href="') + 6
-                    end = line.find('"', start)
-                    link = line[start:end]
-                    if link.endswith('.parquet'):
-                        links.append(url + link)
-
-        # Download the files
-        for n, link in enumerate(links):
-            print(f"\nDownloading {name} file {n+1} of {len(links)}")
-            filename = os.path.basename(link)
-            output_file = os.path.join(output_dir, filename)
-            if os.path.exists(output_file):
-                print(f"File {filename} already exists. Skipping...")
-            else:
-                wget.download(link, out=output_file)
-
-        print("Files downloaded successfully!")
-
-    except Exception as e:
-        print("Downloading files error: " + str(e))
 
 if __name__ == "__main__":
     main()
