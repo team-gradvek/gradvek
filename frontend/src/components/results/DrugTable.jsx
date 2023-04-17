@@ -10,6 +10,13 @@ import {
 
 
 const DrugTable = ({ title, columns, data}) => {
+  if (typeof(data) === 'undefined' || typeof(columns) === 'undefined' ){
+    return (
+      <>
+      <Heading size='md' mb={4}>No Data Found</Heading>
+      </>
+    )
+  }
   return (
   <>
   <Table bg="white" borderRadius={5}>

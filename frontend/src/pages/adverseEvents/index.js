@@ -10,6 +10,9 @@ import { Descriptors } from '@/components/results/filters/Descriptors';
 import { actionsData } from '@/components/data/FetchActionsData';
 import { ResultsSidebar } from '@/components/results/ResultsSidebar';
 
+// Placeholder data
+import { events } from '@/components/data/FetchAdverseEventData';
+
 const checkboxData = [
   {
     name: 'Gene',
@@ -31,6 +34,25 @@ const checkboxData = [
   },
   {
     name: 'IntAct'    
+  }
+]
+
+const columns = [
+  {
+    id: 1,
+    name: 'Adverse Event'
+  }, 
+  {
+    id: 2,
+    name: 'Associated Drugs'
+  }, 
+  {
+    id: 3,
+    name: 'Weights'
+  },
+  {
+    id: 4,
+    name: 'Dataset'
   }
 ]
 
@@ -88,8 +110,11 @@ export default function TargetToAEResults() {
           </Box>
           {/* Results Table */}
           <Box w='100%' mb='5'>
-          <Heading size='md' mb={4}>Adverse Events Associated with Target</Heading>
-          <DataTable/>
+          <DataTable
+          title="Adverse Events Associated with Target" 
+          columns={columns}
+          data={events}
+          />
           </Box>
         </Box>
 

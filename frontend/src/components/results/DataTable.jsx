@@ -46,6 +46,13 @@ const drugTableColumns = [
 
 const DataTable = ({title, columns, data}) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  if (typeof(data) === 'undefined' || typeof(columns) === 'undefined' ){
+    return (
+      <>
+      <Heading size='md' mb={4}>No Data Found</Heading>
+      </>
+    )
+  }
   return (
   <>
   <Heading size='md' mb={4}>{title}</Heading>
