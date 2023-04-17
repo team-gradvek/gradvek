@@ -151,29 +151,33 @@ def get_datasets(name, project_path, ot_path, max_retries=3, delay=5, max_worker
         print("Downloading files error: " + str(e))
 
 def get_open_targets_version_from_file(file_name):
-    cwd = os.getcwd()
-    
-    # Construct the path to the platform.conf file
-    conf_file = os.path.join(cwd, file_name)
-    
-    # Read the contents of the file
-    with open(conf_file, 'r') as f:
-        contents = f.read()
-    
-    # Find the data_version line and extract the value
-    data_version = None
-    for line in contents.split('\n'):
-        if line.startswith('data_version'):
-            data_version = line.split('=')[1].strip()
-            if data_version.startswith('"') and data_version.endswith('"'):
-                data_version = data_version[1:-1]
-            break
-    
-    # Print the data_version value
-    if data_version:
-        return datetime.strptime(data_version, '%y.%m.%d').date()
-    else:
+    try:
+        cwd = os.getcwd()
+        
+        # Construct the path to the platform.conf file
+        conf_file = os.path.join(cwd, file_name)
+        
+        # Read the contents of the file
+        with open(conf_file, 'r') as f:
+            contents = f.read()
+        
+        # Find the data_version line and extract the value
+        data_version = None
+        for line in contents.split('\n'):
+            if line.startswith('data_version'):
+                data_version = line.split('=')[1].strip()
+                if data_version.startswith('"') and data_version.endswith('"'):
+                    data_version = data_version[1:-1]
+                break
+        
+        # Print the data_version value
+        if data_version:
+            return datetime.strptime(data_version, '%y.%m.%d').date()
+        else:
+            return datetime.strptime('21.01.01', '%y.%m.%d').date()
+    except Exception as e:
         return datetime.strptime('21.01.01', '%y.%m.%d').date()
+
 
 
 def download_latest_conf_file():

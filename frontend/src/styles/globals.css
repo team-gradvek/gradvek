@@ -112,6 +112,10 @@ a {
 
 }
 
+.capitalize{
+  text-transform: capitalize;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

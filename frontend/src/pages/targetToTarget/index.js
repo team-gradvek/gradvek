@@ -10,6 +10,9 @@ import { WeightSlider } from '@/components/results/filters/WeightSlider';
 import { actionsData } from '@/components/data/FetchActionsData';
 import ResultsLayout from '@/components/results/ResultsLayout';
 
+// Placeholder data
+import { events } from '@/components/data/FetchAdverseEventData';
+
 const checkboxData = [
   {
     name: 'Gene',
@@ -90,7 +93,9 @@ export default function TargetToTargetResults() {
           {/* Results Table */}
           <Box w='100%' mb='5'>
           <Heading size='md' mb={4}>Top 10 Target Similarity Results</Heading>
-          <DataTable/>
+          <DataTable
+          title="Targets from Adverse Event" 
+          />
           </Box>
         </Box>
 
