@@ -20,9 +20,28 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Divider,
 } from '@chakra-ui/react'
 import { IoArrowDown } from 'react-icons/io5'
 import DrugTable from './DrugTable'
+
+// @TODO Refactor this when request is made
+import { drugs } from '../data/FetchDrugData'
+
+const drugTableColumns = [
+  {
+    id: 1,
+    name: 'Drug Name'
+  }, 
+  {
+    id: 2,
+    name: 'ID'
+  }, 
+  {
+    id: 3,
+    name: 'Weight'
+  }
+]
 
 
 const DataTable = ({title, columns, data}) => {
@@ -34,7 +53,7 @@ const DataTable = ({title, columns, data}) => {
     <Thead>
       <Tr>
       {columns.map((col) => (
-        <Th className="capitalize" key={col.id}>{col.name}</Th>
+        <Th key={col.id}>{col.name}</Th>
       ))}
       </Tr>
     </Thead>
@@ -46,7 +65,7 @@ const DataTable = ({title, columns, data}) => {
               <Checkbox />
               <Avatar name={item.name} boxSize="10" />
               <Box>
-                <Text fontWeight="medium">{item.name}</Text>
+                <Text className="capitalize" fontWeight="medium">{item.name}</Text>
               </Box>
             </HStack>
           </Td>
@@ -70,7 +89,10 @@ const DataTable = ({title, columns, data}) => {
           <ModalCloseButton />
           <ModalBody>
             <Box w="200px">
-            <DrugTable/>
+            <DrugTable 
+              columns={drugTableColumns}
+              data={drugs}
+              />
             </Box>
           </ModalBody>
           <ModalFooter>

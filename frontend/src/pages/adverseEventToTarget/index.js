@@ -113,7 +113,6 @@ export default function TargetToAEResults() {
           />
           </Box>
         </Box>
-
         </Box>
       </ResultsLayout>
         

@@ -1,10 +1,4 @@
 import {
-  Avatar,
-  Box,
-  Checkbox,
-  HStack,
-  Icon,
-  IconButton,
   Table,
   Tbody,
   Td,
@@ -12,41 +6,31 @@ import {
   Th,
   Thead,
   Tr,
-  Button,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
 } from '@chakra-ui/react'
-import { drugs } from '../data/FetchDrugData'
 
 
-const DrugTable = (props) => {
+const DrugTable = ({ title, columns, data}) => {
   return (
   <>
-  <Table {...props} bg="white" borderRadius={5}>
+  <Table bg="white" borderRadius={5}>
     <Thead>
       <Tr>
-        <Th>Drug Name</Th>
-        <Th>ID</Th>
-        <Th>Weight</Th>
+      {columns.map((col) => (
+        <Th key={col.id}>{col.name}</Th>
+      ))}
       </Tr>
     </Thead>
     <Tbody>
-      {drugs.map((drug) => (
-        <Tr key={drug.drugId}>
+      {data.map((item) => (
+        <Tr key={item.drugId}>
           <Td>
-            <Text fontWeight="bold">{drug.drugName}</Text>
+            <Text fontWeight="bold">{item.drugName}</Text>
           </Td>
           <Td>
-            <Text>{drug.drugId}</Text>
+            <Text>{item.drugId}</Text>
           </Td>
           <Td>
-            <Text>{drug.weight}</Text>
+            <Text>{item.weight}</Text>
           </Td>
         </Tr>
       ))}
