@@ -5,7 +5,7 @@ import {
 } from '@chakra-ui/react'
 import { Actions } from './filters/Actions'
 import { Descriptors } from './filters/Descriptors'
-import WeightSlider from './filters/Weights'
+import WeightSlider from './filters/WeightSlider.jsx'
 
 export const TargetToTargetSidebar = () => (
 <Stack spacing={[4]} direction={['column']} p='5'>

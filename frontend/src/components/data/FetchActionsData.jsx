@@ -1,4 +1,4 @@
-export const actions = [
+export const actionsData = [
     {
         "action": "ACTIVATOR",
         "count": 0
