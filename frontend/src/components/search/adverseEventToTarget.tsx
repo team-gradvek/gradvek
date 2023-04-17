@@ -8,7 +8,8 @@ import Link from 'next/link';
 import theme from '@/styles/theme';
 
 // Typeahead URI - DJANGO BACKEND
-const SEARCH_URI = 'http://localhost:8000/api/adverse-events'
+const SEARCH_URI =  process.env.NEXT_PUBLIC_HOST + '/api/suggest/'
+console.log(SEARCH_URI)
 
 // Typeahead Async Search
 function AdverseEventToTargetSearch() {
@@ -19,7 +20,7 @@ function AdverseEventToTargetSearch() {
       const handleSearch = (query: string) => {
         setIsLoading(true);
         
-        fetch(`${SEARCH_URI}`)
+        fetch(`${SEARCH_URI}` + query)
         .then((resp) => resp.json())
         .then((items) => {
           setOptions(items);
