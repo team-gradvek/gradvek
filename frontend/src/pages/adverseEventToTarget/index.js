@@ -8,6 +8,7 @@ import { Actions } from '@/components/results/filters/Actions';
 import { WeightSlider } from '@/components/results/filters/WeightSlider';
 import { Descriptors } from '@/components/results/filters/Descriptors';
 import { actionsData } from '@/components/data/FetchActionsData';
+import { ResultsSidebar } from '@/components/results/ResultsSidebar';
 
 const checkboxData = [
   {
@@ -43,8 +44,7 @@ export default function TargetToAEResults() {
         <Box display='flex' w="100%">
       
         <Box w="25%" minW='250px'>
-        <Stack spacing={[4]} direction={['column']} p='5'>
-            <Heading fontSize='xl'>Filters</Heading>
+        <ResultsSidebar>
             <Divider />
             <Descriptors 
               title = 'Descriptors'
@@ -58,7 +58,7 @@ export default function TargetToAEResults() {
               title='Adverse Event Name'
               range={{min: '0', mid: '50', max: '100'}} 
               initial={{ min: '25', max: '75'}}/>
-          </Stack>
+          </ResultsSidebar>
         </Box>
         <Box p={5} w="75%" bg="#eee">
 

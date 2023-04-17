@@ -5,7 +5,7 @@ import '@fontsource/fira-code'
 // palette https://mycolor.space/?hex=%232E1B4E&sub=1 - matching gradient section
 
 export const theme = extendTheme({
-  initialColorMode: "light",
+  initialColorMode: 'light',
   useSystemColorMode: false,
   colors:{ ...baseTheme.colors, brand: baseTheme.colors.blue },
   fonts: {
