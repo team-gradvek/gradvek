@@ -16,7 +16,10 @@ export const AETargetSidebar = () => (
     <Divider />
     <Actions />
     <Divider />
-    <WeightSlider />
+    <WeightSlider
+      title='Adverse Event Name'
+      range={{min: '0', mid: '50', max: '100'}} 
+      initial={{ min: '25', max: '75'}}/>
     <Divider />
   </Stack>
   )
