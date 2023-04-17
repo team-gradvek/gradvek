@@ -8,7 +8,7 @@ export const Descriptors = ({title, checkboxArray}) => {
               {title}
             </Text>
       {checkboxArray.map((item) => (
-      <Checkbox size='md' colorScheme='blue' id={ item.name }>
+      <Checkbox size='md' colorScheme='blue' id={ item.name } key={item.name}>
         { item.name }
       </Checkbox>
       ))}

@@ -1,6 +1,5 @@
-import { Box, Card, CardBody, Stack, Divider, Text, Flex } from '@chakra-ui/react'
+import { Box, Card, CardBody, Stack, Divider, Text, Heading } from '@chakra-ui/react'
 import Head from "next/head";
-import { Heading } from '@chakra-ui/react'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import DataTable from '@/components/results/DataTable'
 import theme from '@/styles/theme';
@@ -9,6 +8,7 @@ import { WeightSlider } from '@/components/results/filters/WeightSlider';
 import { Descriptors } from '@/components/results/filters/Descriptors';
 import { actionsData } from '@/components/data/FetchActionsData';
 import { ResultsSidebar } from '@/components/results/ResultsSidebar';
+import { events } from '@/components/data/FetchAdverseEventData';
 
 const checkboxData = [
   {
@@ -31,6 +31,25 @@ const checkboxData = [
   },
   {
     name: 'IntAct'    
+  }
+]
+
+const columns = [
+  {
+    id: 1,
+    name: 'Adverse Event'
+  }, 
+  {
+    id: 2,
+    name: 'Associated Drugs'
+  }, 
+  {
+    id: 3,
+    name: 'Weights'
+  },
+  {
+    id: 4,
+    name: 'Dataset'
   }
 ]
 
@@ -87,8 +106,11 @@ export default function TargetToAEResults() {
           </Box>
           {/* Search Results Table */}
           <Box w='100%' mb='5'>
-          <Heading size='md' mb={4}>Targets Associated with Adverse Event</Heading>
-          <DataTable/>
+          <DataTable
+          title="Targets from Adverse Event" 
+          columns={columns}
+          data={events}
+          />
           </Box>
         </Box>
 

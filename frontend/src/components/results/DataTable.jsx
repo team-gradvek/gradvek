@@ -3,7 +3,7 @@ import {
   Box,
   Checkbox,
   HStack,
-  Icon,
+  Heading,
   Table,
   Tbody,
   Td,
@@ -22,39 +22,31 @@ import {
   ModalCloseButton,
 } from '@chakra-ui/react'
 import { IoArrowDown } from 'react-icons/io5'
-import { events } from '../data/FetchAdverseEventData'
 import DrugTable from './DrugTable'
 
 
-const DataTable = (props) => {
+const DataTable = ({title, columns, data}) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
   <>
-  <Table {...props} bg="white" borderRadius={5}>
+  <Heading size='md' mb={4}>{title}</Heading>
+  <Table bg="white" borderRadius={5}>
     <Thead>
       <Tr>
-        <Th>
-          <HStack spacing="3">
-            <Checkbox />
-            <HStack spacing="1">
-              <Text>Adverse Event</Text>
-              <Icon as={IoArrowDown} color="muted" boxSize="4" />
-            </HStack>
-          </HStack>
-        </Th>
-        <Th>Associated Drugs</Th>
-        <Th>Weight</Th>
+      {columns.map((col) => (
+        <Th className="capitalize" key={col.id}>{col.name}</Th>
+      ))}
       </Tr>
     </Thead>
     <Tbody>
-      {events.map((event) => (
-        <Tr key={event.id}>
+      {data.map((item) => (
+        <Tr key={item.id}>
           <Td>
             <HStack spacing="3">
               <Checkbox />
-              <Avatar name={event.name} boxSize="10" />
+              <Avatar name={item.name} boxSize="10" />
               <Box>
-                <Text fontWeight="medium">{event.name}</Text>
+                <Text fontWeight="medium">{item.name}</Text>
               </Box>
             </HStack>
           </Td>
@@ -62,7 +54,10 @@ const DataTable = (props) => {
             <Button variant="ghost" colorScheme="blue" onClick={onOpen}>Open AE Drugs</Button>
           </Td>
           <Td>
-            <Text color="muted">{event.llr}</Text>
+            <Text color="muted">{item.llr}</Text>
+          </Td>
+          <Td>
+            <Text color="muted">{item.dataset}</Text>
           </Td>
         </Tr>
       ))}
