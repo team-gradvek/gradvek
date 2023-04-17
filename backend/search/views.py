@@ -21,7 +21,9 @@ from .utils import (
     fetch_actions,
     fetch_datasets,
     get_all_routes,
+    get_cytoscape_entities_as_json,
     get_entity_count,
+    get_paths_target_ae_drug,
     get_weights_by_target,
     update_dataset_status,
 )
@@ -173,6 +175,19 @@ def get_paths_target_ae_drug_view(request, target, ae=None, drug_id=None):
     # Implement the functionality for returning an array of Cytoscape entities representing paths from a target to adverse events
     pass
 
+class GetAdverseEventTargetPath(APIView):
+    def get(self, request, target, ae=None, drug_id=None):
+        actions = request.GET.getlist('action_types')
+        actions = actions if actions else None
+        count = request.GET.get('count', None)
+        if count:
+            count = int(count)
+
+        entities = get_paths_target_ae_drug(target, actions, ae, drug_id, count)
+        result = get_cytoscape_entities_as_json(entities)
+
+        return JsonResponse(result, safe=False)
+    
 class CountView(APIView):
     """
     CountView handles GET requests to return the count of a specific entity type.
