@@ -15,7 +15,7 @@ command -v pip3 >/dev/null 2>&1 || {
 # Check for Django
 if ! python3 -c "import django" >/dev/null 2>&1; then
     echo >&2 "Django is required, but it's not installed. Installing Django using pip3...";
-    pip3 install --user django
+    pip3 install --user --upgrade django
 fi
 
 # Check for Node.js (npm)
@@ -46,18 +46,20 @@ if [ "${#missing_python_packages[@]}" -gt 0 ]; then
         echo "- $package"
     done
 
-    echo "Installing missing packages using pip3..."
-    pip3 install --user "${missing_python_packages[@]}"
+    echo "Installing and updating missing packages using pip3..."
+    pip3 install --user --upgrade "${missing_python_packages[@]}"
 else
-    echo "All required Python packages are present."
+    echo "All required Python packages are present. Updating packages..."
+    pip3 install --user --upgrade "${required_python_packages[@]}"
 fi
 
-# Install Python dependencies
-echo "Installing Python dependencies..."
+# Install and update Python dependencies
+echo "Installing and updating Python dependencies..."
 cd backend
-pip3 install -r requirements.txt
+pip3 install -r requirements.txt --upgrade
 
-# Install Node.js dependencies
-echo "Installing Node.js dependencies..."
+# Install and update Node.js dependencies
+echo "Installing and updating Node.js dependencies..."
 cd ../frontend
 npm install
+npm update

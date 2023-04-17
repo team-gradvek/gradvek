@@ -1,52 +1,66 @@
 # Makefile
 
 # Variables
+# Set the Docker Compose file for running Neo4j
 DOCKER_COMPOSE_FILE := docker-compose-neo4j-local-test.yml
 
+# Get the current user ID and group ID
 CURRENT_UID := $(shell id -u)
 CURRENT_GID := $(shell id -g)
 
+# Export the user ID and group ID for use in docker-compose
 export CURRENT_UID
 export CURRENT_GID
 
-# Default Target
-.PHONY: run-neo4j
+# Default Target: Run Neo4j using Docker Compose
 default: run-neo4j
 
-# Get datasets using the get_datasets.py script
-get-datasets:
+# Display help for each command in the Makefile
+.PHONY: help
+help: # Show help for each of the Makefile recipes.
+	@grep -E '^[a-zA-Z0-9 -]+:.*#'  Makefile | while read -r l; do printf "\033[1;32m$$(echo $$l | cut -f 1 -d':')\033[00m:$$(echo $$l | cut -f 2- -d'#')\n"; done
+
+# Check the environment for the correct tools and dependencies
+.PHONY: check-environment
+check-environment: # Run the check_environment.sh script to verify the environment
+	$(info Make: Checking the environment for the correct tools and dependencies.)
+	@./check_environment.sh
+
+# Download datasets using the get_datasets.py script
+.PHONY: get-datasets
+get-datasets: # Get datasets using the get_datasets.py script
 	$(info Make: Getting datasets.)
 	@cd datasets && python3 get_datasets.py
 
-# Send data using the parse_datasets.py script
-send-data:
+# Import data into Neo4j using the parse_datasets.py script
+.PHONY: send-data
+send-data: # Send data to Neo4j using the parse_datasets.py script
 	$(info Make: Sending data to Neo4j.)
 	@cd datasets && python3 parse_datasets.py
 
-# Run Neo4j with docker-compose
-run-neo4j:
+# Run the Neo4j container using Docker Compose
+.PHONY: run-neo4j
+run-neo4j: # Run Neo4j using Docker Compose
 	$(info Make: Running Neo4j using Docker Compose.)
 	@docker-compose -f $(DOCKER_COMPOSE_FILE) up -d
 
-# Stop Neo4j container without removing data and logs
+# Stop the Neo4j container without removing the data and logs
 .PHONY: stop-neo4j
-stop-neo4j:
+stop-neo4j: # Stop the Neo4j container
 	$(info Make: Stopping Neo4j container.)
 	@docker-compose -f $(DOCKER_COMPOSE_FILE) stop
 
 # Remove Neo4j data and logs without stopping the container
 .PHONY: remove-data-logs
-remove-data-logs:
+remove-data-logs: # Remove Neo4j data and logs
 	$(info Make: Removing Neo4j data and logs.)
 	@rm -rf ./neo4j/data/*
 	@rm -rf ./neo4j/logs/*
 
-# Clean command for stopping the Neo4j container and removing data and logs
+# Remove the Neo4j container, data, and logs
 .PHONY: clean
-clean:
+clean: # Stop and remove the Neo4j container and clean up data and logs
 	$(info Make: Stopping Neo4j container and cleaning up data and logs.)
 	@docker-compose -f $(DOCKER_COMPOSE_FILE) down
 	@rm -rf ./neo4j/data/*
 	@rm -rf ./neo4j/logs/*
-
-# Notes: add something to get dependencies like for pyhton there are wget, neo4j, and pyarrow libraries

@@ -81,7 +81,7 @@ python3 manage.py migrate
 ```
 https://stackoverflow.com/questions/29980211/django-1-8-whats-the-difference-between-migrate-and-makemigrations
 
-## 4. Run Admin Config
+## 4. (OPTIONAL) Run Admin Config
 
 
 `cd` into `backend` folder  
@@ -98,11 +98,7 @@ python3 manage.py runserver
 test at : http://localhost:8000/admin/  
 
 
-## 5. Create descriptor objects (optional - only to showcase a database example)
-
-Log-in to admin and add a few descriptors http://localhost:8000/admin/
-
-## 6. Install node_modules
+## 5. Install node_modules
 
 `cd` into `frontend` folder
 
@@ -111,6 +107,18 @@ Browse to the `frontend` folder and install modules
 npm i
 ```
 https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+
+## 6. Add .env file inside Django project
+
+Add `.env` file inside `backend/gradvekbackend` dir
+```
+SECRET_KEY=
+NEO4J_USERNAME=
+NEO4J_PASSWORD=
+NEO4J_BOLT_URL=
+```
+
+Secret keys are inside https://github.com/team-gradvek/env
 
 # How to run the frontend and backend
 ## 1. Run Frontend
@@ -131,9 +139,6 @@ python3 manage.py runserver
 ```
 http://localhost:8000/
 
-## 3. To see API example
-http://localhost:3000/test  
-http://localhost:8000/api/descriptors
 
 # Makefile commands
 
@@ -173,9 +178,9 @@ make send-data
 
 ## How to resolve  SSL: CERTIFICATE_VERIFY_FAILED error 
 https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
-
+```
 "Once upon a time I stumbled with this issue. If you're using macOS go to Macintosh HD > Applications > Python3.6 folder (or whatever version of python you're using) > double click on "Install Certificates.command" file. :D"
+```
+## Neo4j/Docker Connection Errors
+https://stackoverflow.com/questions/42397751/neo4j-in-docker-max-heap-size-causes-hard-crash-137/42398497#42398497
 
-
-"If you install Python using Homebrew that file does not exist. The solution is here:"
-https://stackoverflow.com/questions/44649449/brew-installation-of-python-3-6-1-ssl-certificate-verify-failed-certificate/44649450#44649450

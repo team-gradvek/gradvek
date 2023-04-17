@@ -1,23 +1,24 @@
 from django.db import models
 
-# Create your models here.
+from neomodel import (
+    StringProperty,
+    StructuredNode,
+    RelationshipTo,
+    RelationshipFrom,
+    Relationship,
+    UniqueIdProperty,
+    IntegerProperty,
+    config
+)
 
 class Descriptor(models.Model):
     """
     Target Similarity indices, potential descriptors
     """
-    descriptor_name = models.CharField(max_length=30)
-
-class Target(models.Model):
-    """
-    Targets for Typeahead
-    """
     name = models.CharField(max_length=30)
-    description = models.CharField(max_length=60)
 
-class AdverseEvent(models.Model):
-    """
-    Adverse Events for Typeahead
-    """
-    name = models.CharField(max_length=60)
-    description = models.CharField(max_length=60)
+
+class Action(models.Model):
+    action = models.CharField(max_length=30, null=True, blank=True)
+    count = models.IntegerField( null=True, blank=True)
+
