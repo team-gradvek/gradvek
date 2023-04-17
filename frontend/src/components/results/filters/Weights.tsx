@@ -1,8 +1,6 @@
 import { Box, RangeSlider, RangeSliderFilledTrack, RangeSliderMark, RangeSliderThumb, RangeSliderTrack, Text} from '@chakra-ui/react'
 import React, { useState } from 'react';
 
-
-
 function WeightSlider({ title, range, initial }) {
   const [sliderValue, setSliderValue] = useState([25, 75])
   return (

@@ -8,11 +8,36 @@ import { Actions } from './filters/Actions'
 import WeightSlider from './filters/Weights'
 import { Descriptors } from './filters/Descriptors'
 
+const checkboxData = [
+  {
+    name: 'Gene',
+  },
+  {
+    name: 'Protein'
+  },
+  {
+    name: 'GWAS'
+  },
+  {
+    name: 'Phenotype'
+  },
+  {
+    name: 'Reactome'
+  },
+  {
+    name: 'Signor'
+  },
+  {
+    name: 'IntAct'    
+  }
+]
+
 export const AETargetSidebar = () => (
   <Stack spacing={[4]} direction={['column']} p='5'>
     <Heading fontSize='xl'>Filters</Heading>
-    <Divider />
-    <Descriptors />
+    <Descriptors 
+      title = 'Descriptors'
+      checkboxArray = {checkboxData} />
     <Divider />
     <Actions />
     <Divider />

@@ -17,7 +17,7 @@ export const Actions = (props) => {
       Actions
     </Text>
     {filteredActions.map((action) => (
-        <Checkbox size='md' colorScheme='blue' key= {action.action} id={action.action} value={action.action} defaultChecked>
+        <Checkbox size='md' colorScheme='blue' key={action.action} id={action.action} value={action.action} defaultChecked>
           {action.action} ({action.count})
         </Checkbox>
     ))}
