@@ -4,7 +4,35 @@ import { Heading } from '@chakra-ui/react'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import DataTable from '@/components/results/DataTable'
 import theme from '@/styles/theme';
-import { AETargetSidebar } from '@/components/results/AETargetSidebar';
+import { Actions } from '@/components/results/filters/Actions';
+import { WeightSlider } from '@/components/results/filters/WeightSlider';
+import { Descriptors } from '@/components/results/filters/Descriptors';
+import { actionsData } from '@/components/data/FetchActionsData';
+import { ResultsSidebar } from '@/components/results/ResultsSidebar';
+
+const checkboxData = [
+  {
+    name: 'Gene',
+  },
+  {
+    name: 'Protein'
+  },
+  {
+    name: 'GWAS'
+  },
+  {
+    name: 'Phenotype'
+  },
+  {
+    name: 'Reactome'
+  },
+  {
+    name: 'Signor'
+  },
+  {
+    name: 'IntAct'    
+  }
+]
 
 
 export default function TargetToAEResults() {
@@ -16,7 +44,21 @@ export default function TargetToAEResults() {
         <Box display='flex' w="100%">
       
         <Box w="25%" minW='250px'>
-          <AETargetSidebar />
+        <ResultsSidebar>
+            <Divider />
+            <Descriptors 
+              title = 'Descriptors'
+              checkboxArray = {checkboxData} />
+            <Divider />
+            <Actions 
+              title = 'Actions'
+              checkboxArray = {actionsData} />
+            <Divider />
+            <WeightSlider
+              title='Adverse Event Name'
+              range={{min: '0', mid: '50', max: '100'}} 
+              initial={{ min: '25', max: '75'}}/>
+          </ResultsSidebar>
         </Box>
         <Box p={5} w="75%" bg="#eee">
 

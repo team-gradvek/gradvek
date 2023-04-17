@@ -9,7 +9,7 @@ import {
 
 export default function Footer() {
 
-  const { colorMode, toggleColorMode } = useColorMode();
+  // const { colorMode, toggleColorMode } = useColorMode();
 
  return (
   <Container as="footer" role="contentinfo" w='100%' maxWidth='1366px'>
@@ -69,9 +69,6 @@ export default function Footer() {
       <Text fontSize="sm" color="subtle">
         &copy; {new Date().getFullYear()} Gravek 2.0
       </Text>
-      <Button my={4} onClick={toggleColorMode}>
-        {colorMode === "light" ? "Dark mode": "Light mode"}
-      </Button>
     </Stack>
   </Container>
 

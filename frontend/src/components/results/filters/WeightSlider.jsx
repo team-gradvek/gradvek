@@ -1,24 +1,22 @@
 import { Box, RangeSlider, RangeSliderFilledTrack, RangeSliderMark, RangeSliderThumb, RangeSliderTrack, Text} from '@chakra-ui/react'
 import React, { useState } from 'react';
 
-
-
-function WeightSlider( props ) {
+export const WeightSlider = ({title, range, initial}) => {
   const [sliderValue, setSliderValue] = useState([25, 75])
   return (
     <>
     <Text fontSize="lg" color="on-accent-muted" fontWeight="medium">
-      Adverse Events
+      {title}
     </Text>
-    <RangeSlider aria-label={['min', 'max']} defaultValue={[25, 75]} onChange={(val) => setSliderValue(val)}>
-      <RangeSliderMark value={0} mt='1' ml='-2.5' fontSize='sm'>
-        0
+    <RangeSlider aria-label={['min', 'max']} defaultValue={[initial.min, initial.max]} onChange={(val) => setSliderValue(val)}>
+      <RangeSliderMark value={range.min} mt='1' ml='-2.5' fontSize='sm'>
+        {range.min}
       </RangeSliderMark>
-      <RangeSliderMark value={50} mt='1' ml='-2.5' fontSize='sm'>
-        0.50
+      <RangeSliderMark value={range.mid} mt='1' ml='-2.5' fontSize='sm'>
+        {range.mid}
       </RangeSliderMark>
-      <RangeSliderMark value={100} mt='1' ml='-2.5' fontSize='sm'>
-       1
+      <RangeSliderMark value={range.max} mt='1' ml='-2.5' fontSize='sm'>
+       {range.max}
       </RangeSliderMark>
       <RangeSliderTrack>
         <RangeSliderFilledTrack bg='blue.500' />
@@ -33,6 +31,3 @@ function WeightSlider( props ) {
     </>
   )
 }
-
-
-export default WeightSlider;
