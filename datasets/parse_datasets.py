@@ -84,12 +84,10 @@ def update_check():
             return False
         else:
             print("Data version in neo4j doesnt match the data version in conf file. Clearing neo4j db and reloading db")
-            clear_neo4j_database()
             return True
         
     except Exception as e:
        print("Didnt find neo4j entry or dataset version. Reloading data")
-       clear_neo4j_database()
        return True
 
 
@@ -101,6 +99,7 @@ def main():
     # Set the input directory for the opentarget data
     input_dir = f"{current_dir}/opentarget"
 
+    #Check if data files are updated via platform.conf file data version. If so, clear the neo4j db and reload data from files
     if update_check():
         clear_neo4j_database()
         # TODO:
