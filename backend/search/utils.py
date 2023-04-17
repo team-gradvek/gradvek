@@ -301,6 +301,8 @@ def get_cytoscape_entities_as_json(paths):
     # Helper function to process nodes in the graph. It checks if the node is already
     # in the entities_involved dictionary, and if not, adds it with the appropriate properties.
     def process_node(node):
+        # Each entity for Cytoscape must have a unique id, but nodes and relationships from the DB can have
+        # the same id.  So we map node IDs to the even numbers and relationship IDs to the odd numbers.
         node_id = node.id * 2  # map to even numbers
         if node_id not in entities_involved:
             primary_label = "Unknown"
