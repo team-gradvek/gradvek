@@ -8,7 +8,8 @@ import Link from 'next/link';
 import theme from '@/styles/theme';
 
 // Typeahead URI - DJANGO BACKEND
-const SEARCH_URI = 'http://localhost:8000/api/targets'
+const SEARCH_URI =  process.env.NEXT_PUBLIC_HOST + '/api/targets'
+console.log(SEARCH_URI)
 
 // Typeahead Async Search
 function TargetToTargetSimilaritySearch() {
