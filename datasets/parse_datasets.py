@@ -2,6 +2,14 @@ import os
 import time
 import pyarrow.parquet as pq
 from neo4j import GraphDatabase
+from graphdatascience import GraphDataScience
+
+# Set the URI and AUTH for the neo4j database
+URI = "bolt://localhost:7687"
+AUTH = ("neo4j", "gradvek1")
+
+# Use Neo4j URI and credentials according to your setup
+gds = GraphDataScience(URI, auth=AUTH)
 
 """
 Open Targets Neo4j Importer
@@ -55,10 +63,6 @@ def set_dataset_name():
     else:
         print("Dataset version in platform.conf file:", data_version)
 
-# Set the URI and AUTH for the neo4j database
-URI = "bolt://localhost:7687"
-AUTH = ("neo4j", "gradvek1")
-
 def update_check():
     #Find first entry in neo4j and get the dataset version from it
     try:
@@ -110,18 +114,18 @@ def main():
         # Each list contains multiple node or edge query generator functions for the respective data type.
         data_type_query_generators = {
             # Key: data type name, Value: tuple([node query generators], [edge query generators])
-            # "targets": ([create_cypher_query_targets, create_cypher_query_pathways], [create_cypher_query_participates]),
-            # "fda": ([create_cypher_query_adverse_events], [create_cypher_query_associated_with]),
-            # "molecule": ([create_cypher_query_drugs], []),
-            # "mechanismOfAction": ([], [create_cypher_query_mechanism_of_action]),
-            # "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], [create_cypher_query_associated_mouse_phenotypes]),
-            # "diseases": ([create_cypher_query_diseases], [])
             "targets": ([create_cypher_query_targets, create_cypher_query_pathways], [create_cypher_query_participates]),
-            "fda": ([], []),
-            "molecule": ([], []),
-            "mechanismOfAction": ([], []),
+            "fda": ([create_cypher_query_adverse_events], [create_cypher_query_associated_with]),
+            "molecule": ([create_cypher_query_drugs], []),
+            "mechanismOfAction": ([], [create_cypher_query_mechanism_of_action]),
             "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], [create_cypher_query_associated_mouse_phenotypes]),
-            "diseases": ([], [])
+            "diseases": ([create_cypher_query_diseases], [])
+            # "targets": ([create_cypher_query_targets, create_cypher_query_pathways], [create_cypher_query_participates]),
+            # "fda": ([], []),
+            # "molecule": ([], []),
+            # "mechanismOfAction": ([], []),
+            # "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], [create_cypher_query_associated_mouse_phenotypes]),
+            # "diseases": ([], [])
         }
 
 
@@ -456,6 +460,7 @@ def create_cypher_query_associated_mouse_phenotypes(table):
     )
     """
     return [(query, {'data': data, 'dataset': dataset})]
+
 
 
 # Main function call
