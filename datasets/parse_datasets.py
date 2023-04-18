@@ -110,12 +110,18 @@ def main():
         # Each list contains multiple node or edge query generator functions for the respective data type.
         data_type_query_generators = {
             # Key: data type name, Value: tuple([node query generators], [edge query generators])
+            # "targets": ([create_cypher_query_targets, create_cypher_query_pathways], [create_cypher_query_participates]),
+            # "fda": ([create_cypher_query_adverse_events], [create_cypher_query_associated_with]),
+            # "molecule": ([create_cypher_query_drugs], []),
+            # "mechanismOfAction": ([], [create_cypher_query_mechanism_of_action]),
+            # "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], [create_cypher_query_associated_mouse_phenotypes]),
+            # "diseases": ([create_cypher_query_diseases], [])
             "targets": ([create_cypher_query_targets, create_cypher_query_pathways], [create_cypher_query_participates]),
-            "fda": ([create_cypher_query_adverse_events], [create_cypher_query_associated_with]),
-            "molecule": ([create_cypher_query_drugs], []),
-            "mechanismOfAction": ([], [create_cypher_query_mechanism_of_action]),
-            "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], []),
-            "diseases": ([create_cypher_query_diseases], [])
+            "fda": ([], []),
+            "molecule": ([], []),
+            "mechanismOfAction": ([], []),
+            "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], [create_cypher_query_associated_mouse_phenotypes]),
+            "diseases": ([], [])
         }
 
 
@@ -424,6 +430,33 @@ def clear_neo4j_database():
 
     # Close the Neo4j driver
     driver.close()
+
+# Parse the targets data and create a list of Cypher queries to add associatedWith relationships to the database
+def create_cypher_query_associated_mouse_phenotypes(table):
+    df = table.to_pandas()
+    node_label = 'mousePhenotypes'
+    dataset = f"{data_version} {node_label}"
+    data = []
+    for _, row in df.iterrows():
+        if row['targetFromSourceId'] is None or row['modelPhenotypeId'] is None:
+            continue
+        # Append data for each combination of chembl_id and meddraCode
+        data.append({
+            'targetFromSourceId': row['targetFromSourceId'],
+            'modelPhenotypeId': row['modelPhenotypeId'],
+            'weight': 1
+        })
+    # APOC query for creating relationships between Target and Pathway nodes
+    query = """
+    CALL apoc.periodic.iterate(
+        'UNWIND $data as item RETURN item',
+        'MATCH (from:Target {ensembleId: item.targetFromSourceId}), (to:MousePhenotype {mousePhenotypeId: item.modelPhenotypeId})
+         MERGE (from)-[:MOUSE_PHENOTYPE {dataset: $dataset, weight: item.weight}]->(to)',
+        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+    )
+    """
+    return [(query, {'data': data, 'dataset': dataset})]
+
 
 # Main function call
 if __name__ == "__main__":
