@@ -8,6 +8,7 @@ from neomodel.relationship import RelationshipMeta
 from .queries.actions import get_actions
 from .queries.datasets import DATASETS
 from neo4j import GraphDatabase
+import json
 
 
 
@@ -198,3 +199,41 @@ def clear_neo4j_database():
 
     # Close the Neo4j driver
     driver.close()
+
+def suggestion_by_hint_for_target(hint):
+    URI = "bolt://localhost:7687"
+    AUTH = ("neo4j", "gradvek1")
+
+
+    driver = GraphDatabase.driver(URI, auth=AUTH)
+    # Define the Cypher query to search for target entries
+    cypher_query = """
+        MATCH (t:Target)
+        WHERE
+            toLower(t.name) CONTAINS toLower($hint) OR
+            toLower(t.symbol) CONTAINS toLower($hint) OR
+            toLower(t.ensembleId) CONTAINS toLower($hint)
+        RETURN t.name AS name, t.symbol AS symbol, t.ensembleId AS ensembleId
+        LIMIT 12
+    """
+
+    # Execute the Cypher query with the hint as a parameter
+    with driver.session() as session:
+        result = session.run(cypher_query, {"hint": hint})
+    
+        # Extract the name, symbol, and ensembleId properties from the results
+        results_list = []
+        for record in result:
+            result_dict = {
+                "name": record["name"],
+                "symbol": record["symbol"],
+                "ensembleId": record["ensembleId"]
+            }
+            results_list.append(result_dict)
+
+    # Close the Neo4j driver
+    driver.close()
+
+    print(json.dumps(results_list))
+    # Return the results_list as a JSON string
+    return json.dumps(results_list)

@@ -25,7 +25,8 @@ from .utils import (
     get_entity_count,
     get_weights_by_target,
     update_dataset_status,
-    clear_neo4j_database
+    clear_neo4j_database,
+    suggestion_by_hint_for_target
 )
 
 # API view to list all routes in the Django site
@@ -223,10 +224,11 @@ def info(request):
 @require_http_methods(["GET"])
 def suggest_hint(request, hint):
     # Implement the functionality for returning an array of suggested entities in response to a hint
-    pass
+    return JsonResponse(suggestion_by_hint_for_target(hint), safe = False)
 
 # Return an array of all actions in the database
 @require_http_methods(["GET"])
 def actions(request, target=None):
     # Implement the functionality for returning an array of all actions or actions for the specified target
     pass
+ 
