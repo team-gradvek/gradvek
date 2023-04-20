@@ -49,13 +49,16 @@ urlpatterns = [
     path('api/datasets/', Datasets.as_view(), name='datasets'),
 
     # Return an array of adverse events associated with a specific target, optionally filtered by action
+    # target: Drug Symbol
     path('api/weight/<str:target>/', GetAdverseEventByTargetView.as_view(), name='get_adverse_event'),
 
     # Return an array of weights of adverse events associated with a specific target, optionally filtered by action
+    # target: Drug Symbol, ae: meddraId
     path('api/weight/<str:target>/<str:ae>/', GetAdverseEventByTargetView.as_view(), name='get_weights_target_ae'),
 
     # These paths define API routes for querying paths from a target to one or all adverse events
     # associated with it, optionally filtered by drug and action.
+    # target: Drug Symbol, ae: meddraId, drug_id: chemblId
     path('api/ae/path/<str:target>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae'),
     path('api/ae/path/<str:target>/<str:ae>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae_ae'),
     path('api/ae/path/<str:target>/<str:ae>/<str:drug_id>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae_drug'),

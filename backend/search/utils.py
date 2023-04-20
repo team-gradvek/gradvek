@@ -14,6 +14,7 @@ from .Cytoscape import Node, Relationship
 from .queries.actions import get_actions
 from .queries.datasets import DATASETS
 from neo4j import GraphDatabase
+from typing import List, Dict, Tuple, Union
 
 
 
@@ -145,23 +146,19 @@ def get_weights_by_target(target, adverse_event=None, action_types=None, drug=No
         WHERE nae.dataset IN enabledSets
             AND raw.dataset IN enabledSets
             AND nd.dataset IN enabledSets
-            AND nd in targetingDrugs
-    """
+            AND nd in targetingDrugs"""
 
     # Filter the results based on the adverse_event parameter, if provided.
     if adverse_event:
-        associated_query += f" AND nae.adverse_event_id = '{adverse_event}'"
-
-    # Filter the results based on the drug parameter, if provided.
-    if drug:
-        associated_query += f" AND nd.drug_id = '{drug}'"
+        associated_query += f" AND nae.meddraId = '{adverse_event}'"
 
     # Define the return clause based on whether an adverse event is provided.
-    # Calculate the sum of the llr values for each adverse event.
+    # Calculate the sum of the llr values for each adverse event or drug.
     if adverse_event:
         return_query = " RETURN nd, sum(toFloat(raw.llr))"
     else:
         return_query = " RETURN nae, sum(toFloat(raw.llr))"
+
 
     # Sort the results by the summed llr values in descending order.
     return_query += " ORDER BY sum(toFloat(raw.llr)) desc"
@@ -176,31 +173,35 @@ def get_weights_by_target(target, adverse_event=None, action_types=None, drug=No
     # Run the Cypher query and retrieve the results.
     results, _ = db.cypher_query(cypher_query)
 
+    print(cypher_query)
+
     # Format the results to match the Java version
     formatted_results = []
 
     # Loop through the results
     for res in results:
-        # Create an entry as a dictionary for each result
-        entry = {
-            "llr": res[1],  # Store the log likelihood ratio (llr) value
-            # Store the MedDRA ID of the adverse event
-            "id": res[0]["meddraId"],
-            "type": "AdverseEvent",  # Specify the result type as AdverseEvent
-            # Store the MedDRA ID again (for compatibility)
-            "meddraId": res[0]["meddraId"],
-            # Store the name of the adverse event
-            "name": res[0]["adverseEventId"],
-            # Store the dataset name with spaces removed
-            "dataset": res[0]["dataset"].replace(" ", ""),
-            # Store the dataset command string
-            "datasetCommandString": f"dataset: '{res[0]['dataset']}'"
-        }
-        # Add the formatted entry to the list of formatted results
+        if adverse_event:
+            entry = {
+                "drugId": res[0]["drug_id"],
+                "weight": res[1],
+                "drugName": res[0]["name"]
+            }
+        else:
+            entry = {
+                "llr": res[1],
+                "id": res[0]["meddraId"],
+                "type": "AdverseEvent",
+                "meddraId": res[0]["meddraId"],
+                "name": res[0]["adverseEventId"],
+                "dataset": res[0]["dataset"].replace(" ", ""),
+                "datasetCommandString": f"dataset: '{res[0]['dataset']}'"
+            }
         formatted_results.append(entry)
 
     # Return the list of formatted results
     return formatted_results
+
+
 
 def clear_neo4j_database():
     URI = "bolt://localhost:7687"
