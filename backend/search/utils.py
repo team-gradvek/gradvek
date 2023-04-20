@@ -173,7 +173,7 @@ def get_weights_by_target(target, adverse_event=None, action_types=None, drug=No
     # Run the Cypher query and retrieve the results.
     results, _ = db.cypher_query(cypher_query)
 
-    print(cypher_query)
+    # print(cypher_query)
 
     # Format the results to match the Java version
     formatted_results = []
@@ -182,9 +182,9 @@ def get_weights_by_target(target, adverse_event=None, action_types=None, drug=No
     for res in results:
         if adverse_event:
             entry = {
-                "drugId": res[0]["drug_id"],
+                "drugId": res[0]["chemblId"],
                 "weight": res[1],
-                "drugName": res[0]["name"]
+                "drugName": res[0]["drugId"]
             }
         else:
             entry = {
