@@ -27,7 +27,13 @@ from .utils import (
     get_paths_target_ae_drug,
     get_weights_by_target,
     update_dataset_status,
-    clear_neo4j_database
+    clear_neo4j_database,
+    suggestion_by_hint_for_target,
+    suggestion_by_hint_for_adverse_event,
+    suggestion_by_hint_for_disease,
+    suggestion_by_hint_for_drug,
+    suggestion_by_hint_for_mouse_phenotype,
+    suggestion_by_hint_for_pathway,
 )
 
 # API view to list all routes in the Django site
@@ -245,12 +251,34 @@ def info(request):
 
 # Return an array of suggested entities in response to a hint (beginning of the name)
 @require_http_methods(["GET"])
-def suggest_hint(request, hint):
-    # Implement the functionality for returning an array of suggested entities in response to a hint
-    pass
+def suggest_hint(request, entity_type, hint):
+    match entity_type:
+        case "target":
+            return JsonResponse(suggestion_by_hint_for_target(hint), safe = False)
+        
+        case "adverse_event":
+            return JsonResponse(suggestion_by_hint_for_adverse_event(hint), safe = False)
+        
+        case "disease":
+            return JsonResponse(suggestion_by_hint_for_disease(hint), safe = False)
+
+        case "drug":
+            return JsonResponse(suggestion_by_hint_for_drug(hint), safe = False)
+
+        case "mouse_phenotype":
+            return JsonResponse(suggestion_by_hint_for_mouse_phenotype(hint), safe = False)
+
+        case "pathway":
+            return JsonResponse(suggestion_by_hint_for_pathway(hint), safe = False)
+        
+        case _:
+            return JsonResponse({}, status=400)
+
+
 
 # Return an array of all actions in the database
 @require_http_methods(["GET"])
 def actions(request, target=None):
     # Implement the functionality for returning an array of all actions or actions for the specified target
     pass
+ 

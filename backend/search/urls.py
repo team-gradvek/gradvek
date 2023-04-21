@@ -73,7 +73,7 @@ urlpatterns = [
     path('api/info/', views.info, name='info'),
 
     # Return an array of suggested entities in response to a hint (beginning of the name)
-    path('api/suggest/<str:hint>/', views.suggest_hint, name='suggest_hint'),
+    path('api/suggest/<str:entity_type>/<str:hint>/', views.suggest_hint, name='suggest_hint'),
 
 
     # Return an array of actions for the specified target

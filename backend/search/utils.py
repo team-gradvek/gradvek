@@ -14,6 +14,7 @@ from .Cytoscape import Node, Relationship
 from .queries.actions import get_actions
 from .queries.datasets import DATASETS
 from neo4j import GraphDatabase
+import json
 from typing import List, Dict, Tuple, Union
 
 
@@ -24,6 +25,9 @@ from typing import List, Dict, Tuple, Union
 #     'Drug': Drug,
 
 # }
+
+URI = "bolt://localhost:7687"
+AUTH = ("neo4j", "gradvek1")
 
 def fetch_actions(target):
     ACTIONS = get_actions(target)
@@ -224,8 +228,7 @@ def get_weights_by_target(target, adverse_event=None, action_types=None, drug=No
 
 
 def clear_neo4j_database():
-    URI = "bolt://localhost:7687"
-    AUTH = ("neo4j", "gradvek1")
+
     # Connect to Neo4j database
     driver = GraphDatabase.driver(URI, auth=AUTH)
     with driver.session() as session:
@@ -234,181 +237,3 @@ def clear_neo4j_database():
 
     # Close the Neo4j driver
     driver.close()
-
-
-def get_paths_target_ae_drug(target, action_types=None, adverse_event=None, drug=None, count=None):
-    """
-    This function finds paths between the given target, adverse events, and drugs. 
-    It returns the results as a list of paths.
-
-    Args:
-        target (str): The symbol of the protein target.
-        action_types (list, optional): A list of action types to filter the results by.
-        adverse_event (str, optional): The ID (meddraId) of a specific adverse event.
-        drug (str, optional): The ID of a specific drug to filter the results by.
-        count (int, optional): The maximum number of results to return.
-
-    Returns:
-        list: A list of paths between the given target, adverse events, and drugs.
-    """
-    # Find active datasets and store them in the enabledSets variable.
-    enabled_datasets_query = "MATCH (nd:Dataset {enabled: true}) WITH COLLECT(nd.dataset) AS enabledSets"
-
-    # Construct the TARGETS segment of the query to find drugs that target the specified protein.
-    # This part of the query searches for paths between adverse events, drugs, and the given target.
-    target_query = f"""
-        {enabled_datasets_query}
-        MATCH path=(nae:AdverseEvent)-[raw:ASSOCIATED_WITH]-(nd:Drug)-[rt:TARGETS]-(nt:Target)
-        WHERE nae.dataset IN enabledSets
-            AND raw.dataset IN enabledSets
-            AND nd.dataset IN enabledSets
-            AND rt.dataset IN enabledSets
-            AND nt.dataset IN enabledSets
-            AND toUpper(nt.symbol) = '{target.upper()}'
-    """
-
-    # Filter the results based on the adverse_event parameter, if provided.
-    if adverse_event:
-        target_query += f" AND nae.adverse_event_id = '{adverse_event}'"
-
-    # Filter the results based on the drug parameter, if provided.
-    if drug:
-        target_query += f" AND nd.drug_id = '{drug}'"
-
-    # Add RETURN clause for target_query
-    target_query += " RETURN path"
-
-    # Construct the PART_OF segment of the query to find pathways related to the specified target.
-    # This part of the query searches for paths between the given target and related pathways.
-    path_query = f"""
-        {enabled_datasets_query}
-        MATCH path=(nt:Target)-[rpi:PARTICIPATES_IN]-(np:Pathway)
-        WHERE nt.dataset IN enabledSets
-            AND rpi.dataset IN enabledSets
-            AND np.dataset IN enabledSets
-            AND toUpper(nt.symbol) = '{target.upper()}'
-        RETURN path
-    """
-
-    # Construct the DRUG_TARGETS segment of the query to find targets of drugs related to the specified target.
-    # This part of the query searches for paths between drugs and the given target.
-    drug_target_query = f"""
-        {enabled_datasets_query}
-        MATCH path=(nd:Drug)-[rt:TARGETS]-(nt:Target)
-        WHERE nd.dataset IN enabledSets
-            AND rt.dataset IN enabledSets
-            AND nt.dataset IN enabledSets
-            AND toUpper(nt.symbol) = '{target.upper()}'
-    """
-
-    # Filter the results based on the drug parameter, if provided.
-    if drug:
-        drug_target_query += f" AND nd.drug_id = '{drug}'"
-        
-    # Add RETURN clause for drug_target_query
-    drug_target_query += " RETURN path"
-
-    # Construct a query to find the target itself, in case no other paths are found.
-    single_target_query = f"""
-        {enabled_datasets_query}
-        MATCH path=(nt:Target)
-        WHERE nt.dataset IN enabledSets
-            AND toUpper(nt.symbol) = '{target.upper()}'
-        RETURN path
-    """
-
-    # Combine all segments of the Cypher query.
-    cypher_query = f"{target_query} UNION {path_query} UNION {drug_target_query} UNION {single_target_query}"
-
-    # Run the Cypher query and retrieve the results.
-    results, _ = db.cypher_query(cypher_query)
-
-    # Return the list of paths found.
-    return results
-
-
-
-
-def get_cytoscape_entities_as_json(paths):
-    """
-    This function processes the list of paths and converts them to a format that is
-    compatible with the Cytoscape library, which is used for visualizing the graph.
-
-    Args:
-        paths (list): A list of paths between the given target, adverse events, and drugs.
-
-    Returns:
-        list: A list of dictionaries containing the entities involved in the paths formatted for Cytoscape.
-    """
-    # Initialize a dictionary to store the entities involved in the paths.
-    entities_involved = {}
-
-    # Helper function to process nodes in the graph. It checks if the node is already
-    # in the entities_involved dictionary, and if not, adds it with the appropriate properties.
-    def process_node(node):
-        # Each entity for Cytoscape must have a unique id. Map node IDs to even numbers to ensure uniqueness.
-        node_id = node.id * 2
-
-        # If the node_id is not already in entities_involved, process the node.
-        if node_id not in entities_involved:
-            # Set the primary label for the node.
-            primary_label = next(iter(node.labels), "Unknown")
-
-            # Set the node_class based on the primary_label.
-            node_class = primary_label.lower()
-            if primary_label == "AdverseEvent":
-                node_class = "adverse-event"
-
-            # Convert node properties to a dictionary with appropriate keys.
-            data_map = {key: str(node._properties.get(source, ''))
-                        for key, source in Node.NODE_PROPERTY_MAP.get(primary_label, [])}
-            data_map['id'] = str(node_id)
-            if 'targetId' in data_map:
-                data_map['ensembleId'] = data_map.pop('targetId')
-
-            # Add the processed node to the entities_involved dictionary.
-            entities_involved[node_id] = Node(node_id, node_class, data_map)
-
-
-    # Helper function to process relationships in the graph. It checks if the relationship is already
-    # in the entities_involved dictionary, and if not, adds it with the appropriate properties.
-    def process_relationship(relationship):
-        # Map relationship IDs to odd numbers to ensure uniqueness.
-        relationship_id = relationship.id * 2 + 1
-
-        # If the relationship_id is not already in entities_involved, process the relationship.
-        if relationship_id not in entities_involved:
-            # Set start and end node IDs as even numbers.
-            start_node_id = relationship.start_node.id * 2
-            end_node_id = relationship.end_node.id * 2
-
-            # Convert relationship properties to a dictionary with appropriate keys.
-            data_map = {key: str(value)
-                        for key, value in relationship._properties.items()}
-            data_map.update({
-                "id": str(relationship_id),
-                "source": str(start_node_id),
-                "target": str(end_node_id),
-                "arrow": "vee",
-                "action": relationship.type.replace("_", " ")
-            })
-
-            # Set the relationship_class based on the relationship type.
-            relationship_class = relationship.type.lower().replace("_", "-")
-
-            # Add the processed relationship to the entities_involved dictionary.
-            entities_involved[relationship_id] = Relationship(
-                relationship_id, relationship_class, data_map)
-
-    # Process all nodes and relationships in the paths.
-    for row in paths:
-        path = row[0]
-        # Process all nodes in the path.
-        for node in path.nodes:
-            process_node(node)
-        # Process all relationships in the path.
-        for relationship in path.relationships:
-            process_relationship(relationship)
-
-    # Convert the entities_involved values to a list of dictionaries and return the result.
-    return [entity.to_dict() for entity in entities_involved.values()]
