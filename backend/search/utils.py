@@ -9,7 +9,7 @@ from neomodel.core import NodeMeta
 from neomodel.relationship import RelationshipMeta
 from py2neo import Path
 
-
+# Import local modules
 from .Cytoscape import Node, Relationship
 from .queries.actions import get_actions
 from .queries.datasets import DATASETS
@@ -129,9 +129,11 @@ def get_weights_by_target(target, adverse_event=None, action_types=None, drug=No
     """
 
     # Find active datasets and store them in the enabledSets variable.
+    # This query will search for nodes labeled 'Dataset' with a property 'enabled' set to true.
     enabled_datasets_query = "MATCH (nd:Dataset {enabled: true}) WITH COLLECT(nd.dataset) AS enabledSets"
 
     # Construct the TARGETS segment of the query to find drugs that target the specified protein.
+    # This part of the query searches for relationships labeled 'TARGETS' between Drug nodes and Target nodes.
     target_query = f"""
         MATCH (nd:Drug)-[rt:TARGETS]-(nt:Target)
         WHERE nd.dataset IN enabledSets
@@ -154,6 +156,7 @@ def get_weights_by_target(target, adverse_event=None, action_types=None, drug=No
     target_query += " WITH enabledSets, COLLECT(nd) AS targetingDrugs"
 
     # Construct the ASSOCIATED_WITH segment of the query to find adverse events associated with the targeting drugs.
+    # This part of the query searches for relationships labeled 'ASSOCIATED_WITH' between AdverseEvent nodes and Drug nodes.
     associated_query = f"""
         MATCH (nae:AdverseEvent)-[raw:ASSOCIATED_WITH]-(nd:Drug)
         WHERE nae.dataset IN enabledSets
@@ -171,7 +174,6 @@ def get_weights_by_target(target, adverse_event=None, action_types=None, drug=No
         return_query = " RETURN nd, sum(toFloat(raw.llr))"
     else:
         return_query = " RETURN nae, sum(toFloat(raw.llr))"
-
 
     # Sort the results by the summed llr values in descending order.
     return_query += " ORDER BY sum(toFloat(raw.llr)) desc"
@@ -191,25 +193,31 @@ def get_weights_by_target(target, adverse_event=None, action_types=None, drug=No
     # Format the results to match the Java version
     formatted_results = []
 
-    # Loop through the results
+    # Loop through the results obtained from the Cypher query to format the data for output.
+    # Each entry in the results is a tuple with the first item being a node (either a drug or adverse event)
+    # and the second item being the summed Log Likelihood Ratio (LLR) value.
     for res in results:
+        # If an adverse_event parameter was provided, the output should include information on the drugs.
         if adverse_event:
             entry = {
-                "drugId": res[0]["chemblId"],
-                "weight": res[1],
-                "drugName": res[0]["drugId"]
+                "drugId": res[0]["chemblId"],  # The Chembl ID of the drug node.
+                "weight": res[1],             # The summed LLR value for the association.
+                "drugName": res[0]["drugId"]  # The internal drug ID of the drug node.
             }
+        # If an adverse_event parameter was not provided, the output should include information on the adverse events.
         else:
             entry = {
-                "llr": res[1],
-                "id": res[0]["meddraId"],
-                "type": "AdverseEvent",
-                "meddraId": res[0]["meddraId"],
-                "name": res[0]["adverseEventId"],
-                "dataset": res[0]["dataset"].replace(" ", ""),
-                "datasetCommandString": f"dataset: '{res[0]['dataset']}'"
+                "llr": res[1],                                 # The summed LLR value for the association.
+                "id": res[0]["meddraId"],                      # The MedDRA ID of the adverse event node.
+                "type": "AdverseEvent",                        # The type of node (in this case, AdverseEvent).
+                "meddraId": res[0]["meddraId"],                # The MedDRA ID of the adverse event node.
+                "name": res[0]["adverseEventId"],             # The internal adverse event ID of the node.
+                "dataset": res[0]["dataset"].replace(" ", ""),# The dataset the adverse event node belongs to (whitespace removed).
+                "datasetCommandString": f"dataset: '{res[0]['dataset']}'"  # The dataset string in command format.
             }
-        formatted_results.append(entry)
+    
+    # Append the formatted entry to the list of formatted results.
+    formatted_results.append(entry)
 
     # Return the list of formatted results
     return formatted_results
