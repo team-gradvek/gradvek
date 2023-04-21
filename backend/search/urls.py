@@ -48,11 +48,11 @@ urlpatterns = [
     # POST: Modify the active status of one or more datasets
     path('api/datasets/', Datasets.as_view(), name='datasets'),
 
-    # Return an array of adverse events associated with a specific target, optionally filtered by action
+    # This route returns an array of adverse events associated with a specific target, optionally filtered by action types. It requires the drug target symbol as a path parameter
     # target: Drug Symbol
     path('api/weight/<str:target>/', GetAdverseEventByTargetView.as_view(), name='get_adverse_event'),
 
-    # Return an array of weights of adverse events associated with a specific target, optionally filtered by action
+    # This route returns an array of weights (log likelihood ratios) of adverse events associated with a specific target, optionally filtered by action types. It requires the drug target symbol and adverse event ID (meddraId) as path parameters.
     # target: Drug Symbol, ae: meddraId
     path('api/weight/<str:target>/<str:ae>/', GetAdverseEventByTargetView.as_view(), name='get_weights_target_ae'),
 
