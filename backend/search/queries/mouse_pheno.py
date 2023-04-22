@@ -10,6 +10,7 @@ def get_pheno(target):
         YIELD graphName, exists
         RETURN exists
         ''')
+  
     if not exists:
         db.cypher_query(
             '''
@@ -20,7 +21,7 @@ def get_pheno(target):
                     MOUSE_PHENOTYPE: {}
                 });
             ''')
-
+    
     # Run similarity calcs
     results = db.cypher_query(
         f'''
@@ -42,4 +43,5 @@ def get_pheno(target):
     # Convert list to dictionary 
     lst_to_dict = [{'target1':flat_list[i], 'target2':flat_list[i+1], 'similarity':flat_list[i+2]} for i in range(0,len(flat_list),3)]
     PHENO = lst_to_dict
+
     return PHENO
