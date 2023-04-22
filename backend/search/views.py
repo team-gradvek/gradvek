@@ -94,13 +94,9 @@ class GetPheno(APIView):
         
         # Get cypher query results
         pheno = fetch_pheno(target)
-        data = {
-            'response': {
-                'status': '200',
-                'data': pheno,
-            },
-        }
-        return Response(data)    
+
+        # Return the result as a JSON response
+        return Response(pheno, status=status.HTTP_200_OK)  
 
 # Return an array of actions for the specified target
 #actions/{target}
