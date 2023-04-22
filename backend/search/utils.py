@@ -120,14 +120,12 @@ def count_all_entities():
 def get_weights_by_target(target, adverse_event=None, action_types=None, drug=None, count=None):
     """
     Retrieve a list of adverse events and their associated log likelihood ratios (llr) for a given protein target.
-
     Args:
         target (str): The symbol of the protein target.
         adverse_event (str, optional): The ID (meddraId) of a specific adverse event.
         action_types (list, optional): A list of action types to filter the results by.
         drug (str, optional): The ID of a specific drug to filter the results by.
         count (int, optional): The maximum number of results to return.
-
     Returns:
         list: A list of formatted results containing either adverse events or drugs and their associated llr.
     """
@@ -220,8 +218,8 @@ def get_weights_by_target(target, adverse_event=None, action_types=None, drug=No
                 "datasetCommandString": f"dataset: '{res[0]['dataset']}'"  # The dataset string in command format.
             }
     
-    # Append the formatted entry to the list of formatted results.
-    formatted_results.append(entry)
+        # Append the formatted entry to the list of formatted results.
+        formatted_results.append(entry)
 
     # Return the list of formatted results
     return formatted_results
