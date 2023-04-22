@@ -251,7 +251,7 @@ def info(request):
 
 class SuggestHintView(APIView):
     """
-    SuggestHintView handles GET requests to return suggestions for a specific entity type based on the hint.
+    SuggestHintView handles GET requests to return an array of suggested entities in response to a hint (beginning of the name)
     """
 
     def get(self, request, entity_type, hint, *args, **kwargs):
