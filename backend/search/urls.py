@@ -2,9 +2,11 @@ from .views import (
     CountAllView,
     GetActions,
     Datasets,
+    GetAdverseEventTargetPath,
     RoutesListAPIView,
     CountView,
     GetAdverseEventByTargetView,
+    SuggestHintView,
 )
 from django.urls import path
 
@@ -47,19 +49,21 @@ urlpatterns = [
     # POST: Modify the active status of one or more datasets
     path('api/datasets/', Datasets.as_view(), name='datasets'),
 
-    # Return an array of adverse events associated with a specific target, optionally filtered by action
+    # This route returns an array of adverse events associated with a specific target, optionally filtered by action types. It requires the drug target symbol as a path parameter
+    # target: Drug Symbol
     path('api/weight/<str:target>/', GetAdverseEventByTargetView.as_view(), name='get_adverse_event'),
 
-    # Return an array of weights of adverse events associated with a specific target, optionally filtered by action
+    # This route returns an array of weights (log likelihood ratios) of adverse events associated with a specific target, optionally filtered by action types. It requires the drug target symbol and adverse event ID (meddraId) as path parameters.
+    # target: Drug Symbol, ae: meddraId
     path('api/weight/<str:target>/<str:ae>/', GetAdverseEventByTargetView.as_view(), name='get_weights_target_ae'),
 
-    # Return an array of Cytoscape entities representing paths from a target to one or all adverse events associated with it, optionally filtered by drug and action
-    path('api/ae/path/<str:target>/',
-         views.get_paths_target_ae_drug_view, name='get_paths_target_ae'),
-    path('api/ae/path/<str:target>/<str:ae>/',
-         views.get_paths_target_ae_drug_view, name='get_paths_target_ae_ae'),
-    path('api/ae/path/<str:target>/<str:ae>/<str:drug_id>/',
-         views.get_paths_target_ae_drug_view, name='get_paths_target_ae_drug'),
+    # These paths define API routes for querying paths from a target to one or all adverse events
+    # associated with it, optionally filtered by drug and action.
+    # target: Drug Symbol, ae: meddraId, drug_id: chemblId
+    path('api/ae/path/<str:target>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae'),
+    path('api/ae/path/<str:target>/<str:ae>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae_ae'),
+    path('api/ae/path/<str:target>/<str:ae>/<str:drug_id>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae_drug'),
+
 
     # Return an array of Cytoscape entities representing paths from a target to one or all adverse events associated with it, optionally filtered by drug and action
     path('api/count/', CountAllView.as_view(), name='count_all'),
@@ -70,7 +74,7 @@ urlpatterns = [
     path('api/info/', views.info, name='info'),
 
     # Return an array of suggested entities in response to a hint (beginning of the name)
-    path('api/suggest/<str:entity_type>/<str:hint>/', views.suggest_hint, name='suggest_hint'),
+    path('api/suggest/<str:entity_type>/<str:hint>/', SuggestHintView.as_view(), name='suggest_hint'),
 
 
     # Return an array of actions for the specified target
