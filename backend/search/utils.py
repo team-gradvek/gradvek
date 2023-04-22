@@ -415,8 +415,8 @@ def suggestion_by_hint_for_target(hint):
     result, _ = db.cypher_query(cypher_query, {"hint": hint})
     # Transform the result into a list of dictionaries
     results_list = [{"name": r[0], "symbol": r[1], "ensembleId": r[2]} for r in result]
-    # Return the list as a JSON string
-    return json.dumps(results_list)
+    # Return the list
+    return results_list
 
 def suggestion_by_hint_for_adverse_event(hint):
     # Define the Cypher query to search for adverse event nodes that match the hint
@@ -432,8 +432,8 @@ def suggestion_by_hint_for_adverse_event(hint):
     result, _ = db.cypher_query(cypher_query, {"hint": hint})
     # Transform the result into a list of dictionaries
     results_list = [{"meddraId": r[0], "adverseEventId": r[1]} for r in result]
-    # Return the list as a JSON string
-    return json.dumps(results_list)
+    # Return the list
+    return results_list
 
 def suggestion_by_hint_for_disease(hint):
     # Define the Cypher query to search for disease nodes that match the hint
@@ -449,8 +449,8 @@ def suggestion_by_hint_for_disease(hint):
     result, _ = db.cypher_query(cypher_query, {"hint": hint})
     # Transform the result into a list of dictionaries
     results_list = [{"name": r[0], "diseaseId": r[1]} for r in result]
-    # Return the list as a JSON string
-    return json.dumps(results_list)
+    # Return the list
+    return results_list
 
 def suggestion_by_hint_for_drug(hint):
     # Define the Cypher query to search for drug nodes that match the hint
@@ -466,8 +466,8 @@ def suggestion_by_hint_for_drug(hint):
     result, _ = db.cypher_query(cypher_query, {"hint": hint})
     # Transform the result into a list of dictionaries
     results_list = [{"chemblId": r[0], "drugId": r[1]} for r in result]
-    # Return the list as a JSON string
-    return json.dumps(results_list)
+    # Return the list
+    return results_list
 
 
 def suggestion_by_hint_for_mouse_phenotype(hint):
@@ -484,8 +484,8 @@ def suggestion_by_hint_for_mouse_phenotype(hint):
     result, _ = db.cypher_query(cypher_query, {"hint": hint})
     # Transform the result into a list of dictionaries
     results_list = [{"mousePhenotypeLabel": r[0], "mousePhenotypeId": r[1]} for r in result]
-    # Return the list as a JSON string
-    return json.dumps(results_list)
+    # Return the list
+    return results_list
 
 def suggestion_by_hint_for_pathway(hint):
     # Define the Cypher query to search for pathway nodes that match the hint
@@ -502,5 +502,5 @@ def suggestion_by_hint_for_pathway(hint):
     result, _ = db.cypher_query(cypher_query, {"hint": hint})
     # Transform the result into a list of dictionaries
     results_list = [{"pathwayCode": r[0], "pathwayId": r[1], "topLevelTerm": r[2]} for r in result]
-    # Return the list as a JSON string
-    return json.dumps(results_list)
+    # Return the list
+    return results_list
