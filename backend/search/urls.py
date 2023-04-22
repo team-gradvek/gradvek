@@ -6,7 +6,9 @@ from .views import (
     RoutesListAPIView,
     CountView,
     GetAdverseEventByTargetView,
+    GetPheno,
     SuggestHintView,
+
 )
 from django.urls import path
 
@@ -17,6 +19,9 @@ app_name = "search"
 
 
 urlpatterns = [
+
+    path('api/pheno/<str:target>/', GetPheno.as_view(), name='pheno'),
+
     # Return the list of routes in the Django site
     path('api/routes/', RoutesListAPIView.as_view(), name='api-routes-list'),
     
