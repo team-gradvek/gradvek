@@ -22,11 +22,20 @@ from .utils import (
     fetch_actions,
     fetch_datasets,
     get_all_routes,
+    get_cytoscape_entities_as_json,
     get_entity_count,
+    get_paths_target_ae_drug,
     get_weights_by_target,
     update_dataset_status,
     clear_neo4j_database,
     fetch_pheno,
+    suggestion_by_hint_for_target,
+    suggestion_by_hint_for_adverse_event,
+    suggestion_by_hint_for_disease,
+    suggestion_by_hint_for_drug,
+    suggestion_by_hint_for_mouse_phenotype,
+    suggestion_by_hint_for_pathway,
+
 )
 
 # API view to list all routes in the Django site
@@ -209,6 +218,28 @@ def get_paths_target_ae_drug_view(request, target, ae=None, drug_id=None):
     # Implement the functionality for returning an array of Cytoscape entities representing paths from a target to adverse events
     pass
 
+class GetAdverseEventTargetPath(APIView):
+    # This function finds paths between the given target, adverse events, and drugs. 
+    # It returns the results as a list of paths.
+    def get(self, request, target, ae=None, drug_id=None):
+        # Get the list of action types from the request's query parameters, if any.
+        actions = request.GET.getlist('action_types')
+        actions = actions if actions else None
+        
+        # Get the count parameter from the request's query parameters, if any, and convert it to an integer.
+        count = request.GET.get('count', None)
+        if count:
+            count = int(count)
+
+        # Retrieve Cytoscape entities representing paths from a target to one or all adverse events.
+        # The target, action types, adverse event, and drug_id are used as filters for the query.
+        entities = get_paths_target_ae_drug(target, actions, ae, drug_id, count)
+        result = get_cytoscape_entities_as_json(entities)
+
+        # Return the JSON representation of the resulting entities.
+        return JsonResponse(result, safe=False)
+
+    
 class CountView(APIView):
     """
     CountView handles GET requests to return the count of a specific entity type.
@@ -241,14 +272,46 @@ def info(request):
     # Implement the functionality for a health check
     pass
 
-# Return an array of suggested entities in response to a hint (beginning of the name)
-@require_http_methods(["GET"])
-def suggest_hint(request, hint):
-    # Implement the functionality for returning an array of suggested entities in response to a hint
-    pass
+class SuggestHintView(APIView):
+    """
+    SuggestHintView handles GET requests to return an array of suggested entities in response to a hint (beginning of the name)
+    """
+
+    def get(self, request, entity_type, hint, *args, **kwargs):
+        try:
+            match entity_type:
+                case "target":
+                    results_list = suggestion_by_hint_for_target(hint)
+                
+                case "adverse_event":
+                    results_list = suggestion_by_hint_for_adverse_event(hint)
+                
+                case "disease":
+                    results_list = suggestion_by_hint_for_disease(hint)
+
+                case "drug":
+                    results_list = suggestion_by_hint_for_drug(hint)
+
+                case "mouse_phenotype":
+                    results_list = suggestion_by_hint_for_mouse_phenotype(hint)
+
+                case "pathway":
+                    results_list = suggestion_by_hint_for_pathway(hint)
+                
+                case _:
+                    return JsonResponse({}, status=400)
+
+            return JsonResponse(results_list, safe=False, status=200)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+
+
 
 # Return an array of all actions in the database
 @require_http_methods(["GET"])
 def actions(request, target=None):
     # Implement the functionality for returning an array of all actions or actions for the specified target
     pass
+ 
