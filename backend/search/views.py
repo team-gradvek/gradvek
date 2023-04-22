@@ -249,30 +249,40 @@ def info(request):
     # Implement the functionality for a health check
     pass
 
-# Return an array of suggested entities in response to a hint (beginning of the name)
-@require_http_methods(["GET"])
-def suggest_hint(request, entity_type, hint):
-    match entity_type:
-        case "target":
-            return JsonResponse(suggestion_by_hint_for_target(hint), safe = False)
-        
-        case "adverse_event":
-            return JsonResponse(suggestion_by_hint_for_adverse_event(hint), safe = False)
-        
-        case "disease":
-            return JsonResponse(suggestion_by_hint_for_disease(hint), safe = False)
+class SuggestHintView(APIView):
+    """
+    SuggestHintView handles GET requests to return suggestions for a specific entity type based on the hint.
+    """
 
-        case "drug":
-            return JsonResponse(suggestion_by_hint_for_drug(hint), safe = False)
+    def get(self, request, entity_type, hint, *args, **kwargs):
+        try:
+            match entity_type:
+                case "target":
+                    results_list = suggestion_by_hint_for_target(hint)
+                
+                case "adverse_event":
+                    results_list = suggestion_by_hint_for_adverse_event(hint)
+                
+                case "disease":
+                    results_list = suggestion_by_hint_for_disease(hint)
 
-        case "mouse_phenotype":
-            return JsonResponse(suggestion_by_hint_for_mouse_phenotype(hint), safe = False)
+                case "drug":
+                    results_list = suggestion_by_hint_for_drug(hint)
 
-        case "pathway":
-            return JsonResponse(suggestion_by_hint_for_pathway(hint), safe = False)
-        
-        case _:
-            return JsonResponse({}, status=400)
+                case "mouse_phenotype":
+                    results_list = suggestion_by_hint_for_mouse_phenotype(hint)
+
+                case "pathway":
+                    results_list = suggestion_by_hint_for_pathway(hint)
+                
+                case _:
+                    return JsonResponse({}, status=400)
+
+            return JsonResponse(results_list, safe=False, status=200)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
 
 
 
