@@ -25,7 +25,8 @@ from .utils import (
     get_entity_count,
     get_weights_by_target,
     update_dataset_status,
-    clear_neo4j_database
+    clear_neo4j_database,
+    fetch_pheno,
 )
 
 # API view to list all routes in the Django site
@@ -69,7 +70,28 @@ class GetActions(APIView):
         }
         return Response(data)
  
+class GetPheno(APIView):
+    """
+     Return most similar targets - 
+     Mouse Phenotype similarity descending order
+    """
+    def get(self, request,  *args, **kwargs):
+
+        # Check if a target is in the requested path
+        try: 
+            target = self.kwargs["target"]
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
         
+        # Get cypher query results
+        pheno = fetch_pheno(target)
+        data = {
+            'response': {
+                'status': '200',
+                'data': pheno,
+            },
+        }
+        return Response(data)    
 
 # Return an array of actions for the specified target
 #actions/{target}

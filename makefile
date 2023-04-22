@@ -30,13 +30,13 @@ check-environment: # Run the check_environment.sh script to verify the environme
 .PHONY: get-datasets
 get-datasets: # Get datasets using the get_datasets.py script
 	$(info Make: Getting datasets.)
-	@cd datasets && python get_datasets.py
+	@cd datasets && python3 get_datasets.py
 
 # Import data into Neo4j using the parse_datasets.py script
 .PHONY: send-data
 send-data: # Send data to Neo4j using the parse_datasets.py script
 	$(info Make: Sending data to Neo4j.)
-	@cd datasets && python parse_datasets.py
+	@cd datasets && python3 parse_datasets.py
 
 # Run the Neo4j container using Docker Compose
 .PHONY: run-neo4j

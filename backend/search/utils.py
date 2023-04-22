@@ -7,6 +7,7 @@ from neomodel.core import NodeMeta
 from neomodel.relationship import RelationshipMeta
 from .queries.actions import get_actions
 from .queries.datasets import DATASETS
+from .queries.mouse_pheno import get_pheno
 from neo4j import GraphDatabase
 
 
@@ -25,6 +26,10 @@ def fetch_actions(target):
 
 def fetch_datasets():
     return DATASETS
+
+def fetch_pheno(target):
+    RESULTS = get_pheno(target)
+    return RESULTS
 
 
 def update_dataset_status(dataset_name, enabled):
