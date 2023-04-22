@@ -226,21 +226,14 @@ def get_weights_by_target(target, adverse_event=None, action_types=None, drug=No
     # Return the list of formatted results
     return formatted_results
 
-
 def clear_neo4j_database():
-
-    # Connect to Neo4j database
-    driver = GraphDatabase.driver(URI, auth=AUTH)
-    with driver.session() as session:
-        # Delete all nodes and relationships in the database
-        session.run("MATCH (n) DETACH DELETE n")
-
-    driver.close()
+    # Cypher query to detach and delete all nodes in the database
+    query = "MATCH (n) DETACH DELETE n"
+    # Execute the query
+    db.cypher_query(query)
 
 def suggestion_by_hint_for_target(hint):
-
-    driver = GraphDatabase.driver(URI, auth=AUTH)
-    # Define the Cypher query to search for target entries
+    # Define the Cypher query to search for target nodes that match the hint
     cypher_query = """
         MATCH (t:Target)
         WHERE
@@ -250,30 +243,15 @@ def suggestion_by_hint_for_target(hint):
         RETURN t.name AS name, t.symbol AS symbol, t.ensembleId AS ensembleId
         LIMIT 12
     """
-
-    # Execute the Cypher query with the hint as a parameter
-    with driver.session() as session:
-        result = session.run(cypher_query, {"hint": hint})
-
-        # Extract the name, symbol, and ensembleId properties from the results
-        results_list = []
-        for record in result:
-            result_dict = {
-                "name": record["name"],
-                "symbol": record["symbol"],
-                "ensembleId": record["ensembleId"]
-            }
-            results_list.append(result_dict)
-
-    # Close the Neo4j driver
-    driver.close()
-
-    # Return the results_list as a JSON string
+    # Execute the query with the hint as a parameter
+    result, _ = db.cypher_query(cypher_query, {"hint": hint})
+    # Transform the result into a list of dictionaries
+    results_list = [{"name": r[0], "symbol": r[1], "ensembleId": r[2]} for r in result]
+    # Return the list as a JSON string
     return json.dumps(results_list)
 
 def suggestion_by_hint_for_adverse_event(hint):
-    driver = GraphDatabase.driver(URI, auth=AUTH)
-    # Define the Cypher query to search for adverse_event entries
+    # Define the Cypher query to search for adverse event nodes that match the hint
     cypher_query = """
         MATCH (t:AdverseEvent)
         WHERE
@@ -282,29 +260,15 @@ def suggestion_by_hint_for_adverse_event(hint):
         RETURN t.meddraId AS meddraId, t.adverseEventId AS adverseEventId
         LIMIT 12
     """
-
-    # Execute the Cypher query with the hint as a parameter
-    with driver.session() as session:
-        result = session.run(cypher_query, {"hint": hint})
-
-        # Extract the meddraId, and adverseEventId properties from the results
-        results_list = []
-        for record in result:
-            result_dict = {
-                "meddraId": record["meddraId"],
-                "adverseEventId": record["adverseEventId"],
-            }
-            results_list.append(result_dict)
-
-    # Close the Neo4j driver
-    driver.close()
-
-    # Return the results_list as a JSON string
+    # Execute the query with the hint as a parameter
+    result, _ = db.cypher_query(cypher_query, {"hint": hint})
+    # Transform the result into a list of dictionaries
+    results_list = [{"meddraId": r[0], "adverseEventId": r[1]} for r in result]
+    # Return the list as a JSON string
     return json.dumps(results_list)
 
 def suggestion_by_hint_for_disease(hint):
-    driver = GraphDatabase.driver(URI, auth=AUTH)
-    # Define the Cypher query to search for disease entries
+    # Define the Cypher query to search for disease nodes that match the hint
     cypher_query = """
         MATCH (t:Disease)
         WHERE
@@ -313,60 +277,15 @@ def suggestion_by_hint_for_disease(hint):
         RETURN t.name AS name, t.diseaseId AS diseaseId
         LIMIT 12
     """
-
-    # Execute the Cypher query with the hint as a parameter
-    with driver.session() as session:
-        result = session.run(cypher_query, {"hint": hint})
-
-        # Extract the name, and diseaseId properties from the results
-        results_list = []
-        for record in result:
-            result_dict = {
-                "name": record["name"],
-                "diseaseId": record["diseaseId"],
-            }
-            results_list.append(result_dict)
-
-    # Close the Neo4j driver
-    driver.close()
-
-    # Return the results_list as a JSON string
-    return json.dumps(results_list)
-
-def suggestion_by_hint_for_drug(hint):
-    driver = GraphDatabase.driver(URI, auth=AUTH)
-    # Define the Cypher query to search for drug entries
-    cypher_query = """
-        MATCH (t:Drug)
-        WHERE
-            toLower(t.chemblId) CONTAINS toLower($hint) OR
-            toLower(t.drugId) CONTAINS toLower($hint)
-        RETURN t.chemblId AS chemblId, t.drugId AS drugId
-        LIMIT 12
-    """
-
-    # Execute the Cypher query with the hint as a parameter
-    with driver.session() as session:
-        result = session.run(cypher_query, {"hint": hint})
-
-        # Extract the chemblId, and drugId properties from the results
-        results_list = []
-        for record in result:
-            result_dict = {
-                "chemblId": record["chemblId"],
-                "drugId": record["drugId"],
-            }
-            results_list.append(result_dict)
-
-    # Close the Neo4j driver
-    driver.close()
-
-    # Return the results_list as a JSON string
+    # Execute the query with the hint as a parameter
+    result, _ = db.cypher_query(cypher_query, {"hint": hint})
+    # Transform the result into a list of dictionaries
+    results_list = [{"name": r[0], "diseaseId": r[1]} for r in result]
+    # Return the list as a JSON string
     return json.dumps(results_list)
 
 def suggestion_by_hint_for_mouse_phenotype(hint):
-    driver = GraphDatabase.driver(URI, auth=AUTH)
-    # Define the Cypher query to search for mouse_phenotype entries
+    # Define the Cypher query to search for mouse phenotype nodes that match the hint
     cypher_query = """
         MATCH (t:MousePhenotype)
         WHERE
@@ -375,29 +294,15 @@ def suggestion_by_hint_for_mouse_phenotype(hint):
         RETURN t.mousePhenotypeLabel AS mousePhenotypeLabel, t.mousePhenotypeId AS mousePhenotypeId
         LIMIT 12
     """
-
-    # Execute the Cypher query with the hint as a parameter
-    with driver.session() as session:
-        result = session.run(cypher_query, {"hint": hint})
-
-        # Extract the mousePhenotypeLabel, and mousePhenotypeId properties from the results
-        results_list = []
-        for record in result:
-            result_dict = {
-                "mousePhenotypeLabel": record["mousePhenotypeLabel"],
-                "mousePhenotypeId": record["mousePhenotypeId"],
-            }
-            results_list.append(result_dict)
-
-    # Close the Neo4j driver
-    driver.close()
-
-    # Return the results_list as a JSON string
+    # Execute the query with the hint as a parameter
+    result, _ = db.cypher_query(cypher_query, {"hint": hint})
+    # Transform the result into a list of dictionaries
+    results_list = [{"mousePhenotypeLabel": r[0], "mousePhenotypeId": r[1]} for r in result]
+    # Return the list as a JSON string
     return json.dumps(results_list)
 
 def suggestion_by_hint_for_pathway(hint):
-    driver = GraphDatabase.driver(URI, auth=AUTH)
-    # Define the Cypher query to search for Pathway entries
+    # Define the Cypher query to search for pathway nodes that match the hint
     cypher_query = """
         MATCH (t:Pathway)
         WHERE
@@ -407,23 +312,9 @@ def suggestion_by_hint_for_pathway(hint):
         RETURN t.pathwayCode AS pathwayCode, t.pathwayId AS pathwayId, t.topLevelTerm AS topLevelTerm
         LIMIT 12
     """
-
-    # Execute the Cypher query with the hint as a parameter
-    with driver.session() as session:
-        result = session.run(cypher_query, {"hint": hint})
-
-        # Extract the pathwayCode, pathwayId, and topLevelTerm properties from the results
-        results_list = []
-        for record in result:
-            result_dict = {
-                "pathwayCode": record["pathwayCode"],
-                "pathwayId": record["pathwayId"],
-                "topLevelTerm": record["topLevelTerm"]
-            }
-            results_list.append(result_dict)
-
-    # Close the Neo4j driver
-    driver.close()
-
-    # Return the results_list as a JSON string
+    # Execute the query with the hint as a parameter
+    result, _ = db.cypher_query(cypher_query, {"hint": hint})
+    # Transform the result into a list of dictionaries
+    results_list = [{"pathwayCode": r[0], "pathwayId": r[1], "topLevelTerm": r[2]} for r in result]
+    # Return the list as a JSON string
     return json.dumps(results_list)
