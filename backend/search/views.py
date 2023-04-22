@@ -28,12 +28,14 @@ from .utils import (
     get_weights_by_target,
     update_dataset_status,
     clear_neo4j_database,
+    fetch_pheno,
     suggestion_by_hint_for_target,
     suggestion_by_hint_for_adverse_event,
     suggestion_by_hint_for_disease,
     suggestion_by_hint_for_drug,
     suggestion_by_hint_for_mouse_phenotype,
     suggestion_by_hint_for_pathway,
+
 )
 
 # API view to list all routes in the Django site
@@ -77,7 +79,24 @@ class GetActions(APIView):
         }
         return Response(data)
  
+class GetPheno(APIView):
+    """
+     Return most similar targets - 
+     Mouse Phenotype similarity descending order
+    """
+    def get(self, request,  *args, **kwargs):
+
+        # Check if a target is in the requested path
+        try: 
+            target = self.kwargs["target"]
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
         
+        # Get cypher query results
+        pheno = fetch_pheno(target)
+
+        # Return the result as a JSON response
+        return Response(pheno, status=status.HTTP_200_OK)  
 
 # Return an array of actions for the specified target
 #actions/{target}
