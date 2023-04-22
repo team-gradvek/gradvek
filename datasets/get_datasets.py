@@ -115,7 +115,6 @@ def get_datasets(name, project_path, ot_path, max_retries=3, delay=5, max_worker
        # Prepare the download tasks for each file link
         tasks = []
         for n, link in enumerate(links):
-            print(f"\nDownloading {name} file {n+1} of {len(links)} ")
             filename = os.path.basename(link)
             output_file = os.path.join(output_dir, filename)
             if os.path.exists(output_file):
