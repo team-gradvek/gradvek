@@ -104,8 +104,8 @@ def main():
     input_dir = f"{current_dir}/opentarget"
 
     #Check if data files are updated via platform.conf file data version. If so, clear the neo4j db and reload data from files
-    if update_check():
-        clear_neo4j_database()
+    if True or update_check():
+        # clear_neo4j_database()
         # TODO:
         # Action (edge) - appears to not use any data source?
         # Gene (entity), Involves (edge) - these seem to only come from csv
@@ -119,13 +119,17 @@ def main():
             "molecule": ([create_cypher_query_drugs], []),
             "mechanismOfAction": ([], [create_cypher_query_mechanism_of_action]),
             "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], [create_cypher_query_associated_mouse_phenotypes]),
-            "diseases": ([create_cypher_query_diseases], [])
-            # "targets": ([create_cypher_query_targets, create_cypher_query_pathways], [create_cypher_query_participates]),
+            "diseases": ([create_cypher_query_diseases], []),
+            "interactions":([],[create_cypher_query_interactions]),
+            "baseExpressions":([create_cypher_query_baseline_expression],[create_cypher_query_hgene, create_cypher_query_hprotein])
+            # "targets": ([create_cypher_query_targets], []),
             # "fda": ([], []),
             # "molecule": ([], []),
             # "mechanismOfAction": ([], []),
-            # "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], [create_cypher_query_associated_mouse_phenotypes]),
-            # "diseases": ([], [])
+            # "mousePhenotypes": ([], []),
+            # "diseases": ([], []),
+            # "interactions":([],[]),
+            # "baseExpressions":([create_cypher_query_baseline_expression],[create_cypher_query_hgene, create_cypher_query_hprotein])
         }
 
 
@@ -229,6 +233,7 @@ def create_dataset_cypher_query(node_label):
 def create_cypher_query_nodes(table, node_label, props_to_columns):
     # Convert the table to a pandas DataFrame
     df = table.to_pandas()
+
     dataset = f"{data_version} {node_label}"
     # Prepare data for the Cypher query
     data = []
@@ -315,6 +320,36 @@ def create_cypher_query_diseases(table):
     })
 
 
+# Generate Cypher queries for hGene nodes
+def create_cypher_query_baseline_expression(table):
+    # Convert the table to a pandas DataFrame
+    df = table.to_pandas()
+
+    node_label = 'baseline_expression'
+    dataset = f"{data_version} {node_label}"
+    # Prepare data for the Cypher query
+    data = []
+    for _, row in df.iterrows():
+        for i in row['tissues']:
+            data.append({
+                'efo_code': i['efo_code'],
+                'label': i['label']
+            })
+
+    # APOC query for creating Pathway nodes in batch
+    query = """
+    CALL apoc.periodic.iterate(
+        'UNWIND $props as prop RETURN prop',
+        'MERGE (:Baseline_Expression {efo_code: prop.efo_code, label: prop.label, dataset: $dataset})',
+        {params: {props: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+    )
+    """
+    # Include the dataset creation query
+    dataset_query = create_dataset_cypher_query(node_label)
+    # Return a list of queries to be executed
+    return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
+
+
 
 # Create indexes in the database for the nodes before running edge queries
 def create_indexes():
@@ -328,6 +363,7 @@ def create_indexes():
             session.run("CREATE INDEX mousePhenotypeId_index IF NOT EXISTS FOR (a:MousePhenotype) ON (a.mousePhenotypeId)")
             session.run("CREATE INDEX diseaseId_index IF NOT EXISTS FOR (a:Disease) ON (a.diseaseId)")
             session.run("CREATE INDEX dataset_index IF NOT EXISTS FOR (a:Dataset) ON (a.dataset)")
+            session.run("CREATE INDEX hGene_index IF NOT EXISTS FOR (a:hGene) ON (a.efo_code)")
 
 
 # TODO Add function to handle generation of Cypher queries for edge creation similar to how nodes are handled
@@ -435,7 +471,7 @@ def clear_neo4j_database():
     # Close the Neo4j driver
     driver.close()
 
-# Parse the targets data and create a list of Cypher queries to add associatedWith relationships to the database
+# Parse the mouse phenotypes data and create a list of Cypher queries to add associatedWith relationships to the database
 def create_cypher_query_associated_mouse_phenotypes(table):
     df = table.to_pandas()
     node_label = 'mousePhenotypes'
@@ -461,7 +497,119 @@ def create_cypher_query_associated_mouse_phenotypes(table):
     """
     return [(query, {'data': data, 'dataset': dataset})]
 
+# Parse the molecular interaction data and create a list of Cypher queries
+# to add interaction relationships to the database.
+def create_cypher_query_interactions(table):
+    # Convert the input table to a Pandas DataFrame.
+    df = table.to_pandas()
 
+    # Set the node_label and dataset string.
+    node_label = 'interactions'
+    dataset = f"{data_version} {node_label}"
+
+    # Initialize an empty dictionary to group the data by sourceDatabase.
+    data_dict = {}
+
+    # Iterate through the rows of the DataFrame.
+    for _, row in df.iterrows():
+        # Skip the row if targetB is None or sourceDatabase is 'string'.
+        if row['targetB'] is None or row['sourceDatabase'].lower() == 'string':
+            continue
+
+        # Group data by sourceDatabase.
+        source_database = row['sourceDatabase']
+        if source_database not in data_dict:
+            data_dict[source_database] = []
+
+        # Append targetA and targetB to the corresponding sourceDatabase list.
+        data_dict[source_database].append({
+            'targetA': row['targetA'],
+            'targetB': row['targetB']
+        })
+
+    # Initialize an empty list to store the APOC queries.
+    queries = []
+
+    # Iterate through the data_dict items.
+    for source_database, data in data_dict.items():
+        # Convert the source_database string to uppercase and replace spaces with underscores.
+        relationship_type = source_database.upper().replace(" ", "_")
+
+        # Define the APOC query for creating relationships between Target nodes.
+        query = f"""
+        CALL apoc.periodic.iterate(
+            'UNWIND $data as item RETURN item',
+            'MATCH (from:Target {{ensembleId: item.targetA}}), (to:Target {{ensembleId: item.targetB}})
+             CALL apoc.create.relationship(from, $relType, {{dataset: $dataset}}, to) YIELD rel
+             RETURN rel',
+            {{params: {{data: $data, dataset: $dataset, relType: "{relationship_type}"}}, batchSize: 1000, parallel: true}}
+        )
+        """
+        # Append the query and its parameters to the queries list.
+        queries.append((query, {'data': data, 'dataset': dataset}))
+
+    # Return the list of queries.
+    return queries
+
+def create_cypher_query_hgene(table):
+    # Convert the table to a pandas DataFrame
+    df = table.to_pandas()
+
+    node_label = 'hgene'
+    dataset = f"{data_version} {node_label}"
+    # Prepare data for the Cypher query
+    data = []
+    for _, row in df.iterrows():
+        for i in row['tissues']:
+            data.append({
+                'ensembleId': row['id'],
+                'efo_code': i['efo_code'],
+                'rna_value': i['rna']['value']
+            })
+
+    # APOC query for creating Pathway nodes in batch
+    query = """
+        CALL apoc.periodic.iterate(
+            'UNWIND $data as item RETURN item',
+            'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Baseline_Expression {efo_code: item.efo_code})
+            MERGE (from)-[:HGENE {dataset: $dataset, rna_value: item.rna_value}]->(to)',
+            {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+        )
+        """
+    # Include the dataset creation query
+    dataset_query = create_dataset_cypher_query(node_label)
+    # Return a list of queries to be executed
+    return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
+
+def create_cypher_query_hprotein(table):
+    # Convert the table to a pandas DataFrame
+    df = table.to_pandas()
+
+    node_label = 'hprotein'
+    dataset = f"{data_version} {node_label}"
+    # Prepare data for the Cypher query
+    data = []
+    for _, row in df.iterrows():
+        for i in row['tissues']:
+            data.append({
+                'ensembleId': row['id'],
+                'efo_code': i['efo_code'],
+                'protein_level': i['protein']['level']
+            })
+
+    # APOC query for creating Pathway nodes in batch
+    query = """
+        CALL apoc.periodic.iterate(
+            'UNWIND $data as item RETURN item',
+            'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Baseline_Expression {efo_code: item.efo_code})
+            MERGE (from)-[:HPROTEIN {dataset: $dataset, protein_level: item.protein_level}]->(to)',
+            {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+        )
+        """
+    # Include the dataset creation query
+    dataset_query = create_dataset_cypher_query(node_label)
+    # Return a list of queries to be executed
+    return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
 
 # Main function call
 if __name__ == "__main__":
