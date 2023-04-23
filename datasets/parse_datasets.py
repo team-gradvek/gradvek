@@ -323,7 +323,7 @@ def create_cypher_query_diseases(table):
 # Generate Cypher queries for hGene nodes
 def create_cypher_query_hgene(table):
     # Convert the table to a pandas DataFrame
-    df= table.to_pandas()
+    df = table.to_pandas()
 
     node_label = 'hGeneTissue'
     dataset = f"{data_version} {node_label}"
@@ -334,13 +334,14 @@ def create_cypher_query_hgene(table):
             data.append({
                 'efo_code': i['efo_code'],
                 'label': i['label'],
+                'rna_value': i['rna']['value'],
             })
 
     # APOC query for creating Pathway nodes in batch
     query = """
     CALL apoc.periodic.iterate(
         'UNWIND $props as prop RETURN prop',
-        'MERGE (:hGene {efo_code: prop.efo_code, label: prop.label, dataset: $dataset})',
+        'MERGE (:hGene {efo_code: prop.efo_code, label: prop.label, rna_value: prop.rna_value, dataset: $dataset})',
         {params: {props: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
     )
     """
@@ -348,6 +349,7 @@ def create_cypher_query_hgene(table):
     dataset_query = create_dataset_cypher_query(node_label)
     # Return a list of queries to be executed
     return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
+
 
 
 # Create indexes in the database for the nodes before running edge queries
@@ -362,6 +364,7 @@ def create_indexes():
             session.run("CREATE INDEX mousePhenotypeId_index IF NOT EXISTS FOR (a:MousePhenotype) ON (a.mousePhenotypeId)")
             session.run("CREATE INDEX diseaseId_index IF NOT EXISTS FOR (a:Disease) ON (a.diseaseId)")
             session.run("CREATE INDEX dataset_index IF NOT EXISTS FOR (a:Dataset) ON (a.dataset)")
+            session.run("CREATE INDEX hGene_index IF NOT EXISTS FOR (a:hGene) ON (a.efo_code)")
 
 
 # TODO Add function to handle generation of Cypher queries for edge creation similar to how nodes are handled
