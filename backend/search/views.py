@@ -104,6 +104,7 @@ class GetPheno(APIView):
 
 # Trying to copy paths from gradvek 1.0
 
+# CSVVVVV
 # Upload one or more entities in a comma-separated file
 @require_http_methods(["POST"])
 def upload_csv(request):
