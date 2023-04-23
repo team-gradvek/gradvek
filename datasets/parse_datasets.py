@@ -463,31 +463,60 @@ def create_cypher_query_associated_mouse_phenotypes(table):
     """
     return [(query, {'data': data, 'dataset': dataset})]
 
-# Parse the moleculr interaction data and create a list of Cypher queries to add interactions relationships to the database
+# Parse the molecular interaction data and create a list of Cypher queries
+# to add interaction relationships to the database.
 def create_cypher_query_interactions(table):
+    # Convert the input table to a Pandas DataFrame.
     df = table.to_pandas()
+
+    # Set the node_label and dataset string.
     node_label = 'interactions'
     dataset = f"{data_version} {node_label}"
-    data = []
+
+    # Initialize an empty dictionary to group the data by sourceDatabase.
+    data_dict = {}
+
+    # Iterate through the rows of the DataFrame.
     for _, row in df.iterrows():
+        # Skip the row if targetB is None.
         if row['targetB'] is None:
             continue
-        # Append data for each combination of chembl_id and meddraCode
-        data.append({
-            'sourceDatabase': row['sourceDatabase'],
+
+        # Group data by sourceDatabase.
+        source_database = row['sourceDatabase']
+        if source_database not in data_dict:
+            data_dict[source_database] = []
+
+        # Append targetA and targetB to the corresponding sourceDatabase list.
+        data_dict[source_database].append({
             'targetA': row['targetA'],
             'targetB': row['targetB']
         })
-    # APOC query for creating relationships between Target and Pathway nodes
-    query = """
-    CALL apoc.periodic.iterate(
-        'UNWIND $data as item RETURN item',
-        'MATCH (from:Target {ensembleId: item.targetA}), (to:Target {ensembleId: item.targetB})
-         MERGE (from)-[:toUpper({item.sourceDatabase}) {dataset: $dataset}]->(to)',
-        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
-    )
-    """
-    return [(query, {'data': data, 'dataset': dataset})]
+
+    # Initialize an empty list to store the APOC queries.
+    queries = []
+
+    # Iterate through the data_dict items.
+    for source_database, data in data_dict.items():
+        # Convert the source_database string to uppercase and replace spaces with underscores.
+        relationship_type = source_database.upper().replace(" ", "_")
+
+        # Define the APOC query for creating relationships between Target nodes.
+        query = f"""
+        CALL apoc.periodic.iterate(
+            'UNWIND $data as item RETURN item',
+            'MATCH (from:Target {{ensembleId: item.targetA}}), (to:Target {{ensembleId: item.targetB}})
+             CALL apoc.create.relationship(from, $relType, {{dataset: $dataset}}, to) YIELD rel
+             RETURN rel',
+            {{params: {{data: $data, dataset: $dataset, relType: "{relationship_type}"}}, batchSize: 1000, parallel: true}}
+        )
+        """
+        # Append the query and its parameters to the queries list.
+        queries.append((query, {'data': data, 'dataset': dataset}))
+
+    # Return the list of queries.
+    return queries
+
 
 
 
