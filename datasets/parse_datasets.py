@@ -114,22 +114,22 @@ def main():
         # Each list contains multiple node or edge query generator functions for the respective data type.
         data_type_query_generators = {
             # Key: data type name, Value: tuple([node query generators], [edge query generators])
-            # "targets": ([create_cypher_query_targets, create_cypher_query_pathways], [create_cypher_query_participates]),
-            # "fda": ([create_cypher_query_adverse_events], [create_cypher_query_associated_with]),
-            # "molecule": ([create_cypher_query_drugs], []),
-            # "mechanismOfAction": ([], [create_cypher_query_mechanism_of_action]),
-            # "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], [create_cypher_query_associated_mouse_phenotypes]),
-            # "diseases": ([create_cypher_query_diseases], []),
-            # "interactions":([],[create_cypher_query_interactions]),
-            # "baseExpressions":([create_cypher_query_hgene],[])
-            "targets": ([], []),
-            "fda": ([], []),
-            "molecule": ([], []),
-            "mechanismOfAction": ([], []),
-            "mousePhenotypes": ([], []),
-            "diseases": ([], []),
-            "interactions":([],[]),
-            "baseExpressions":([create_cypher_query_hgene],[])
+            "targets": ([create_cypher_query_targets, create_cypher_query_pathways], [create_cypher_query_participates]),
+            "fda": ([create_cypher_query_adverse_events], [create_cypher_query_associated_with]),
+            "molecule": ([create_cypher_query_drugs], []),
+            "mechanismOfAction": ([], [create_cypher_query_mechanism_of_action]),
+            "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], [create_cypher_query_associated_mouse_phenotypes]),
+            "diseases": ([create_cypher_query_diseases], []),
+            "interactions":([],[create_cypher_query_interactions]),
+            "baseExpressions":([create_cypher_query_baseline_expression],[create_cypher_query_hgene, create_cypher_query_hprotein])
+            # "targets": ([create_cypher_query_targets], []),
+            # "fda": ([], []),
+            # "molecule": ([], []),
+            # "mechanismOfAction": ([], []),
+            # "mousePhenotypes": ([], []),
+            # "diseases": ([], []),
+            # "interactions":([],[]),
+            # "baseExpressions":([create_cypher_query_baseline_expression],[create_cypher_query_hgene, create_cypher_query_hprotein])
         }
 
 
@@ -321,11 +321,11 @@ def create_cypher_query_diseases(table):
 
 
 # Generate Cypher queries for hGene nodes
-def create_cypher_query_hgene(table):
+def create_cypher_query_baseline_expression(table):
     # Convert the table to a pandas DataFrame
     df = table.to_pandas()
 
-    node_label = 'hGeneTissue'
+    node_label = 'baseline_expression'
     dataset = f"{data_version} {node_label}"
     # Prepare data for the Cypher query
     data = []
@@ -333,15 +333,14 @@ def create_cypher_query_hgene(table):
         for i in row['tissues']:
             data.append({
                 'efo_code': i['efo_code'],
-                'label': i['label'],
-                'rna_value': i['rna']['value'],
+                'label': i['label']
             })
 
     # APOC query for creating Pathway nodes in batch
     query = """
     CALL apoc.periodic.iterate(
         'UNWIND $props as prop RETURN prop',
-        'MERGE (:hGene {efo_code: prop.efo_code, label: prop.label, rna_value: prop.rna_value, dataset: $dataset})',
+        'MERGE (:Baseline_Expression {efo_code: prop.efo_code, label: prop.label, dataset: $dataset})',
         {params: {props: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
     )
     """
@@ -552,6 +551,65 @@ def create_cypher_query_interactions(table):
     # Return the list of queries.
     return queries
 
+def create_cypher_query_hgene(table):
+    # Convert the table to a pandas DataFrame
+    df = table.to_pandas()
+
+    node_label = 'hgene'
+    dataset = f"{data_version} {node_label}"
+    # Prepare data for the Cypher query
+    data = []
+    for _, row in df.iterrows():
+        for i in row['tissues']:
+            data.append({
+                'ensembleId': row['id'],
+                'efo_code': i['efo_code'],
+                'rna_value': i['rna']['value']
+            })
+
+    # APOC query for creating Pathway nodes in batch
+    query = """
+        CALL apoc.periodic.iterate(
+            'UNWIND $data as item RETURN item',
+            'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Baseline_Expression {efo_code: item.efo_code})
+            MERGE (from)-[:HGENE {dataset: $dataset, rna_value: item.rna_value}]->(to)',
+            {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+        )
+        """
+    # Include the dataset creation query
+    dataset_query = create_dataset_cypher_query(node_label)
+    # Return a list of queries to be executed
+    return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
+
+def create_cypher_query_hprotein(table):
+    # Convert the table to a pandas DataFrame
+    df = table.to_pandas()
+
+    node_label = 'hprotein'
+    dataset = f"{data_version} {node_label}"
+    # Prepare data for the Cypher query
+    data = []
+    for _, row in df.iterrows():
+        for i in row['tissues']:
+            data.append({
+                'ensembleId': row['id'],
+                'efo_code': i['efo_code'],
+                'protein_level': i['protein']['level']
+            })
+
+    # APOC query for creating Pathway nodes in batch
+    query = """
+        CALL apoc.periodic.iterate(
+            'UNWIND $data as item RETURN item',
+            'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Baseline_Expression {efo_code: item.efo_code})
+            MERGE (from)-[:HPROTEIN {dataset: $dataset, protein_level: item.protein_level}]->(to)',
+            {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+        )
+        """
+    # Include the dataset creation query
+    dataset_query = create_dataset_cypher_query(node_label)
+    # Return a list of queries to be executed
+    return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
 
 # Main function call
 if __name__ == "__main__":
