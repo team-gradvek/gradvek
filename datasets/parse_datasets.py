@@ -104,7 +104,7 @@ def main():
     input_dir = f"{current_dir}/opentarget"
 
     #Check if data files are updated via platform.conf file data version. If so, clear the neo4j db and reload data from files
-    if True or update_check():
+    if update_check(): # change this to 'if True:' when doing dev work
         # clear_neo4j_database()
         # TODO:
         # Action (edge) - appears to not use any data source?
@@ -138,6 +138,11 @@ def main():
 
         # Iterate over each data type in the input directory for node query generators
         for data_type in os.listdir(input_dir):
+            # Check if the data_type is in the data_type_query_generators dictionary
+            if data_type not in data_type_query_generators:
+                print(f"Ignoring '{data_type}' folder. No matching function found.")
+                continue
+
             # Set the data_type_path
             data_type_path = os.path.join(input_dir, data_type)
             # Check if the path is a directory
@@ -152,6 +157,11 @@ def main():
 
         # Iterate over each data type in the input directory for edge query generators
         for data_type in os.listdir(input_dir):
+            # Check if the data_type is in the data_type_query_generators dictionary
+            if data_type not in data_type_query_generators:
+                print(f"Ignoring '{data_type}' folder. No matching function found.")
+                continue
+
             # Set the data_type_path
             data_type_path = os.path.join(input_dir, data_type)
             # Check if the path is a directory
