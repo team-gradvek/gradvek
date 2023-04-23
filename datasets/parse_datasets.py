@@ -535,14 +535,14 @@ def create_cypher_query_interactions(table):
         # Convert the source_database string to uppercase and replace spaces with underscores.
         relationship_type = source_database.upper().replace(" ", "_")
 
-        # Define the APOC query for creating relationships between Target nodes.
+        # Define the Cypher query for creating relationships between Target nodes.
         query = f"""
         CALL apoc.periodic.iterate(
             'UNWIND $data as item RETURN item',
             'MATCH (from:Target {{ensembleId: item.targetA}}), (to:Target {{ensembleId: item.targetB}})
-             CALL apoc.create.relationship(from, $relType, {{dataset: $dataset}}, to) YIELD rel
+             MERGE (from)-[rel:{relationship_type} {{dataset: $dataset}}]->(to)
              RETURN rel',
-            {{params: {{data: $data, dataset: $dataset, relType: "{relationship_type}"}}, batchSize: 1000, parallel: true}}
+            {{params: {{data: $data, dataset: $dataset}}, batchSize: 1000, parallel: true}}
         )
         """
         # Append the query and its parameters to the queries list.
