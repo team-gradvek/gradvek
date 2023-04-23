@@ -104,7 +104,7 @@ def main():
     input_dir = f"{current_dir}/opentarget"
 
     #Check if data files are updated via platform.conf file data version. If so, clear the neo4j db and reload data from files
-    if update_check():
+    if True or update_check():
         clear_neo4j_database()
         # TODO:
         # Action (edge) - appears to not use any data source?
@@ -114,20 +114,22 @@ def main():
         # Each list contains multiple node or edge query generator functions for the respective data type.
         data_type_query_generators = {
             # Key: data type name, Value: tuple([node query generators], [edge query generators])
-            "targets": ([create_cypher_query_targets, create_cypher_query_pathways], [create_cypher_query_participates]),
-            "fda": ([create_cypher_query_adverse_events], [create_cypher_query_associated_with]),
-            "molecule": ([create_cypher_query_drugs], []),
-            "mechanismOfAction": ([], [create_cypher_query_mechanism_of_action]),
-            "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], [create_cypher_query_associated_mouse_phenotypes]),
-            "diseases": ([create_cypher_query_diseases], []),
-            "interactions":([],[create_cypher_query_interactions]),
-            "baseExpressions":([],[])
             # "targets": ([create_cypher_query_targets, create_cypher_query_pathways], [create_cypher_query_participates]),
-            # "fda": ([], []),
-            # "molecule": ([], []),
-            # "mechanismOfAction": ([], []),
+            # "fda": ([create_cypher_query_adverse_events], [create_cypher_query_associated_with]),
+            # "molecule": ([create_cypher_query_drugs], []),
+            # "mechanismOfAction": ([], [create_cypher_query_mechanism_of_action]),
             # "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], [create_cypher_query_associated_mouse_phenotypes]),
-            # "diseases": ([], [])
+            # "diseases": ([create_cypher_query_diseases], []),
+            # "interactions":([],[create_cypher_query_interactions]),
+            # "baseExpressions":([create_cypher_query_hgene],[])
+            "targets": ([], []),
+            "fda": ([], []),
+            "molecule": ([], []),
+            "mechanismOfAction": ([], []),
+            "mousePhenotypes": ([], []),
+            "diseases": ([], []),
+            "interactions":([],[]),
+            "baseExpressions":([create_cypher_query_hgene],[])
         }
 
 
@@ -316,6 +318,12 @@ def create_cypher_query_diseases(table):
         'diseaseId': 'id'
     })
 
+# Generate Cypher queries for hGene nodes
+def create_cypher_query_hgene(table):
+    return create_cypher_query_nodes(table, 'hGeneTissue', {
+        'tissue': 'tissue',
+        'rnaValue': 'rnaValue'
+    })
 
 
 # Create indexes in the database for the nodes before running edge queries
