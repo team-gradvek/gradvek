@@ -104,7 +104,7 @@ def main():
     input_dir = f"{current_dir}/opentarget"
 
     #Check if data files are updated via platform.conf file data version. If so, clear the neo4j db and reload data from files
-    if True or update_check():
+    if update_check(): # change this to 'if True:' when doing dev work
         # clear_neo4j_database()
         # TODO:
         # Action (edge) - appears to not use any data source?
@@ -138,6 +138,11 @@ def main():
 
         # Iterate over each data type in the input directory for node query generators
         for data_type in os.listdir(input_dir):
+            # Check if the data_type is in the data_type_query_generators dictionary
+            if data_type not in data_type_query_generators:
+                print(f"Ignoring '{data_type}' folder. No matching function found.")
+                continue
+
             # Set the data_type_path
             data_type_path = os.path.join(input_dir, data_type)
             # Check if the path is a directory
@@ -152,6 +157,11 @@ def main():
 
         # Iterate over each data type in the input directory for edge query generators
         for data_type in os.listdir(input_dir):
+            # Check if the data_type is in the data_type_query_generators dictionary
+            if data_type not in data_type_query_generators:
+                print(f"Ignoring '{data_type}' folder. No matching function found.")
+                continue
+
             # Set the data_type_path
             data_type_path = os.path.join(input_dir, data_type)
             # Check if the path is a directory
@@ -363,7 +373,7 @@ def create_indexes():
             session.run("CREATE INDEX mousePhenotypeId_index IF NOT EXISTS FOR (a:MousePhenotype) ON (a.mousePhenotypeId)")
             session.run("CREATE INDEX diseaseId_index IF NOT EXISTS FOR (a:Disease) ON (a.diseaseId)")
             session.run("CREATE INDEX dataset_index IF NOT EXISTS FOR (a:Dataset) ON (a.dataset)")
-            session.run("CREATE INDEX hGene_index IF NOT EXISTS FOR (a:hGene) ON (a.efo_code)")
+            session.run("CREATE INDEX baseline_expression_index IF NOT EXISTS FOR (a:Baseline_Expression) ON (a.efo_code)")
 
 
 # TODO Add function to handle generation of Cypher queries for edge creation similar to how nodes are handled
@@ -535,14 +545,14 @@ def create_cypher_query_interactions(table):
         # Convert the source_database string to uppercase and replace spaces with underscores.
         relationship_type = source_database.upper().replace(" ", "_")
 
-        # Define the APOC query for creating relationships between Target nodes.
+        # Define the Cypher query for creating relationships between Target nodes.
         query = f"""
         CALL apoc.periodic.iterate(
             'UNWIND $data as item RETURN item',
             'MATCH (from:Target {{ensembleId: item.targetA}}), (to:Target {{ensembleId: item.targetB}})
-             CALL apoc.create.relationship(from, $relType, {{dataset: $dataset}}, to) YIELD rel
+             MERGE (from)-[rel:{relationship_type} {{dataset: $dataset}}]->(to)
              RETURN rel',
-            {{params: {{data: $data, dataset: $dataset, relType: "{relationship_type}"}}, batchSize: 1000, parallel: true}}
+            {{params: {{data: $data, dataset: $dataset}}, batchSize: 1000, parallel: true}}
         )
         """
         # Append the query and its parameters to the queries list.
