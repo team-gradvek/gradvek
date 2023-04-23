@@ -478,8 +478,8 @@ def create_cypher_query_interactions(table):
 
     # Iterate through the rows of the DataFrame.
     for _, row in df.iterrows():
-        # Skip the row if targetB is None.
-        if row['targetB'] is None:
+        # Skip the row if targetB is None or sourceDatabase is 'string'.
+        if row['targetB'] is None or row['sourceDatabase'].lower() == 'string':
             continue
 
         # Group data by sourceDatabase.
@@ -516,8 +516,6 @@ def create_cypher_query_interactions(table):
 
     # Return the list of queries.
     return queries
-
-
 
 
 # Main function call
