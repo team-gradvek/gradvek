@@ -363,7 +363,7 @@ def create_indexes():
             session.run("CREATE INDEX mousePhenotypeId_index IF NOT EXISTS FOR (a:MousePhenotype) ON (a.mousePhenotypeId)")
             session.run("CREATE INDEX diseaseId_index IF NOT EXISTS FOR (a:Disease) ON (a.diseaseId)")
             session.run("CREATE INDEX dataset_index IF NOT EXISTS FOR (a:Dataset) ON (a.dataset)")
-            session.run("CREATE INDEX hGene_index IF NOT EXISTS FOR (a:hGene) ON (a.efo_code)")
+            session.run("CREATE INDEX baseline_expression_index IF NOT EXISTS FOR (a:Baseline_Expression) ON (a.efo_code)")
 
 
 # TODO Add function to handle generation of Cypher queries for edge creation similar to how nodes are handled
