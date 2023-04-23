@@ -105,7 +105,7 @@ def main():
 
     #Check if data files are updated via platform.conf file data version. If so, clear the neo4j db and reload data from files
     if True or update_check():
-        clear_neo4j_database()
+        # clear_neo4j_database()
         # TODO:
         # Action (edge) - appears to not use any data source?
         # Gene (entity), Involves (edge) - these seem to only come from csv
@@ -233,6 +233,7 @@ def create_dataset_cypher_query(node_label):
 def create_cypher_query_nodes(table, node_label, props_to_columns):
     # Convert the table to a pandas DataFrame
     df = table.to_pandas()
+
     dataset = f"{data_version} {node_label}"
     # Prepare data for the Cypher query
     data = []
@@ -318,12 +319,35 @@ def create_cypher_query_diseases(table):
         'diseaseId': 'id'
     })
 
+
 # Generate Cypher queries for hGene nodes
 def create_cypher_query_hgene(table):
-    return create_cypher_query_nodes(table, 'hGeneTissue', {
-        'tissue': 'tissue',
-        'rnaValue': 'rnaValue'
-    })
+    # Convert the table to a pandas DataFrame
+    df= table.to_pandas()
+
+    node_label = 'hGeneTissue'
+    dataset = f"{data_version} {node_label}"
+    # Prepare data for the Cypher query
+    data = []
+    for _, row in df.iterrows():
+        for i in row['tissues']:
+            data.append({
+                'efo_code': i['efo_code'],
+                'label': i['label'],
+            })
+
+    # APOC query for creating Pathway nodes in batch
+    query = """
+    CALL apoc.periodic.iterate(
+        'UNWIND $props as prop RETURN prop',
+        'MERGE (:hGene {efo_code: prop.efo_code, label: prop.label, dataset: $dataset})',
+        {params: {props: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+    )
+    """
+    # Include the dataset creation query
+    dataset_query = create_dataset_cypher_query(node_label)
+    # Return a list of queries to be executed
+    return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
 
 
 # Create indexes in the database for the nodes before running edge queries
