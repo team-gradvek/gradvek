@@ -119,7 +119,9 @@ def main():
             "molecule": ([create_cypher_query_drugs], []),
             "mechanismOfAction": ([], [create_cypher_query_mechanism_of_action]),
             "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], [create_cypher_query_associated_mouse_phenotypes]),
-            "diseases": ([create_cypher_query_diseases], [])
+            "diseases": ([create_cypher_query_diseases], []),
+            "interactions":([],[create_cypher_query_interactions]),
+            "baseExpressions":([],[])
             # "targets": ([create_cypher_query_targets, create_cypher_query_pathways], [create_cypher_query_participates]),
             # "fda": ([], []),
             # "molecule": ([], []),
@@ -435,7 +437,7 @@ def clear_neo4j_database():
     # Close the Neo4j driver
     driver.close()
 
-# Parse the targets data and create a list of Cypher queries to add associatedWith relationships to the database
+# Parse the mouse phenotypes data and create a list of Cypher queries to add associatedWith relationships to the database
 def create_cypher_query_associated_mouse_phenotypes(table):
     df = table.to_pandas()
     node_label = 'mousePhenotypes'
@@ -456,6 +458,32 @@ def create_cypher_query_associated_mouse_phenotypes(table):
         'UNWIND $data as item RETURN item',
         'MATCH (from:Target {ensembleId: item.targetFromSourceId}), (to:MousePhenotype {mousePhenotypeId: item.modelPhenotypeId})
          MERGE (from)-[:MOUSE_PHENOTYPE {dataset: $dataset, weight: item.weight}]->(to)',
+        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+    )
+    """
+    return [(query, {'data': data, 'dataset': dataset})]
+
+# Parse the moleculr interaction data and create a list of Cypher queries to add interactions relationships to the database
+def create_cypher_query_interactions(table):
+    df = table.to_pandas()
+    node_label = 'interactions'
+    dataset = f"{data_version} {node_label}"
+    data = []
+    for _, row in df.iterrows():
+        if row['targetB'] is None:
+            continue
+        # Append data for each combination of chembl_id and meddraCode
+        data.append({
+            'sourceDatabase': row['sourceDatabase'],
+            'targetA': row['targetA'],
+            'targetB': row['targetB']
+        })
+    # APOC query for creating relationships between Target and Pathway nodes
+    query = """
+    CALL apoc.periodic.iterate(
+        'UNWIND $data as item RETURN item',
+        'MATCH (from:Target {ensembleId: item.targetA}), (to:Target {ensembleId: item.targetB})
+         MERGE (from)-[:toUpper({item.sourceDatabase}) {dataset: $dataset}]->(to)',
         {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
     )
     """
