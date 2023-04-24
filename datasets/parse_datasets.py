@@ -104,7 +104,7 @@ def main():
     input_dir = f"{current_dir}/opentarget"
 
     #Check if data files are updated via platform.conf file data version. If so, clear the neo4j db and reload data from files
-    if update_check(): # change this to 'if True:' when doing dev work
+    if True or update_check(): # change this to 'if True:' when doing dev work
         # clear_neo4j_database()
         # TODO:
         # Action (edge) - appears to not use any data source?
@@ -556,7 +556,7 @@ def create_cypher_query_interactions(table):
             'MATCH (from:Target {{ensembleId: item.targetA}}), (to:Target {{ensembleId: item.targetB}})
              MERGE (from)-[rel:{relationship_type} {{dataset: $dataset}}]->(to)
              RETURN rel',
-            {{params: {{data: $data, dataset: $dataset}}, batchSize: 1000, parallel: true, retries: 3}}
+            {{params: {{data: $data, dataset: $dataset}}, batchSize: 1000, parallel: false}}
         )
         """
         # Append the query and its parameters to the queries list.
@@ -587,7 +587,7 @@ def create_cypher_query_hgene(table):
             'UNWIND $data as item RETURN item',
             'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Baseline_Expression {efo_code: item.efo_code})
             MERGE (from)-[:HGENE {dataset: $dataset, rna_value: item.rna_value}]->(to)',
-            {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true, retries: 3}
+            {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
         )
         """
     # Include the dataset creation query
@@ -617,7 +617,7 @@ def create_cypher_query_hprotein(table):
             'UNWIND $data as item RETURN item',
             'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Baseline_Expression {efo_code: item.efo_code})
             MERGE (from)-[:HPROTEIN {dataset: $dataset, protein_level: item.protein_level}]->(to)',
-            {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true, retries: 3}
+            {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
         )
         """
     # Include the dataset creation query
