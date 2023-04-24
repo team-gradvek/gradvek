@@ -10,6 +10,7 @@ datasets/opentarget/interactions/*.snappy*.parquet*
 datasets/opentarget/baseExpressions/*.snappy*.parquet*
 datasets/platform.conf
 download*.wget*
+*.tmp
 neo4j/data/
 neo4j/logs/
 neo4j/import/
