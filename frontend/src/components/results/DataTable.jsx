@@ -20,10 +20,12 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Divider,
+  Card, CardBody, 
 } from '@chakra-ui/react'
-import { IoArrowDown } from 'react-icons/io5'
 import DrugTable from './DrugTable'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+// import getAdverseEvent from "../../hooks/targetToAdverseEventHook"
 
 // @TODO Refactor this when request is made
 import { drugs } from '../data/FetchDrugData'
@@ -44,15 +46,24 @@ const drugTableColumns = [
 ]
 
 
-const DataTable = ({title, columns, data}) => {
+const DataTable = ({data, title, columns}) => {
+
+  // const { data, isLoading, isError } = getAdverseEvent(id)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  if (typeof(data) === 'undefined' || typeof(columns) === 'undefined' ){
+
+  if (data.length == 0) {
     return (
       <>
-      <Heading size='md' mb={4}>No Data Found</Heading>
+        <Card>
+          <CardBody>
+            <Heading size='md' mb={4}>{title}</Heading>
+            <Text size='md' mb={4}>No Data Available</Text>
+          </CardBody>
+        </Card>
       </>
     )
   }
+
   return (
   <>
   <Heading size='md' mb={4}>{title}</Heading>
@@ -69,7 +80,7 @@ const DataTable = ({title, columns, data}) => {
         <Tr key={item.id}>
           <Td>
             <HStack spacing="3">
-              <Checkbox />
+              {/* <Checkbox /> */}
               <Avatar name={item.name} boxSize="10" />
               <Box>
                 <Text className="capitalize" fontWeight="medium">{item.name}</Text>
@@ -77,7 +88,7 @@ const DataTable = ({title, columns, data}) => {
             </HStack>
           </Td>
           <Td>
-            <Button variant="ghost" colorScheme="blue" onClick={onOpen}>Open AE Drugs</Button>
+           <Text color="muted">{item.id}</Text>
           </Td>
           <Td>
             <Text color="muted">{item.llr}</Text>
