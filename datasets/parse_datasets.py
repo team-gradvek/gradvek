@@ -575,6 +575,8 @@ def create_cypher_query_hgene(table):
     data = []
     for _, row in df.iterrows():
         for i in row['tissues']:
+            if i['rna']['value'] == 0:
+                continue
             data.append({
                 'ensembleId': row['id'],
                 'efo_code': i['efo_code'],
@@ -605,6 +607,8 @@ def create_cypher_query_hprotein(table):
     data = []
     for _, row in df.iterrows():
         for i in row['tissues']:
+            if i['protein']['level'] == -1:
+                continue
             data.append({
                 'ensembleId': row['id'],
                 'efo_code': i['efo_code'],
