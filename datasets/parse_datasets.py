@@ -50,10 +50,12 @@ Adding a new data type to the 'data_type_query_generators' dictionary:
 Creating query generator functions (for nodes and relationships):
 
 1. Define a function that takes a 'table' as its argument. This table is obtained by converting a parquet file to a
-   table using PyArrow and then the function converts that table to a pandas DataFrame.
+   table using PyArrow (handled in main you don't need to define this) and then the function converts that table to a pandas DataFrame.
 2. Extract the required properties from the DataFrame and prepare the data for the Cypher query.
 3. Create an APOC query for creating or merging nodes or relationships in batch, using the prepared data.
 4. Return a list of queries to be executed, including the dataset creation query and the node/relationship creation query.
+
+As long at the function is defined and added to the 'data_type_query_generators' dictionary, the script will run it.
 
 """
 
