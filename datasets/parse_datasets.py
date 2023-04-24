@@ -556,7 +556,7 @@ def create_cypher_query_interactions(table):
             'MATCH (from:Target {{ensembleId: item.targetA}}), (to:Target {{ensembleId: item.targetB}})
              MERGE (from)-[rel:{relationship_type} {{dataset: $dataset}}]->(to)
              RETURN rel',
-            {{params: {{data: $data, dataset: $dataset}}, batchSize: 1000, parallel: false}}
+            {{params: {{data: $data, dataset: $dataset}}, batchSize: 1000, parallel: true, retries: 3}}
         )
         """
         # Append the query and its parameters to the queries list.
@@ -587,7 +587,7 @@ def create_cypher_query_hgene(table):
             'UNWIND $data as item RETURN item',
             'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Baseline_Expression {efo_code: item.efo_code})
             MERGE (from)-[:HGENE {dataset: $dataset, rna_value: item.rna_value}]->(to)',
-            {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
+            {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true, retries: 3}
         )
         """
     # Include the dataset creation query
@@ -617,7 +617,7 @@ def create_cypher_query_hprotein(table):
             'UNWIND $data as item RETURN item',
             'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Baseline_Expression {efo_code: item.efo_code})
             MERGE (from)-[:HPROTEIN {dataset: $dataset, protein_level: item.protein_level}]->(to)',
-            {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
+            {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true, retries: 3}
         )
         """
     # Include the dataset creation query
