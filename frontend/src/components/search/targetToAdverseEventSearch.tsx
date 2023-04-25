@@ -6,6 +6,7 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import styles from "../../styles/Search.module.css"
 import Link from 'next/link';
 import theme from '@/styles/theme';
+import { useRouter } from 'next/router';
 
 // Typeahead URI - DJANGO BACKEND
 const SEARCH_URI =  process.env.NEXT_PUBLIC_HOST + '/api/suggest/target'
@@ -13,6 +14,7 @@ console.log(SEARCH_URI)
 
 // Typeahead Async Search
 function TargetToAESearch() {
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState([]);
   const [selectedTypeAhead, setSelectedTypeAhead] = useState([]);
@@ -29,9 +31,12 @@ function TargetToAESearch() {
       };
 
       const handleChange = (selectedOptions) => {
-        setSelectedTypeAhead(selectedOptions.symbol);
-
+        setSelectedTypeAhead(selectedOptions);
       };
+
+      const handleButtonClick = () => {
+        router.push(`targetToAdverseEvents/${selectedTypeAhead[0].symbol}`)
+      }
 
       const filterByFields = ['symbol', 'description'];
 
@@ -65,7 +70,7 @@ function TargetToAESearch() {
           )}
         />
         <Center>
-          <Button size="lg" bg={theme.brand.secondary} color="white" mt="5" type='submit' id='submit'>Search</Button>
+          <Button size="lg" bg={theme.brand.secondary} color="white" mt="5" onClick={handleButtonClick} id='submit'>Search</Button>
         </Center>
         </TabPanel>
       );

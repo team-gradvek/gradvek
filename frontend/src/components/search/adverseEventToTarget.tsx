@@ -4,8 +4,8 @@ import { TabPanel, Flex, Text, Center, Button } from '@chakra-ui/react'
 import React, { useState } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import styles from "../../styles/Search.module.css"
-import Link from 'next/link';
 import theme from '@/styles/theme';
+import { useRouter } from 'next/router';
 
 // Typeahead URI - DJANGO BACKEND
 const SEARCH_URI =  process.env.NEXT_PUBLIC_HOST + '/api/suggest/adverse_event'
@@ -13,6 +13,7 @@ console.log(SEARCH_URI)
 
 // Typeahead Async Search
 function AdverseEventToTargetSearch() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState([]);
   const [selectedTypeAhead, setSelectedTypeAhead] = useState([]);
@@ -29,11 +30,15 @@ function AdverseEventToTargetSearch() {
       };
 
       const handleChange = (selectedOptions) => {
-        setSelectedTypeAhead(selectedOptions.adverseEventId);
+        setSelectedTypeAhead(selectedOptions);
       };
 
-      const filterByFields = ['adverseEventId', 'meddraId'];
+       // @TODO Refactor this to be one reusable method
+       const handleButtonClick = () => {
+        router.push(`adverseEventToTarget/${selectedTypeAhead[0].meddraId}`)
+      }
 
+      const filterByFields = ['adverseEventId', 'meddraId'];
 
       return (
         <TabPanel className={styles.searchInput}>
@@ -65,7 +70,7 @@ function AdverseEventToTargetSearch() {
           )}
         />
         <Center>
-          <Button size="lg" mt="5" bg={theme.brand.secondary} color="white">Search</Button>
+          <Button size="lg" bg={theme.brand.secondary} color="white" mt="5" onClick={handleButtonClick}>Search</Button>
         </Center>
         </TabPanel>
         

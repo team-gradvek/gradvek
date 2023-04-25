@@ -100,11 +100,14 @@ const Settings = () => {
         <Head>
           <title>Application Settings & Data</title>
         </Head>
-      {/* Grid for small, med, large, xl screens */}
-      {/* <Heading>
-        Application Settings & Data
-      </Heading>
-      <Divider /> */}
+
+      <Box display='flex' w="100%">
+      {/* <Box w="100%" m={2}>
+        <Heading>
+          Application Settings & Data
+        </Heading>
+        <Divider />
+      </Box> */}
 
       <Box w="100%" m={2}>
       <Box m={3}>
@@ -140,7 +143,7 @@ const Settings = () => {
         </Box>
         */}
       </Box>
-
+    </Box>
     </ResultsLayout>
     </>
   )
