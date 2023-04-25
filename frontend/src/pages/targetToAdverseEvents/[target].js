@@ -2,6 +2,9 @@ import { useRouter } from 'next/router'
 import DataTable from '@/components/results/DataTable'
 import getAdverseEvent from "../../hooks/targetToAdverseEventHook"
 import DataTableSkeleton from '@/components/results/DataTableSkeleton'
+import ResultsLayout from '@/components/results/ResultsLayout';
+import Head from "next/head";
+import { ResultsSidebar } from '@/components/results/ResultsSidebar';
 
 const columns = [
   {
@@ -38,19 +41,26 @@ const TargetToAdverseEvents = () => {
   if (isLoading) {
     return (
       <>
+      <ResultsLayout>
         <DataTableSkeleton />
+      </ResultsLayout>
       </>
     )
   }
 
   return (
     <>
+    <ResultsLayout>
+        <Head>
+          <title>Target to Adverse Events Results</title>
+        </Head>
       <DataTable
           title={`Adverse Events for ${target}`}
           data={adverseEvent}
           id={target} 
           columns={columns}
           />
+    </ResultsLayout>
     </>
   )
 }
