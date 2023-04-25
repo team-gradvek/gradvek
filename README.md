@@ -20,8 +20,19 @@ Run the check_environment.sh script to verify that your environment has the nece
 ```Bash
 ./check_environment.sh
 ```
-### 3. Setup the Django backend
-#### 3.1. (Optional) If you want to use a virtual environment for Python, first navigate to the backend folder and follow these steps:
+
+## 3. Add .env file inside Django project
+
+```makefile
+SECRET_KEY=
+NEO4J_USERNAME=
+NEO4J_PASSWORD=
+NEO4J_BOLT_URL=
+```
+The secret keys can be found in the team's private repository at https://github.com/team-gradvek/env.
+
+### 4. Setup the Django backend
+#### 4.1. (Optional) If you want to use a virtual environment for Python, first navigate to the backend folder and follow these steps:
 
 ```Bash
 cd backend
@@ -29,7 +40,7 @@ pip3 install virtualenv
 python3 -m venv env
 source env/bin/activate
 ```
-#### 3.2. Install Python dependencies:
+#### 4.2. Install Python dependencies:
 Note: if you created a Python env in step 1, install the modules inside the environement. 
 To start the env:
 
@@ -85,13 +96,13 @@ https://docs.djangoproject.com/en/4.1/howto/windows/
 ```Bash
 pip3 install -r requirements.txt
 ```
-#### 3.3. Run Django migrations:
+#### 4.3. Run Django migrations:
 ```Bash
 python3 manage.py migrate
 ```
 https://stackoverflow.com/questions/29980211/django-1-8-whats-the-difference-between-migrate-and-makemigrations
 
-## 4. (OPTIONAL) Run Admin Config
+## 5. (OPTIONAL) Run Admin Config
 
 
 `cd` into `backend` folder  
@@ -101,7 +112,11 @@ Create a user:
 ```
 python3 manage.py createsuperuser
 ```
-#### 4. Setup the Next.js frontend
+
+
+## Running the project
+### 1. Install Node.js modules and Run the Next.js frontend
+
 Navigate to the frontend folder and install the required Node.js modules:
 ```Bash
 cd frontend
@@ -109,18 +124,6 @@ npm i
 ```
 https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 
-## 6. Add .env file inside Django project
-
-```makefile
-SECRET_KEY=
-NEO4J_USERNAME=
-NEO4J_PASSWORD=
-NEO4J_BOLT_URL=
-```
-The secret keys can be found in the team's private repository at https://github.com/team-gradvek/env.
-
-## Running the project
-### 1. Run the Next.js frontend
 ```bash
 cd frontend
 npm run dev
@@ -166,9 +169,9 @@ Note: The Neo4j database must be running for this command to work.
 
 ## How to resolve  SSL: CERTIFICATE_VERIFY_FAILED error 
 https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
-```
-"Once upon a time I stumbled with this issue. If you're using macOS go to Macintosh HD > Applications > Python3.6 folder (or whatever version of python you're using) > double click on "Install Certificates.command" file. :D"
-```
+
+"Once upon a time I stumbled with this issue. If you're using macOS go to Macintosh HD > Applications > Python3.6 folder (or whatever version of python you're using) > double click on "Install Certificates.command" file."
+
 ## Neo4j/Docker Connection Errors
 https://stackoverflow.com/questions/42397751/neo4j-in-docker-max-heap-size-causes-hard-crash-137/42398497#42398497
 
