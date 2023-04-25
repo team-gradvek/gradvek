@@ -506,7 +506,7 @@ def create_cypher_query_associated_mouse_phenotypes(table):
         'UNWIND $data as item RETURN item',
         'MATCH (from:Target {ensembleId: item.targetFromSourceId}), (to:MousePhenotype {mousePhenotypeId: item.modelPhenotypeId})
          MERGE (from)-[:MOUSE_PHENOTYPE {dataset: $dataset, weight: item.weight}]->(to)',
-        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
     )
     """
     return [(query, {'data': data, 'dataset': dataset})]
