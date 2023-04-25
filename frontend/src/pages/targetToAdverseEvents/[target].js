@@ -5,6 +5,7 @@ import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
 import { ResultsSidebar } from '@/components/results/ResultsSidebar';
+import { Box } from '@chakra-ui/react';
 
 const columns = [
   {
@@ -42,7 +43,9 @@ const TargetToAdverseEvents = () => {
     return (
       <>
       <ResultsLayout>
+      <Box p={5} w="100%">
         <DataTableSkeleton />
+      </Box>
       </ResultsLayout>
       </>
     )
@@ -54,12 +57,14 @@ const TargetToAdverseEvents = () => {
         <Head>
           <title>Target to Adverse Events Results</title>
         </Head>
+      <Box p={5} w="100%">
       <DataTable
           title={`Adverse Events for ${target}`}
           data={adverseEvent}
           id={target} 
           columns={columns}
           />
+          </Box>
     </ResultsLayout>
     </>
   )
