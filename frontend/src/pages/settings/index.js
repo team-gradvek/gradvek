@@ -2,7 +2,7 @@ import getSettings from '../../hooks/getSettingsHook'
 import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
-import { Box, Grid, Heading } from '@chakra-ui/react';
+import { Box, Divider, Flex, Grid, Heading } from '@chakra-ui/react';
 import DatasetsTable from '@/components/settings/DatasetsTable';
 import SystemDataTable from '@/components/settings/SystemDataTable';
 import DescriptorsTable from '@/components/settings/DescriptorsTable';
@@ -101,6 +101,10 @@ const Settings = () => {
           <title>Application Settings & Data</title>
         </Head>
       {/* Grid for small, med, large, xl screens */}
+      {/* <Heading>
+        Application Settings & Data
+      </Heading>
+      <Divider /> */}
 
       <Box w="100%" m={2}>
       <Box m={3}>
