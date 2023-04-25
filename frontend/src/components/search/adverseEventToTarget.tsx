@@ -8,7 +8,7 @@ import Link from 'next/link';
 import theme from '@/styles/theme';
 
 // Typeahead URI - DJANGO BACKEND
-const SEARCH_URI =  process.env.NEXT_PUBLIC_HOST + '/api/suggest/'
+const SEARCH_URI =  process.env.NEXT_PUBLIC_HOST + '/api/suggest/adverse_event'
 console.log(SEARCH_URI)
 
 // Typeahead Async Search
@@ -20,7 +20,7 @@ function AdverseEventToTargetSearch() {
       const handleSearch = (query: string) => {
         setIsLoading(true);
         
-        fetch(`${SEARCH_URI}` + query)
+        fetch(`${SEARCH_URI}/${query}`)
         .then((resp) => resp.json())
         .then((items) => {
           setOptions(items);
@@ -29,10 +29,10 @@ function AdverseEventToTargetSearch() {
       };
 
       const handleChange = (selectedOptions) => {
-        setSelectedTypeAhead(selectedOptions);
+        setSelectedTypeAhead(selectedOptions.adverseEventId);
       };
 
-      const filterByFields = ['name', 'description'];
+      const filterByFields = ['adverseEventId', 'meddraId'];
 
 
       return (
@@ -42,7 +42,7 @@ function AdverseEventToTargetSearch() {
           filterBy={filterByFields}
           id="ae-to-target-search"
           isLoading={isLoading}
-          labelKey="name"
+          labelKey="adverseEventId"
           minLength={2}
           onSearch={handleSearch}
           options={options}
@@ -53,19 +53,19 @@ function AdverseEventToTargetSearch() {
           renderMenuItemChildren={(ae) => (
             <>
               <Flex direction={"row"} className={styles.results}>
-                <Text fontWeight="bold" className="name">
-                  {ae["name"]}
+                <Text fontWeight="bold" className="adverse_event">
+                  {ae["adverseEventId"]}
                 </Text>
 
-                <Text ml={"1"} className="description">
-                  {ae["description"]}
+                <Text ml={"1"} className="id">
+                  {ae["meddraId"]}
                 </Text>
               </Flex>
             </>
           )}
         />
         <Center>
-          <Button size="lg" mt="5" bg={theme.brand.secondary} color="white"><Link href="/adverseEventToTarget">Search</Link></Button>
+          <Button size="lg" mt="5" bg={theme.brand.secondary} color="white">Search</Button>
         </Center>
         </TabPanel>
         

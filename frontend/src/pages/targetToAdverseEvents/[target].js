@@ -4,7 +4,6 @@ import getAdverseEvent from "../../hooks/targetToAdverseEventHook"
 import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
-import { ResultsSidebar } from '@/components/results/ResultsSidebar';
 import { Box } from '@chakra-ui/react';
 
 const columns = [

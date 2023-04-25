@@ -8,7 +8,7 @@ import Link from 'next/link';
 import theme from '@/styles/theme';
 
 // Typeahead URI - DJANGO BACKEND
-const SEARCH_URI =  process.env.NEXT_PUBLIC_HOST + '/api/targets'
+const SEARCH_URI =  process.env.NEXT_PUBLIC_HOST + '/api/suggest/target'
 console.log(SEARCH_URI)
 
 // Typeahead Async Search
@@ -20,7 +20,7 @@ function TargetToAESearch() {
       const handleSearch = (query: string) => {
         setIsLoading(true);
         
-        fetch(`${SEARCH_URI}`)
+        fetch(`${SEARCH_URI}/${query}`)
         .then((resp) => resp.json())
         .then((items) => {
           setOptions(items);
@@ -29,10 +29,11 @@ function TargetToAESearch() {
       };
 
       const handleChange = (selectedOptions) => {
-        setSelectedTypeAhead(selectedOptions);
+        setSelectedTypeAhead(selectedOptions.symbol);
+
       };
 
-      const filterByFields = ['name', 'description'];
+      const filterByFields = ['symbol', 'description'];
 
 
       return (
@@ -42,7 +43,7 @@ function TargetToAESearch() {
           filterBy={filterByFields}
           id="target-to-ae-search"
           isLoading={isLoading}
-          labelKey="name"
+          labelKey="symbol"
           minLength={2}
           onSearch={handleSearch}
           options={options}
@@ -54,17 +55,17 @@ function TargetToAESearch() {
             <>
               <Flex direction={"row"} className={styles.results}>
                 <Text fontWeight="bold" className="target-name">
-                  {target["name"]}
+                  {target["symbol"]}
                 </Text>
                 <Text ml={"1"} className="target-description">
-                  {target["description"]}
+                  {target["name"]}
                 </Text>
               </Flex>
             </>
           )}
         />
         <Center>
-          <Button size="lg" bg={theme.brand.secondary} color="white" mt="5"><Link href="/adverseEvents">Search</Link></Button>
+          <Button size="lg" bg={theme.brand.secondary} color="white" mt="5" type='submit' id='submit'>Search</Button>
         </Center>
         </TabPanel>
       );

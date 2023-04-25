@@ -8,7 +8,7 @@ import Link from 'next/link';
 import theme from '@/styles/theme';
 
 // Typeahead URI - DJANGO BACKEND
-const SEARCH_URI =  process.env.NEXT_PUBLIC_HOST + '/api/targets'
+const SEARCH_URI =  process.env.NEXT_PUBLIC_HOST + '/api/suggest/target'
 console.log(SEARCH_URI)
 
 // Typeahead Async Search
@@ -20,7 +20,7 @@ function TargetToTargetSimilaritySearch() {
       const handleSearch = (query: string) => {
         setIsLoading(true);
         
-        fetch(`${SEARCH_URI}`)
+        fetch(`${SEARCH_URI}/${query}`)
         .then((resp) => resp.json())
         .then((items) => {
           setOptions(items);
@@ -29,7 +29,7 @@ function TargetToTargetSimilaritySearch() {
       };
 
       const handleChange = (selectedOptions) => {
-        setSelectedTypeAhead(selectedOptions);
+        setSelectedTypeAhead(selectedOptions.symbol);
       };
 
       const filterByFields = ['name', 'description'];
@@ -42,7 +42,7 @@ function TargetToTargetSimilaritySearch() {
           filterBy={filterByFields}
           id="target-to-target-search"
           isLoading={isLoading}
-          labelKey="name"
+          labelKey="symbol"
           minLength={2}
           onSearch={handleSearch}
           options={options}
@@ -54,10 +54,10 @@ function TargetToTargetSimilaritySearch() {
             <>
               <Flex direction={"row"} className={styles.results}>
                 <Text fontWeight="bold" className="target-name">
-                  {target["name"]}
+                  {target["symbol"]}
                 </Text>
                 <Text ml={"1"} className="target-description">
-                  {target["description"]}
+                  {target["name"]}
                 </Text>
               </Flex>
             </>
