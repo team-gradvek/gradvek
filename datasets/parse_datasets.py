@@ -405,7 +405,7 @@ def create_cypher_query_mechanism_of_action(table):
         'UNWIND $data as item RETURN item',
         'MATCH (from:Drug {chemblId: item.chemblId}), (to:Target {ensembleId: item.ensembleId})
          MERGE (from)-[:TARGETS {dataset: $dataset, actionType: item.actionType}]->(to)',
-        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
     )
     """
     # Include the dataset creation query
@@ -465,7 +465,7 @@ def create_cypher_query_associated_with(table):
         'UNWIND $data as item RETURN item',
         'MATCH (from:Drug {chemblId: item.chembl_id}), (to:AdverseEvent {meddraId: item.meddraCode})
          MERGE (from)-[:ASSOCIATED_WITH {dataset: $dataset, critval: item.critval, llr: item.llr}]->(to)',
-        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
     )
     """
     # Include the dataset creation query
