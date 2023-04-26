@@ -122,7 +122,8 @@ def main():
             "diseases": ([create_cypher_query_diseases], []),
             "interactions":([],[create_cypher_query_interactions]),
             "baseExpressions":([create_cypher_query_baseline_expression],[create_cypher_query_hgene, create_cypher_query_hprotein]),
-            "pathways":([create_cypher_query_pathway_types],[create_cypher_query_pathways_relation])
+            "pathways":([create_cypher_query_pathway_types],[create_cypher_query_pathways_relation]),
+            "gwasTraitProfile":([create_cypher_query_gwas],[create_cypher_query_gwas_relation])
         }
 
 
@@ -357,6 +358,29 @@ def create_cypher_query_pathway_types(table):
     # Return a list of queries to be executed
     return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
 
+# Generate Cypher queries for GWAS nodes
+def create_cypher_query_gwas(table):
+    df = table.to_pandas()
+    # large data volume, filter to speed it up
+    df = df['trait_efos'].explode('trait_efos').drop_duplicates()
+
+    node_label = 'Gwas'
+    dataset = f"{data_version} {node_label}"
+    # Prepare data for the Cypher query
+    data = [{'id': x} for x in df]
+
+    # APOC query for creating Evidence nodes in batch
+    query = """
+    CALL apoc.periodic.iterate(
+        'UNWIND $props as prop RETURN prop',
+        'MERGE (:Gwas {id: prop.id, dataset: $dataset})',
+        {params: {props: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+    )
+    """
+    # Include the dataset creation query
+    dataset_query = create_dataset_cypher_query(node_label)
+    # Return a list of queries to be executed
+    return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
 
 
 # Generate Cypher queries for hGene nodes
@@ -404,7 +428,34 @@ def create_indexes():
             session.run("CREATE INDEX dataset_index IF NOT EXISTS FOR (a:Dataset) ON (a.dataset)")
             session.run("CREATE INDEX baseline_expression_index IF NOT EXISTS FOR (a:Baseline_Expression) ON (a.efo_code)")
             session.run("CREATE INDEX evidence_index IF NOT EXISTS FOR (a:Evidence) ON (a.id)")
+            session.run("CREATE INDEX gwas_index IF NOT EXISTS FOR (a:Gwas) ON (a.id)")
 
+
+# Parse the Gwas data and create a list of Cypher queries to insert the data into the database
+def create_cypher_query_gwas_relation(table):
+    df = table.to_pandas()
+    df = df[['gene_id','trait_efos']].explode('trait_efos').drop_duplicates()
+    node_label = 'GwasRelation'
+    dataset = f"{data_version} {node_label}"
+    data = []
+    for _, row in df.iterrows():
+        data.append({
+            'id': row['trait_efos'],
+            'ensembleId': row['gene_id'],
+        })
+    # APOC query for merging relationships between Drug and Target nodes
+    query = """
+    CALL apoc.periodic.iterate(
+        'UNWIND $data as item RETURN item',
+        'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Gwas {id: item.gwas})
+         MERGE (from)-[:GWAS_RELATION {dataset: $dataset}]->(to)',
+        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
+    )
+    """
+    # Include the dataset creation query
+    dataset_query = create_dataset_cypher_query(node_label)
+    # Return a list of queries to be executed
+    return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
 
 # Parse the mechanism of action data and create a list of Cypher queries to insert the data into the database
 def create_cypher_query_mechanism_of_action(table):
