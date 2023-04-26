@@ -96,7 +96,7 @@ def download_file(session, link, output_file, max_retries=3, delay=5, max_thread
     try:
         response = session.head(link)
         file_size = int(response.headers['Content-Length'])
-        chunk_size = max(file_size // max_threads_per_file, 1024 * 1024)
+        chunk_size = file_size // max_threads_per_file
         tasks = [(session, link, i * chunk_size, min((i + 1) * chunk_size - 1, file_size - 1), max_retries, delay) for i in range(max_threads_per_file)]
 
         with open(output_file, "wb") as f:
