@@ -104,7 +104,7 @@ def main():
     input_dir = f"{current_dir}/opentarget"
 
     #Check if data files are updated via platform.conf file data version. If so, clear the neo4j db and reload data from files
-    if True or update_check():
+    if True or update_check(): # change this to 'if True:' when doing dev work
         # clear_neo4j_database()
         # TODO:
         # Action (edge) - appears to not use any data source?
@@ -131,6 +131,11 @@ def main():
 
         # Iterate over each data type in the input directory for node query generators
         for data_type in os.listdir(input_dir):
+            # Check if the data_type is in the data_type_query_generators dictionary
+            if data_type not in data_type_query_generators:
+                print(f"Ignoring '{data_type}' folder. No matching function found.")
+                continue
+
             # Set the data_type_path
             data_type_path = os.path.join(input_dir, data_type)
             # Check if the path is a directory
@@ -145,6 +150,11 @@ def main():
 
         # Iterate over each data type in the input directory for edge query generators
         for data_type in os.listdir(input_dir):
+            # Check if the data_type is in the data_type_query_generators dictionary
+            if data_type not in data_type_query_generators:
+                print(f"Ignoring '{data_type}' folder. No matching function found.")
+                continue
+
             # Set the data_type_path
             data_type_path = os.path.join(input_dir, data_type)
             # Check if the path is a directory
@@ -231,7 +241,11 @@ def create_cypher_query_nodes(table, node_label, props_to_columns):
     # Prepare data for the Cypher query
     data = []
     for _, row in df.iterrows():
-        data.append({column: row[column] for _, column in props_to_columns.items()})
+        entry_data = {column: row[column] for _, column in props_to_columns.items()}
+        # Skip the entry if any of the values are null
+        if any(value is None for value in entry_data.values()):
+            continue
+        data.append(entry_data)
 
     # APOC query for creating or merging nodes in batch
     query = f"""
@@ -415,7 +429,7 @@ def create_cypher_query_mechanism_of_action(table):
         'UNWIND $data as item RETURN item',
         'MATCH (from:Drug {chemblId: item.chemblId}), (to:Target {ensembleId: item.ensembleId})
          MERGE (from)-[:TARGETS {dataset: $dataset, actionType: item.actionType}]->(to)',
-        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
     )
     """
     # Include the dataset creation query
@@ -475,7 +489,7 @@ def create_cypher_query_associated_with(table):
         'UNWIND $data as item RETURN item',
         'MATCH (from:Drug {chemblId: item.chembl_id}), (to:AdverseEvent {meddraId: item.meddraCode})
          MERGE (from)-[:ASSOCIATED_WITH {dataset: $dataset, critval: item.critval, llr: item.llr}]->(to)',
-        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
     )
     """
     # Include the dataset creation query
@@ -516,7 +530,7 @@ def create_cypher_query_associated_mouse_phenotypes(table):
         'UNWIND $data as item RETURN item',
         'MATCH (from:Target {ensembleId: item.targetFromSourceId}), (to:MousePhenotype {mousePhenotypeId: item.modelPhenotypeId})
          MERGE (from)-[:MOUSE_PHENOTYPE {dataset: $dataset, weight: item.weight}]->(to)',
-        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
     )
     """
     return [(query, {'data': data, 'dataset': dataset})]
@@ -585,14 +599,14 @@ def create_cypher_query_interactions(table):
         # Convert the source_database string to uppercase and replace spaces with underscores.
         relationship_type = source_database.upper().replace(" ", "_")
 
-        # Define the APOC query for creating relationships between Target nodes.
+        # Define the Cypher query for creating relationships between Target nodes.
         query = f"""
         CALL apoc.periodic.iterate(
             'UNWIND $data as item RETURN item',
             'MATCH (from:Target {{ensembleId: item.targetA}}), (to:Target {{ensembleId: item.targetB}})
-             CALL apoc.create.relationship(from, $relType, {{dataset: $dataset}}, to) YIELD rel
+             MERGE (from)-[rel:{relationship_type} {{dataset: $dataset}}]->(to)
              RETURN rel',
-            {{params: {{data: $data, dataset: $dataset, relType: "{relationship_type}"}}, batchSize: 1000, parallel: true}}
+            {{params: {{data: $data, dataset: $dataset}}, batchSize: 1000, parallel: false}}
         )
         """
         # Append the query and its parameters to the queries list.
@@ -611,6 +625,8 @@ def create_cypher_query_hgene(table):
     data = []
     for _, row in df.iterrows():
         for i in row['tissues']:
+            if i['rna']['value'] == 0:
+                continue
             data.append({
                 'ensembleId': row['id'],
                 'efo_code': i['efo_code'],
@@ -623,7 +639,7 @@ def create_cypher_query_hgene(table):
             'UNWIND $data as item RETURN item',
             'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Baseline_Expression {efo_code: item.efo_code})
             MERGE (from)-[:HGENE {dataset: $dataset, rna_value: item.rna_value}]->(to)',
-            {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+            {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
         )
         """
     # Include the dataset creation query
@@ -641,6 +657,8 @@ def create_cypher_query_hprotein(table):
     data = []
     for _, row in df.iterrows():
         for i in row['tissues']:
+            if i['protein']['level'] == -1:
+                continue
             data.append({
                 'ensembleId': row['id'],
                 'efo_code': i['efo_code'],
@@ -653,7 +671,7 @@ def create_cypher_query_hprotein(table):
             'UNWIND $data as item RETURN item',
             'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Baseline_Expression {efo_code: item.efo_code})
             MERGE (from)-[:HPROTEIN {dataset: $dataset, protein_level: item.protein_level}]->(to)',
-            {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+            {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
         )
         """
     # Include the dataset creation query
