@@ -15,24 +15,8 @@ Follow these steps to set up the GradVek project:
 git clone https://github.com/team-gradvek/gradvek
 cd gradvek
 ```
-### 2. Check your environment
-Run the check_environment.sh script to verify that your environment has the necessary tools and dependencies:
-```Bash
-./check_environment.sh
-```
 
-## 3. Add .env file inside Django project
-
-```makefile
-SECRET_KEY=
-NEO4J_USERNAME=
-NEO4J_PASSWORD=
-NEO4J_BOLT_URL=
-```
-The secret keys can be found in the team's private repository at https://github.com/team-gradvek/env.
-
-### 4. Setup the Django backend
-#### 4.1. (Optional) If you want to use a virtual environment for Python, first navigate to the backend folder and follow these steps:
+### 2. (OPTIONAL) If you want to use a virtual environment for Python, first navigate to the backend folder and follow these steps:
 
 ```Bash
 cd backend
@@ -40,8 +24,7 @@ pip3 install virtualenv
 python3 -m venv env
 source env/bin/activate
 ```
-#### 4.2. Install Python dependencies:
-Note: if you created a Python env in step 1, install the modules inside the environement. 
+Note: if you created a Python env install the modules inside the environment.   
 To start the env:
 
 ```
@@ -53,65 +36,25 @@ To stop the env:
 ```
 deactivate 
 ```
-
-Update to Python 3.11  
-
-```
-https://www.python.org/downloads/
-```
-
-Get Django  
-
-MacOS/Linux:
-
-```
- brew install django-completion
-```
-Windows:
-
-```
-https://docs.djangoproject.com/en/4.1/howto/windows/
-```
-Update to Python 3.11  
-
-```
-https://www.python.org/downloads/
-```
-
-Get Django  
-
-MacOS/Linux:
-
-```
- brew install django-completion
-```
-Windows:
-
-```
-https://docs.djangoproject.com/en/4.1/howto/windows/
-```
-
-`cd` into `backend` folder
-
+### 3. Check your environment
+Note: if you created a Python env install the modules inside the environment.   
+Run the check_environment.sh script to verify that your environment has the necessary tools and dependencies:
 ```Bash
-pip3 install -r requirements.txt
+./check_environment.sh
 ```
-#### 4.3. Run Django migrations:
-```Bash
-python3 manage.py migrate
-```
-https://stackoverflow.com/questions/29980211/django-1-8-whats-the-difference-between-migrate-and-makemigrations
+Windows: you may need to change `python3` for `python`  
 
-## 5. (OPTIONAL) Run Admin Config
+### 4. Add `.env` file inside Django project
 
-
-`cd` into `backend` folder  
-
-Create a user:
+`cd backend/gradvekbackend `
 
 ```
-python3 manage.py createsuperuser
+SECRET_KEY=
+NEO4J_USERNAME=
+NEO4J_PASSWORD=
+NEO4J_BOLT_URL=
 ```
+The secret keys can be found in the team's private repository at https://github.com/team-gradvek/env.
 
 
 ## Running the project
@@ -131,12 +74,31 @@ npm run dev
 Open your browser and navigate to http://localhost:3000/.
 
 ### 2. Run the Django backend
+
+#### 2.1 Run Django migrations:
+Note: For the names of the nine descriptors used in this project, we constructed a basic Django model. This can be changed in the future.
+
+```Bash
+python3 manage.py migrate
+```
+https://stackoverflow.com/questions/29980211/django-1-8-whats-the-difference-between-migrate-and-makemigrations
+
+#### 2.2 Run Admin Config
+`cd` into `backend` folder  
+
+Create a user:
+
+```
+python3 manage.py createsuperuser
+```
+#### 2.3 Run Django backend
 ```bash
 cd backend
 python3 manage.py runserver
 ```
 Visit http://localhost:8000/ to ensure the backend is running.
 Note: The Neo4j database must be running for the backend to work.
+
 
 ## Makefile commands
 ### 1. Start the Neo4j database
@@ -152,7 +114,7 @@ make stop-neo4j
 make clean
 ```
 ### 4. Get datasets
-To fetch the Parquet datasets, run the get_datasets.py script in the datasets folder:
+To fetch the Parquet datasets, run the `get_datasets.py` script in the datasets folder:
 
 ```bash
 make get-datasets
