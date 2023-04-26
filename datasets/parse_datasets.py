@@ -440,7 +440,7 @@ def create_cypher_query_gwas_relation(table):
     data = []
     for _, row in df.iterrows():
         data.append({
-            'id': row['trait_efos'],
+            'gwas': row['trait_efos'],
             'ensembleId': row['gene_id'],
         })
     # APOC query for merging relationships between Drug and Target nodes
