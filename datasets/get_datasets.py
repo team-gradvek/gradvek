@@ -32,7 +32,7 @@ paths = {
     "targets": ["opentarget/targets","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/targets/"],
     "interactions": ["opentarget/interactions","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/interaction/"],
     "baseExpressions": ["opentarget/baseExpressions","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/baselineExpression/"],
-    "pathways": ["opentarget/baseExpressions","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/evidence/sourceId=reactome/"]
+    "pathways": ["opentarget/pathways","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/evidence/sourceId=reactome/"]
     # "gwasTraitProfile": ["opentarget/gwasTraitProfile","https://ftp.ebi.ac.uk/pub/databases/opentargets/genetics/latest/d2v2g/"]
 }
 
