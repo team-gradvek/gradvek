@@ -1,8 +1,4 @@
 import {
-  Avatar,
-  Box,
-  Checkbox,
-  HStack,
   Heading,
   Table,
   Tbody,
@@ -11,21 +7,11 @@ import {
   Th,
   Thead,
   Tr,
-  Button,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   Card, CardBody, 
 } from '@chakra-ui/react'
 import Link from 'next/link'
-import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-// import getAdverseEvent from "../../hooks/targetToAdverseEventHook"
+import theme from '@/styles/theme'
 
 
 const MouseTable = ({data, title, columns}) => {
@@ -58,10 +44,12 @@ const MouseTable = ({data, title, columns}) => {
       {data.map((item) => (
         <Tr key={item.id}>
           <Td>
-            <Text className="capitalize" fontWeight="medium">{item.target1}</Text>
+            <Text className="capitalize" fontWeight="medium" color={theme.brand.color}><Link href={{ pathname: `/targetToAdverseEvents/` + item.target1 }}>{item.target1}</Link></Text>
           </Td>
           <Td>
-            <Text className="capitalize" fontWeight="medium"><Link href='/targetToAdverseEvent/{item.target2}'>{item.target2}</Link></Text>
+            <Text className="capitalize" fontWeight="medium" color={theme.brand.color}>
+              <Link href={{ pathname: `/targetToAdverseEvents/` + item.target2 }}>{item.target2}</Link>
+              </Text>
           </Td>
           <Td>
            <Text color="muted">{item.similarity}</Text>
