@@ -6,6 +6,7 @@ import TargetToAESearch from '@/components/search/targetToAdverseEventSearch';
 import AdverseEventToTargetSearch from '@/components/search/adverseEventToTarget';
 import TargetToTargetSimilaritySearch from '@/components/search/targetToTargetSimilaritySearch';
 import theme from '@/styles/theme';
+import DrugsByTargetAESearch from '@/components/search/drugsByTargetAESearch';
 
 
 export default function Index() {
@@ -34,6 +35,7 @@ export default function Index() {
               <Tab _selected={{ color: 'white', bg: '#0069A4' }}>Target to Adverse Event</Tab>
               <Tab _selected={{ color: 'white', bg: '#0069A4' }}>Adverse Event to Target</Tab>
               <Tab _selected={{ color: 'white', bg: '#0069A4' }}>Target to Target</Tab>
+              <Tab _selected={{ color: 'white', bg: '#0069A4' }}>Drug Search by Target and Adverse Event</Tab>
             </TabList>
             </Card>
             <Card p="4" mx="4" mt="4">
@@ -41,6 +43,7 @@ export default function Index() {
               <TargetToAESearch />
               <AdverseEventToTargetSearch />
               <TargetToTargetSimilaritySearch />
+              <DrugsByTargetAESearch />
             </TabPanels>
             </Card>
         </Tabs>

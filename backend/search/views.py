@@ -71,13 +71,10 @@ class GetActions(APIView):
             target = ""
         # Get cypher query results
         actions = fetch_actions(target)
-        data = {
-            'response': {
-                'status': '200',
-                'data': actions,
-            },
-        }
-        return Response(data)
+    
+        # Return the result as a JSON response
+        return Response(actions, status=status.HTTP_200_OK)
+ 
  
 class GetPheno(APIView):
     """
@@ -150,14 +147,11 @@ class Datasets(APIView):
     def get(self, request):
         # Retrieve all Dataset objects from the Neo4j database
         datasets = fetch_datasets()
-        data = {
-            'response': {
-                'status': '200',
-                'data': datasets,
-            },
-        }
+
+        datasets = [{"name": item } for item in datasets]
+
         # Return the data as a JSON response
-        return Response(data)
+        return Response(datasets, status=status.HTTP_200_OK)
 
     """
     Modify the active status of one or more datasets
@@ -244,6 +238,7 @@ class CountView(APIView):
     def get(self, request, type_string, *args, **kwargs):
         try:
             num_entities = get_entity_count(type_string)
+            
             return Response(num_entities, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
@@ -254,12 +249,28 @@ class CountAllView(APIView):
     """
 
     def get(self, request, *args, **kwargs):
+
         try:
             counts = count_all_entities()
-            return Response({"counts": counts}, status=200)
+
+            counts = convert_array(counts)
+
+            return Response(counts, status=status.HTTP_200_OK)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
+""" Function to process array in to cleaner format for frontend"""
+def convert_array(original_array):
+    result_dict = {}
+    for subarr in original_array:
+        key, value = subarr
+        result_dict[key] = value
+    
+    result_array = []
+    for key, value in result_dict.items():
+        result_array.append({"name": key.lower(), "count": value})
+    
+    return result_array
 
 
 # Health check

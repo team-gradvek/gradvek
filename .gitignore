@@ -14,7 +14,7 @@ neo4j/data/
 neo4j/logs/
 neo4j/import/
 neo4j/plugins/
-.env
+# .env commiting this on purpose as its a required nextjs public environment variable
 .vscode
 
 

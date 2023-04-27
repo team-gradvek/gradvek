@@ -4,15 +4,16 @@ import { TabPanel, Flex, Text, Center, Button } from '@chakra-ui/react'
 import React, { useState } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import styles from "../../styles/Search.module.css"
-import Link from 'next/link';
 import theme from '@/styles/theme';
+import { useRouter } from 'next/router';
 
 // Typeahead URI - DJANGO BACKEND
-const SEARCH_URI =  process.env.NEXT_PUBLIC_HOST + '/api/suggest/'
+const SEARCH_URI =  process.env.NEXT_PUBLIC_HOST + '/api/suggest/adverse_event'
 console.log(SEARCH_URI)
 
 // Typeahead Async Search
 function AdverseEventToTargetSearch() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState([]);
   const [selectedTypeAhead, setSelectedTypeAhead] = useState([]);
@@ -20,7 +21,7 @@ function AdverseEventToTargetSearch() {
       const handleSearch = (query: string) => {
         setIsLoading(true);
         
-        fetch(`${SEARCH_URI}` + query)
+        fetch(`${SEARCH_URI}/${query}`)
         .then((resp) => resp.json())
         .then((items) => {
           setOptions(items);
@@ -32,8 +33,12 @@ function AdverseEventToTargetSearch() {
         setSelectedTypeAhead(selectedOptions);
       };
 
-      const filterByFields = ['name', 'description'];
+       // @TODO Refactor this to be one reusable method
+       const handleButtonClick = () => {
+        router.push(`adverseEventToTarget/${selectedTypeAhead[0].meddraId}`)
+      }
 
+      const filterByFields = ['adverseEventId', 'meddraId'];
 
       return (
         <TabPanel className={styles.searchInput}>
@@ -42,7 +47,7 @@ function AdverseEventToTargetSearch() {
           filterBy={filterByFields}
           id="ae-to-target-search"
           isLoading={isLoading}
-          labelKey="name"
+          labelKey="adverseEventId"
           minLength={2}
           onSearch={handleSearch}
           options={options}
@@ -53,19 +58,19 @@ function AdverseEventToTargetSearch() {
           renderMenuItemChildren={(ae) => (
             <>
               <Flex direction={"row"} className={styles.results}>
-                <Text fontWeight="bold" className="name">
-                  {ae["name"]}
+                <Text fontWeight="bold" className="adverse_event">
+                  {ae["adverseEventId"]}
                 </Text>
 
-                <Text ml={"1"} className="description">
-                  {ae["description"]}
+                <Text ml={"1"} className="id">
+                  {ae["meddraId"]}
                 </Text>
               </Flex>
             </>
           )}
         />
         <Center>
-          <Button size="lg" mt="5" bg={theme.brand.secondary} color="white"><Link href="/adverseEventToTarget">Search</Link></Button>
+          <Button size="lg" bg={theme.brand.secondary} color="white" mt="5" onClick={handleButtonClick}>Search</Button>
         </Center>
         </TabPanel>
         
