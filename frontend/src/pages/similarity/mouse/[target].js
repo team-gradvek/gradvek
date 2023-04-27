@@ -19,7 +19,7 @@ const columns = [
   },
   {
     id: 3,
-    name: 'Average Similarity'
+    name: 'Similarity Score'
   },
   {
     id: 4,
