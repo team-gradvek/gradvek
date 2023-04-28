@@ -7,10 +7,16 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 """
 This script downloads Open Target datasets from the Open Target FTP server.
-The datasets include information about diseases, FDA significant adverse drug reactions, 
+The datasets include information about diseases, FDA significant adverse drug reactions,
 mechanism of action, molecules, mouse phenotypes, and targets.
 
-The script downloads files in parallel to try and speed up the process, particuarly when there are retries.
+Steps to add a new data type:
+
+1. Add a new key-value pair to the 'paths' dictionary.
+The key is the name of the new data type and the value is a list containing the local directory path and the Open Target FTP server path.
+2. Ensure the URL and local directory are correct and have the appropriate read and write permissions.
+
+The script downloads files in parallel to try and speed up the process, particularly when there are retries.
 The ThreadPoolExecutor class from the concurrent.futures module is used to manage threads for parallel downloads.
 The 'max_workers' parameter determines the maximum number of threads used concurrently.
 
@@ -35,24 +41,32 @@ paths = {
     # "gwasTraitProfile": ["opentarget/gwasTraitProfile","https://ftp.ebi.ac.uk/pub/databases/opentargets/genetics/latest/d2v2g/"]
 }
 
-def main():
+def get_datasets():
+    # Print the initial message when the program starts
     print("Starting the program...")
+
+    # Create necessary directories for storing data
+    create_required_directories()
     try:
-        # Check current directory for conf file to determine the version of open targets for the current files
+       # Get the current data version from the existing platform.conf file
         current_data_date = get_open_targets_version_from_file("platform.conf")
+        print(f"Current data version: {current_data_date}")
 
-        # Download latest conf file
+        # Download the latest platform.conf file
         download_latest_conf_file()
+        # Get the latest data version from the downloaded newplatform.conf file
         latest_data_date = get_open_targets_version_from_file("newplatform.conf")
-
-        # If the current open targets files are newer than the current downloaded ones
-        if latest_data_date > current_data_date:
+        print(f"Latest data version: {latest_data_date}")
+        # Get the number of CPU cores available
+        core_count = os.cpu_count()
+        # If the latest data is newer than the current data, or the current data version is unknown, update the data
+        if current_data_date is None or latest_data_date > current_data_date:
             print("Files being updated")
-            # Delete existing parquet files
+            # Delete existing parquet files before downloading new ones
             delete_existing_file()
             # Download new data
             for key, values in paths.items():
-                get_datasets(key, values[0], values[1])
+                get_datatype(key, values[0], values[1], max_retries=3, delay=5, max_workers=core_count)
 
         # If the current open targets files are up to date, validate the existing files
         else: 
@@ -60,7 +74,7 @@ def main():
                 os.remove('newplatform.conf')
             print("Files are already up to date")            
             for key, values in paths.items():
-                get_datasets(key, values[0], values[1])
+                get_datatype(key, values[0], values[1], max_retries=3, delay=5, max_workers=core_count)
 
     except Exception as e:
         print("Couldn't validate latest open targets version and update data." + str(e))
@@ -83,7 +97,7 @@ def download_file(link, output_file, max_retries=3, delay=5):
                 time.sleep(delay)
 
 
-def get_datasets(name, project_path, ot_path, max_retries=3, delay=5, max_workers=5):
+def get_datatype(name, project_path, ot_path, max_retries=3, delay=5, max_workers=5):
     try:
         print(f"Starting to download {name} files...")
 
@@ -251,5 +265,14 @@ def delete_existing_file():
             except Exception as e:
                 print(f"Error deleting file {file_path}: {e}")
 
+def create_required_directories():
+    current_dir = os.getcwd()
+    # Iterate through the paths and create required directories if they don't exist
+    for key, values in paths.items():
+        dir_path = os.path.join(current_dir, values[0])
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+            print(f"Created directory: {dir_path}")
+
 if __name__ == "__main__":
-    main()
+    get_datasets()

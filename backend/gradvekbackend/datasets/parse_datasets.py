@@ -95,7 +95,7 @@ def update_check():
        return True
 
 
-def main():
+def parse_datasets():
     # Set the dataset name
     set_dataset_name()
     # Get the current working directory
@@ -104,7 +104,7 @@ def main():
     input_dir = f"{current_dir}/opentarget"
 
     #Check if data files are updated via platform.conf file data version. If so, clear the neo4j db and reload data from files
-    if True or update_check(): # change this to 'if True:' when doing dev work
+    if update_check(): # change this to 'if True:' when doing dev work
         # clear_neo4j_database()
         # TODO:
         # Action (edge) - appears to not use any data source?
@@ -631,5 +631,5 @@ def create_cypher_query_hprotein(table):
 
 # Main function call
 if __name__ == "__main__":
-    main()
+    parse_datasets()
 
