@@ -15,32 +15,50 @@ gds = GraphDataScience(URI, auth=AUTH)
 Open Targets Neo4j Importer
 
 This script imports Open Targets data into a Neo4j database. It processes various types of data, including targets,
-FDA adverse events, molecules, mechanisms of action, mouse phenotypes, and diseases, and imports them as nodes and
-edges into the database.
+pathways, FDA adverse events, molecules, mechanisms of action, mouse phenotypes, diseases, interactions, and
+baseline expressions, and imports them as nodes and edges into the database.
 
-The script is designed to read parquet data from the 'opentarget' folder, where each data type should be stored in its own
-subfolder. To add a new data type, create a subfolder with the appropriate name and add the necessary node and edge
-query generators to the 'data_type_query_generators' dictionary.
+How this file uses the data retrieved by the 'get_datasets.py' file:
 
-Neo4j queries are generated and executed for each data type. Nodes are first imported into the database, followed by the
-edges. Queries use the APOC library for parallelized batch processing, which significantly improves performance.
+1. The script reads data from parquet files stored in the 'opentarget' folder. Parquet files are a columnar storage file
+   format optimized for use with big data processing frameworks. Each data type is stored in its own subfolder.
 
-How the script works:
+2. The data in the parquet files is converted to tables using the PyArrow library. These tables are then converted
+   to pandas DataFrames for easier manipulation.
 
-1. Iterates over each data type in the input directory for node query generators
-2. Creates indexes for nodes to improve performance in edge query generation
-3. Iterates over each data type in the input directory for edge query generators
+3. The script processes the data using node and edge query generator functions defined for each data type. These
+   generator functions take the DataFrames as input, extract the required properties, and create Cypher queries to
+   create or update nodes and edges in the Neo4j database.
 
-To update the script for new data types:
+4. The script uses the APOC library for parallelized batch processing of Neo4j Cypher queries. Make sure to have the
+   APOC plugin installed in your Neo4j instance before running the script.
 
-1. Create a folder for the new data type in the 'opentarget' folder - the folder name will be the data type name
-2. Add the data type name to the 'data_type_query_generators' dictionary - the key will be the data type name and the
-value will be a tuple containing the node query generator and edge query generator for that data type
-3. Add 'create_cypher_query_<data_type_name>' functions for the node and edge query generators as needed for the new type
+Main function overview:
 
-Important note: This script uses the APOC library for parallelized batch processing of Neo4j queries. Make sure to have
-the APOC plugin installed in your Neo4j instance before running the script.
+- The script first sets the dataset name and checks if the data files are up-to-date.
+- It then defines a dictionary called 'data_type_query_generators', which maps data types to lists of node and edge
+  query generator functions.
+- It creates indexes for nodes to improve query performance.
+- The script iterates over each data type for the node query generators, and then does the same for edge query
+  generators, executing them in two separate loops to ensure all node generators are run before the edge generators.
+
+Adding a new data type to the 'data_type_query_generators' dictionary:
+
+1. Define the node and edge query generator functions for the new data type.
+2. Add the data type name as the key and a tuple containing the node and edge query generator functions as the value.
+
+Creating query generator functions (for nodes and relationships):
+
+1. Define a function that takes a 'table' as its argument. This table is obtained by converting a parquet file to a
+   table using PyArrow (handled in main you don't need to define this) and then the function converts that table to a pandas DataFrame.
+2. Extract the required properties from the DataFrame and prepare the data for the Cypher query.
+3. Create an APOC query for creating or merging nodes or relationships in batch, using the prepared data.
+4. Return a list of queries to be executed, including the dataset creation query and the node/relationship creation query.
+
+As long at the function is defined and added to the 'data_type_query_generators' dictionary, the script will run it.
+
 """
+
 
 # Dataset name
 data_version = None

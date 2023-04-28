@@ -112,6 +112,10 @@ a {
 
 }
 
+.dropdown-menu.show {
+  z-index: 900 !important;
+}
+
 .capitalize{
   text-transform: capitalize;
 }
