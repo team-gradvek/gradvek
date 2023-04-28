@@ -5,7 +5,7 @@ from django.core.management import call_command
 import importlib
 import environ
 from neomodel import config, db
-from gradvekbackend.datasets.get_datasets import get_datasets
+from datasets.get_datasets import get_datasets
 
 # Initialize environment variables
 env = environ.Env()
@@ -65,5 +65,5 @@ def run_startup_tasks():
     wait_for_neo4j_connection()
 
     # Dynamically import parse_datasets module
-    parse_datasets_module = importlib.import_module('gradvekbackend.datasets.parse_datasets', package='gradvekbackend')
+    parse_datasets_module = importlib.import_module('datasets.parse_datasets', package='datasets')
     parse_datasets_module.parse_datasets()

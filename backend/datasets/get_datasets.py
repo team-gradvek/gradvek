@@ -47,8 +47,12 @@ def get_datasets():
 
     # Create necessary directories for storing data
     create_required_directories()
+
+    # Get the current script's directory instead of the working directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
     try:
-       # Get the current data version from the existing platform.conf file
+        # Get the current data version from the existing platform.conf file
         current_data_date = get_open_targets_version_from_file("platform.conf")
         print(f"Current data version: {current_data_date}")
 
@@ -69,15 +73,19 @@ def get_datasets():
                 get_datatype(key, values[0], values[1], max_retries=3, delay=5, max_workers=core_count)
 
         # If the current open targets files are up to date, validate the existing files
-        else: 
-            if os.path.exists('newplatform.conf'):
-                os.remove('newplatform.conf')
-            print("Files are already up to date")            
+        else:
+            # Construct the path to the newplatform.conf file
+            new_platform_conf_path = os.path.join(current_dir, 'newplatform.conf')
+
+            if os.path.exists(new_platform_conf_path):
+                os.remove(new_platform_conf_path)
+            print("Files are already up to date")
             for key, values in paths.items():
                 get_datatype(key, values[0], values[1], max_retries=3, delay=5, max_workers=core_count)
 
     except Exception as e:
         print("Couldn't validate latest open targets version and update data." + str(e))
+
 
 
 def download_file(link, output_file, max_retries=3, delay=5):
@@ -103,8 +111,9 @@ def get_datatype(name, project_path, ot_path, max_retries=3, delay=5, max_worker
 
         url = ot_path
 
-        current_dir = os.getcwd()
-        output_dir = f"{current_dir}/{project_path}"
+        # Get the current script's directory instead of the working directory
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        output_dir = os.path.join(current_dir, project_path)
 
          # Create the output directory if it doesn't exist
         if not os.path.exists(output_dir):
@@ -175,10 +184,11 @@ def get_datatype(name, project_path, ot_path, max_retries=3, delay=5, max_worker
 
 def get_open_targets_version_from_file(file_name):
     try:
-        cwd = os.getcwd()
+        # Get the current script's directory instead of the working directory
+        current_dir = os.path.dirname(os.path.abspath(__file__))
         
         # Construct the path to the platform.conf file
-        conf_file = os.path.join(cwd, file_name)
+        conf_file = os.path.join(current_dir, file_name)
         
         # Read the contents of the file
         with open(conf_file, 'r') as f:
@@ -204,14 +214,13 @@ def get_open_targets_version_from_file(file_name):
 
 
 def download_latest_conf_file():
-
     try:
 
         # Specify the URL
         url = 'https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/conf/'
 
-        # Use the current directory as the output directory
-        output_dir = os.getcwd()
+        # Get the current script's directory instead of the working directory
+        output_dir = os.path.dirname(os.path.abspath(__file__))
 
         # Use wget to retrieve the HTML content of the page
         html_content = wget.download(url, out=output_dir)
@@ -244,18 +253,23 @@ def download_latest_conf_file():
         print("Downloading file error: " + str(e))
 
 def delete_existing_file():
-    # Check if the platform.conf file exists
-    if os.path.exists('platform.conf'):
-        os.remove('platform.conf')
+    # Get the current script's directory instead of the working directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
     
+    # Construct the path to the platform.conf file and newplatform.conf file
+    platform_conf_path = os.path.join(current_dir, 'platform.conf')
+    new_platform_conf_path = os.path.join(current_dir, 'newplatform.conf')
+
+    # Check if the platform.conf file exists
+    if os.path.exists(platform_conf_path):
+        os.remove(platform_conf_path)
+
     # Rename the newplatform.conf file to platform.conf
-    os.rename('newplatform.conf', 'platform.conf')
+    os.rename(new_platform_conf_path, platform_conf_path)
     print("Successfully updated platform.conf file.")
 
-    current_dir = os.getcwd()
-
     for key, values in paths.items():
-        delete_files_dir = f"{current_dir}/{values[0]}"
+        delete_files_dir = os.path.join(current_dir, values[0])
         for filename in os.listdir(delete_files_dir):
             file_path = os.path.join(delete_files_dir, filename)
             try:
@@ -265,8 +279,10 @@ def delete_existing_file():
             except Exception as e:
                 print(f"Error deleting file {file_path}: {e}")
 
+
 def create_required_directories():
-    current_dir = os.getcwd()
+    # Get the current script's directory instead of the working directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
     # Iterate through the paths and create required directories if they don't exist
     for key, values in paths.items():
         dir_path = os.path.join(current_dir, values[0])

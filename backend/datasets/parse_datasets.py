@@ -98,10 +98,10 @@ def update_check():
 def parse_datasets():
     # Set the dataset name
     set_dataset_name()
-    # Get the current working directory
-    current_dir = os.getcwd()
+    # Get the current script's directory instead of the working directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
     # Set the input directory for the opentarget data
-    input_dir = f"{current_dir}/opentarget"
+    input_dir = os.path.join(current_dir, "opentarget")
 
     #Check if data files are updated via platform.conf file data version. If so, clear the neo4j db and reload data from files
     if update_check(): # change this to 'if True:' when doing dev work
