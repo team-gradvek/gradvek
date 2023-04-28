@@ -7,10 +7,16 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 """
 This script downloads Open Target datasets from the Open Target FTP server.
-The datasets include information about diseases, FDA significant adverse drug reactions, 
+The datasets include information about diseases, FDA significant adverse drug reactions,
 mechanism of action, molecules, mouse phenotypes, and targets.
 
-The script downloads files in parallel to try and speed up the process, particuarly when there are retries.
+Steps to add a new data type:
+
+1. Add a new key-value pair to the 'paths' dictionary.
+The key is the name of the new data type and the value is a list containing the local directory path and the Open Target FTP server path.
+2. Ensure the URL and local directory are correct and have the appropriate read and write permissions.
+
+The script downloads files in parallel to try and speed up the process, particularly when there are retries.
 The ThreadPoolExecutor class from the concurrent.futures module is used to manage threads for parallel downloads.
 The 'max_workers' parameter determines the maximum number of threads used concurrently.
 
@@ -31,8 +37,9 @@ paths = {
     "mousePhenotypes": ["opentarget/mousePhenotypes", "https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/mousePhenotypes/"],
     "targets": ["opentarget/targets","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/targets/"],
     "interactions": ["opentarget/interactions","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/interaction/"],
-    "baseExpressions": ["opentarget/baseExpressions","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/baselineExpression/"]
-    # "gwasTraitProfile": ["opentarget/gwasTraitProfile","https://ftp.ebi.ac.uk/pub/databases/opentargets/genetics/latest/d2v2g/"]
+    "baseExpressions": ["opentarget/baseExpressions","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/baselineExpression/"],
+    "pathways": ["opentarget/pathways","https://ftp.ebi.ac.uk/pub/databases/opentargets/platform/latest/output/etl/parquet/evidence/sourceId=reactome/"],
+    "gwasTraitProfile": ["opentarget/gwasTraitProfile","https://ftp.ebi.ac.uk/pub/databases/opentargets/genetics/latest/d2v2g/"]
 }
 
 def main():

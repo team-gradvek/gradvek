@@ -54,9 +54,9 @@ else
 fi
 
 # Install and update Python dependencies
-echo "Installing and updating Python dependencies..."
+echo "Installing and Python dependencies..."
 cd backend
-pip3 install -r requirements.txt --upgrade
+pip3 install -r requirements.txt
 
 # Install and update Node.js dependencies
 echo "Installing and updating Node.js dependencies..."
