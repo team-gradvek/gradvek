@@ -47,7 +47,14 @@ data_version = None
 
 def set_dataset_name():
     global data_version
-    with open("platform.conf", "r") as file:
+
+    # Get the current script's directory instead of the working directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Construct the path to the platform.conf file
+    conf_file = os.path.join(current_dir, "platform.conf")
+
+    with open(conf_file, "r") as file:
         for line in file:
             # Remove whitespace from the beginning and end of the line
             stripped_line = line.strip()
@@ -93,6 +100,7 @@ def update_check():
     except Exception as e:
        print("Didnt find neo4j entry or dataset version. Reloading data")
        return True
+
 
 
 def parse_datasets():
