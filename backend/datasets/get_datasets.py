@@ -141,13 +141,20 @@ def get_datatype(name, project_path, ot_path, max_retries=3, delay=5, max_worker
 
        # Prepare the download tasks for each file link
         tasks = []
+        existing_files_count = 0
         for n, link in enumerate(links):
             filename = os.path.basename(link)
             output_file = os.path.join(output_dir, filename)
             if os.path.exists(output_file):
-                print(f"File {filename} already exists. Skipping...")
+                existing_files_count += 1
             else:
                 tasks.append((link, output_file, max_retries, delay))
+
+        if existing_files_count == len(links):
+            print(f"All {name} files are present. Skipping...")
+        elif existing_files_count > 0:
+            print(f"{existing_files_count}/{len(links)} {name} files are present. Downloading missing files...")
+
 
         # Initialize the count of completed files
         completed_files = 0
