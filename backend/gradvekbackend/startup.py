@@ -7,6 +7,11 @@ import environ
 from neomodel import config, db
 from datasets.get_datasets import get_datasets
 
+'''
+ This file contains functions that are run when the Django application starts up. It is imported in
+ backend/search/apps.py and the run_startup_tasks function is called from the ready function in that file.
+'''
+
 # Initialize environment variables
 env = environ.Env()
 
@@ -26,6 +31,7 @@ def close_driver():
 atexit.register(close_driver)
 
 def check_neo4j_connection():
+    # Function to check Neo4j connection by executing a simple Cypher query.
     try:
         # Execute a simple Cypher query to check the connection
         query = "MATCH (n) RETURN COUNT(n) AS node_count"
@@ -41,6 +47,8 @@ def check_neo4j_connection():
         return False
 
 def wait_for_neo4j_connection():
+    # Function to wait for Neo4j connection to be established. It will retry the connection 10 times with a 5 second
+    # delay between each attempt.
     retry = 0
     max_retries = 10
     while retry < max_retries:
@@ -61,9 +69,10 @@ def wait_for_neo4j_connection():
 
 
 def run_startup_tasks():
+    # Function to run startup tasks
     get_datasets()
     wait_for_neo4j_connection()
 
-    # Dynamically import parse_datasets module
+    # Dynamically import parse_datasets module, this is done to better manage the neo4j connections
     parse_datasets_module = importlib.import_module('datasets.parse_datasets', package='datasets')
     parse_datasets_module.parse_datasets()

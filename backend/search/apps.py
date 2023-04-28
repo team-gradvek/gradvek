@@ -5,7 +5,9 @@ class SearchConfig(AppConfig):
     name = "search"
 
     def ready(self):
-        # put your startup code here
+        # This hooks into the startup process of Django
+        # and runs the startup tasks defined in
+        # gradvekbackend.startup
         from gradvekbackend.startup import run_startup_tasks
         run_startup_tasks()
 
