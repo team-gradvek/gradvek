@@ -8,6 +8,8 @@ datasets/opentarget/mousePhenotypes/*.snappy*.parquet*
 datasets/opentarget/targets/*.snappy*.parquet*
 datasets/opentarget/interactions/*.snappy*.parquet*
 datasets/opentarget/baseExpressions/*.snappy*.parquet*
+datasets/opentarget/gwasTraitProfile/*.snappy*.parquet*
+*.tmp
 datasets/platform.conf
 download*.wget*
 neo4j/data/
