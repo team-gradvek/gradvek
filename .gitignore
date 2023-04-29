@@ -9,6 +9,7 @@ datasets/opentarget/targets/*.snappy*.parquet*
 datasets/opentarget/interactions/*.snappy*.parquet*
 datasets/opentarget/baseExpressions/*.snappy*.parquet*
 datasets/opentarget/gwasTraitProfile/*.snappy*.parquet*
+datasets/opentarget/pathways/*.snappy*.parquet*
 datasets/platform.conf
 download*.wget*
 *.tmp
