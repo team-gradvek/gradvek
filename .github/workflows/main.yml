@@ -17,6 +17,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: ns_dockerhub
     strategy:
       matrix:
         service: ["backend", "frontend"]
@@ -34,12 +35,13 @@ jobs:
           context: ./${{ matrix.service }}
           platforms: linux/${{ matrix.arch }}
           push: false
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek:${{ matrix.service }}-${{ github.sha }}-${{ matrix.arch }}
 
   publish:
     if: github.event_name == 'pull_request' && github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
+    environment: ns_dockerhub
     strategy:
       matrix:
         service: ["backend", "frontend"]
@@ -63,13 +65,14 @@ jobs:
           context: ./${{ matrix.service }}
           platforms: linux/${{ matrix.arch }}
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek:${{ matrix.service }}-${{ github.sha }}-${{ matrix.arch }}
 
 
   # deploy:
   #   if: github.event_name == 'pull_request' && github.ref == 'refs/heads/main'
   #   needs: publish
   #   runs-on: ubuntu-latest
+  #   environment: ns_dockerhub
   #   steps:
   #     - name: Checkout code
   #       uses: actions/checkout@v3
