@@ -29,5 +29,12 @@ services:
       - "8000:8000"
     networks:
       - my_network
-    # Add any additional configuration for your backend service here.
-    # For example, environment variables, volumes, etc.
+  
+  frontend:
+    build: ./frontend
+    image: gradvek_frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - my_network
+
