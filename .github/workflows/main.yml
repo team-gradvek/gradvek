@@ -34,7 +34,7 @@ jobs:
           context: ./${{ matrix.service }}
           platforms: linux/${{ matrix.arch }}
           push: false
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek:${{ matrix.service }}-${{ matrix.arch }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek:latest
 
   publish:
     if: github.event_name == 'pull_request' && github.ref == 'refs/heads/main'
@@ -63,7 +63,7 @@ jobs:
           context: ./${{ matrix.service }}
           platforms: linux/${{ matrix.arch }}
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek:${{ matrix.service }}-${{ matrix.arch }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek:latest
 
 
   # deploy:
