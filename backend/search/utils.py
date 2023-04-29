@@ -28,15 +28,6 @@ from .queries.reactome import get_reactome
 from .queries.signor import get_signor
 
 
-# # For easily access each of the model classes programmatically, create a key-value map.
-# MODEL_ENTITIES = {
-#     'Drug': Drug,
-
-# }
-
-URI = "bolt://localhost:7687"
-AUTH = ("neo4j", "gradvek1")
-
 def fetch_actions(target):
     ACTIONS = get_actions(target)
     return ACTIONS
