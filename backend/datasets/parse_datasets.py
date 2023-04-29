@@ -173,7 +173,7 @@ def parse_datasets():
             "interactions":([],[create_cypher_query_interactions]),
             "baseExpressions":([create_cypher_query_baseline_expression],[create_cypher_query_hgene, create_cypher_query_hprotein]),
             "pathways":([create_cypher_query_pathway_types],[create_cypher_query_pathways_relation]),
-            "gwasTraitProfile":([create_cypher_query_gwas],[create_cypher_query_gwas_relation])
+            # "gwasTraitProfile":([create_cypher_query_gwas],[create_cypher_query_gwas_relation])
         }
 
 
@@ -243,10 +243,10 @@ def generate_queries(data_type, data_type_path, query_generator):
         # Generate queries for the current table
         queries = query_generator(table)
 
-    # Execute the queries concurrently within a single transaction
-    with db.transaction:
-        for query, params in queries:
-            db.cypher_query(query, params=params)
+        # Execute the queries concurrently within a single transaction
+        with db.transaction:
+            for query, params in queries:
+                db.cypher_query(query, params=params)
 
 
 # Generate Cypher query for Dataset nodes
@@ -458,7 +458,7 @@ def create_indexes():
     db.cypher_query("CREATE INDEX diseaseId_index IF NOT EXISTS FOR (a:Disease) ON (a.diseaseId)")
     db.cypher_query("CREATE INDEX dataset_index IF NOT EXISTS FOR (a:Dataset) ON (a.dataset)")
     db.cypher_query("CREATE INDEX baseline_expression_index IF NOT EXISTS FOR (a:Baseline_Expression) ON (a.efo_code)")
-    db.cypher_query("CREATE INDEX evidence_index IF NOT EXISTS FOR (a:Evidence) ON (a.id)")
+    db.cypher_query("CREATE INDEX targetpathway_index IF NOT EXISTS FOR (a:TargetPathway) ON (a.id)")
     db.cypher_query("CREATE INDEX gwas_index IF NOT EXISTS FOR (a:Gwas) ON (a.id)")
 
 
