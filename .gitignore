@@ -1,8 +1,8 @@
 .DS_Store
 .ipynb_checkpoints/
 *.snappy*.parquet*
-*.tmp
 platform.conf
+*.tmp
 download*.wget*
 neo4j/data/
 neo4j/logs/
