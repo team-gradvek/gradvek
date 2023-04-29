@@ -21,6 +21,13 @@ from .utils import (
     count_all_entities,
     fetch_actions,
     fetch_datasets,
+    fetch_gwas,
+    fetch_hgene,
+    fetch_hprotein,
+    fetch_intact,
+    fetch_pathway,
+    fetch_reactome,
+    fetch_signor,
     get_all_routes,
     get_cytoscape_entities_as_json,
     get_entity_count,
@@ -94,6 +101,143 @@ class GetPheno(APIView):
 
         # Return the result as a JSON response
         return Response(pheno, status=status.HTTP_200_OK)  
+    
+
+class GetGwas(APIView):
+    """
+     Return most similar targets - 
+     GWAS similarity descending order
+    """
+    def get(self, request,  *args, **kwargs):
+
+        # Check if a target is in the requested path
+        try: 
+            target = self.kwargs["target"]
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+        
+        # Get cypher query results
+        gwas = fetch_gwas(target)
+
+        # Return the result as a JSON response
+        return Response(gwas, status=status.HTTP_200_OK)  
+
+
+class GetHGene(APIView):
+    """
+     Return most similar targets - 
+     hGene similarity descending order
+    """
+    def get(self, request,  *args, **kwargs):
+
+        # Check if a target is in the requested path
+        try: 
+            target = self.kwargs["target"]
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+        
+        # Get cypher query results
+        hgene = fetch_hgene(target)
+
+        # Return the result as a JSON response
+        return Response(hgene, status=status.HTTP_200_OK)  
+
+
+class GetHProtein(APIView):
+    """
+     Return most similar targets - 
+     hProtein similarity descending order
+    """
+    def get(self, request,  *args, **kwargs):
+
+        # Check if a target is in the requested path
+        try: 
+            target = self.kwargs["target"]
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+        
+        # Get cypher query results
+        hprotein = fetch_hprotein(target)
+
+        # Return the result as a JSON response
+        return Response(hprotein, status=status.HTTP_200_OK)  
+
+class GetIntact(APIView):
+    """
+     Return most similar targets - 
+     Intact similarity descending order
+    """
+    def get(self, request,  *args, **kwargs):
+
+        # Check if a target is in the requested path
+        try: 
+            target = self.kwargs["target"]
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+        
+        # Get cypher query results
+        intact = fetch_intact(target)
+
+        # Return the result as a JSON response
+        return Response(intact, status=status.HTTP_200_OK)  
+
+class GetPathway(APIView):
+    """
+     Return most similar targets - 
+     Pathway similarity descending order
+    """
+    def get(self, request,  *args, **kwargs):
+
+        # Check if a target is in the requested path
+        try: 
+            target = self.kwargs["target"]
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+        
+        # Get cypher query results
+        pathway = fetch_pathway(target)
+
+        # Return the result as a JSON response
+        return Response(pathway, status=status.HTTP_200_OK)  
+
+class GetReactome(APIView):
+    """
+     Return most similar targets - 
+     Reactome similarity descending order
+    """
+    def get(self, request,  *args, **kwargs):
+
+        # Check if a target is in the requested path
+        try: 
+            target = self.kwargs["target"]
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+        
+        # Get cypher query results
+        reactome = fetch_reactome(target)
+
+        # Return the result as a JSON response
+        return Response(reactome, status=status.HTTP_200_OK)  
+
+class GetSignor(APIView):
+    """
+     Return most similar targets - 
+     Signor similarity descending order
+    """
+    def get(self, request,  *args, **kwargs):
+
+        # Check if a target is in the requested path
+        try: 
+            target = self.kwargs["target"]
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+        
+        # Get cypher query results
+        signor = fetch_signor(target)
+
+        # Return the result as a JSON response
+        return Response(signor, status=status.HTTP_200_OK)  
+
 
 # Return an array of actions for the specified target
 #actions/{target}
