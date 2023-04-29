@@ -86,7 +86,7 @@ jobs:
           platforms: linux/${{ matrix.arch }}
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:${{ matrix.arch }}-${{ github.sha }}
-          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-from: type=gha
 
 
   # deploy:
