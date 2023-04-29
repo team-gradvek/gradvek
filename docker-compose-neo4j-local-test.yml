@@ -1,14 +1,10 @@
 version: "3.9"
 
-services:
-  backend:
-    build: ./backend
-    image: backend_image
-    ports:
-      - "8000:8000"
-    # Add any additional configuration for your backend service here.
-    # For example, environment variables, volumes, etc.
+networks:
+  my_network:
+    driver: bridge
 
+services:
   neo4j:
     build: ./neo4j
     image: gradvek_neo4j
@@ -22,3 +18,16 @@ services:
       - ./neo4j/logs:/logs
       - ./neo4j/import:/var/lib/neo4j/import
       - ./neo4j/plugins:/plugins
+    networks:
+      - my_network
+
+  backend:
+    build: ./backend
+    image: gradvek_backend
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    networks:
+      - my_network
+    # Add any additional configuration for your backend service here.
+    # For example, environment variables, volumes, etc.

@@ -5,7 +5,7 @@ from neo4j import GraphDatabase
 from graphdatascience import GraphDataScience
 
 # Set the URI and AUTH for the neo4j database
-URI = "bolt://localhost:7687"
+URI = "bolt://neo4j:7687"
 AUTH = ("neo4j", "gradvek1")
 
 # Use Neo4j URI and credentials according to your setup
