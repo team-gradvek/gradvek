@@ -1,8 +1,8 @@
 import {
   Flex,
 } from '@chakra-ui/react'
-import Footer from '../Footer';
-import TopNav  from '../TopNav'
+import Footer from '../footer';
+import TopNav  from '../topnav'
 
 function ResultsLayout({ children }) {
   

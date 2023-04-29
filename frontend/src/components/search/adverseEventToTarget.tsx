@@ -38,17 +38,23 @@ function AdverseEventToTargetSearch() {
         router.push(`adverseEventToTarget/${selectedTypeAhead[0].meddraId}`)
       }
 
-      const filterByFields = ['adverseEventId', 'meddraId'];
+      const filterByCallback = (option, props) => {
+        const query = props.text.toLowerCase();
+        const adverseEventIdMatch = option.adverseEventId ? option.adverseEventId.toLowerCase().includes(query) : false;
+        const meddraIdMatch = option.meddraId ? option.meddraId.toLowerCase().includes(query) : false;
+        
+        return adverseEventIdMatch || meddraIdMatch;
+      };
 
       return (
         <TabPanel className={styles.searchInput}>
           <Text mb="4">Find targets that include this adverse event</Text>
         <AsyncTypeahead
-          filterBy={filterByFields}
+          filterBy={filterByCallback}
           id="ae-to-target-search"
           isLoading={isLoading}
           labelKey="adverseEventId"
-          minLength={2}
+          minLength={1}
           onSearch={handleSearch}
           options={options}
           maxResults={25}
