@@ -51,13 +51,8 @@ jobs:
           platforms: linux/${{ matrix.arch }}
           push: false
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:${{ matrix.arch }}-${{ github.sha }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
-
-      - name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   publish:
     if: github.event_name == 'pull_request' && github.ref == 'refs/heads/main'
