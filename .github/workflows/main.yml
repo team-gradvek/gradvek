@@ -3,7 +3,7 @@ name: Gradvek CI/CD
 on:
   workflow_dispatch:
     inputs:
-      NON_MASTER_DEPLOY:
+      NON_MAIN_DEPLOY:
         description: 'Deploy from workflow dispatch'
         required: false
         default: 'true'
@@ -55,7 +55,7 @@ jobs:
           cache-to: type=gha,mode=max
 
   publish:
-    if: github.event_name == 'pull_request' && github.ref == 'refs/heads/main'
+    if: (github.event_name == 'pull_request' && github.ref == 'refs/heads/main') ||  github.event.inputs.NON_MAIN_DEPLOY == 'TRUE'
     needs: build
     runs-on: ubuntu-latest
     environment: ns_dockerhub
@@ -90,7 +90,7 @@ jobs:
 
 
   # deploy:
-  #   if: github.event_name == 'pull_request' && github.ref == 'refs/heads/main'
+  #   if: (github.event_name == 'pull_request' && github.ref == 'refs/heads/main') ||  github.event.inputs.NON_MAIN_DEPLOY == 'TRUE'
   #   needs: publish
   #   runs-on: ubuntu-latest
   #   environment: ns_dockerhub
