@@ -30,13 +30,13 @@ check-environment: # Run the check_environment.sh script to verify the environme
 .PHONY: get-datasets
 get-datasets: # Get datasets using the get_datasets.py script
 	$(info Make: Getting datasets.)
-	@cd datasets && python3 get_datasets.py
+	@cd backend/datasets && python3 get_datasets.py
 
 # Import data into Neo4j using the parse_datasets.py script
 .PHONY: send-data
 send-data: # Send data to Neo4j using the parse_datasets.py script
 	$(info Make: Sending data to Neo4j.)
-	@cd datasets && python3 parse_datasets.py
+	@cd backend/datasets && python3 parse_datasets.py
 
 # Run the Neo4j container using Docker Compose
 .PHONY: run-neo4j
@@ -64,3 +64,16 @@ clean: # Stop and remove the Neo4j container and clean up data and logs
 	@docker-compose -f $(DOCKER_COMPOSE_FILE) down
 	@rm -rf ./neo4j/data/*
 	@rm -rf ./neo4j/logs/*
+
+# Run the Next.js frontend
+.PHONY: run-frontend
+run-frontend: # Run the Next.js frontend
+	$(info Make: Running the Next.js frontend.)
+	@cd frontend && npm run dev
+
+# Run the Django backend
+.PHONY: run-backend
+run-backend: # Run the Django backend
+	$(info Make: Running the Django backend.)
+	@cd backend && python3 manage.py runserver
+
