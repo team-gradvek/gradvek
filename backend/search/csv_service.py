@@ -73,11 +73,7 @@ def load_drug_to_ae_data_from_csv(csv_data):
     dataset = f"{data_version} {node_label}"
 
     # Iterate over every line in csv file
-    #for row in csv_data:
-    for i, row in enumerate(csv_data):
-        if i <= 10000:
-            continue
-
+    for row in csv_data:
         # Confirm there are two entries in the line, one more chemblId and one for medraId
         if len(row) != 2:
             print(f"Invalid row: {row}. For drug to adverse event csv file load, each row must have exactly two entries, one chembl_Id and one code/meddra_Id")
