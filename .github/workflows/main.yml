@@ -24,7 +24,19 @@ jobs:
         arch: ["amd64", "arm64"]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: |
+            /tmp/buildx_cache
+            ~/.docker
+          key: ${{ runner.os }}-${{ matrix.arch }}-${{ matrix.service }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.arch }}-${{ matrix.service }}
+            ${{ runner.os }}-${{ matrix.arch }}
+            ${{ runner.os }}-
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -35,7 +47,8 @@ jobs:
           context: ./${{ matrix.service }}
           platforms: linux/${{ matrix.arch }}
           push: false
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek:${{ matrix.service }}-${{ github.sha }}-${{ matrix.arch }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:${{ matrix.arch }}-${{ github.sha }}
+          cache-to: type=inline,dest=/tmp/buildx_cache
 
   publish:
     if: github.event_name == 'pull_request' && github.ref == 'refs/heads/main'
@@ -48,7 +61,7 @@ jobs:
         arch: ["amd64", "arm64"]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -65,8 +78,8 @@ jobs:
           context: ./${{ matrix.service }}
           platforms: linux/${{ matrix.arch }}
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek:${{ matrix.service }}-${{ github.sha }}-${{ matrix.arch }}
-
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:${{ matrix.arch }}-${{ github.sha }}
+          cache-from: type=inline,src=/tmp/buildx_cache
 
   # deploy:
   #   if: github.event_name == 'pull_request' && github.ref == 'refs/heads/main'
@@ -75,14 +88,10 @@ jobs:
   #   environment: ns_dockerhub
   #   steps:
   #     - name: Checkout code
-  #       uses: actions/checkout@v3
+  #       uses: actions/checkout@v2
 
   #     - name: Configure AWS credentials
   #       uses: aws-actions/configure-aws-credentials@v1
   #       with:
   #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         aws-region: us-west-2
-
-  #     # Add AWS deployment steps here
-  #     # Make sure you have the required configurations and credentials
+  #         aws-secret-access-key: ${{
