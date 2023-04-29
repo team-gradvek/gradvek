@@ -709,11 +709,14 @@ def create_cypher_query_hgene(table):
             })
 
     # APOC query for creating Pathway nodes in batch
+    # When there are redundant nodes with different rna_value, the average value is used
     query = """
         CALL apoc.periodic.iterate(
             'UNWIND $data as item RETURN item',
             'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Baseline_Expression {efo_code: item.efo_code})
-            MERGE (from)-[:HGENE {dataset: $dataset, rna_value: item.rna_value}]->(to)',
+            MERGE (from)-[rel:HGENE {dataset: $dataset}]->(to)
+            ON CREATE SET rel.rna_value = item.rna_value
+            ON MATCH SET rel.rna_value = (rel.rna_value + item.rna_value) / 2',
             {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
         )
         """
@@ -745,7 +748,9 @@ def create_cypher_query_hprotein(table):
         CALL apoc.periodic.iterate(
             'UNWIND $data as item RETURN item',
             'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Baseline_Expression {efo_code: item.efo_code})
-            MERGE (from)-[:HPROTEIN {dataset: $dataset, protein_level: item.protein_level}]->(to)',
+            MERGE (from)-[rel:HPROTEIN {dataset: $dataset}]->(to)
+            ON CREATE SET rel.protein_level = item.protein_level
+            ON MATCH SET rel.protein_level = (rel.protein_level + item.protein_level) / 2',
             {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
         )
         """
