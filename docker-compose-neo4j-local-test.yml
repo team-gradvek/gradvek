@@ -17,8 +17,8 @@ services:
       - "7474:7474"
       - "7687:7687"
     # volumes section is only for initial loading of data
-    # volumes:
-    #   - ./neo4j/data:/data
-    #   - ./neo4j/logs:/logs
-    #   - ./neo4j/import:/var/lib/neo4j/import
-    #   - ./neo4j/plugins:/plugins
+    volumes:
+      - ./neo4j/data:/data
+      - ./neo4j/logs:/logs
+      - ./neo4j/import:/var/lib/neo4j/import
+      - ./neo4j/plugins:/plugins
