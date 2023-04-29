@@ -1,4 +1,6 @@
+import csv
 import json
+import os
 from django.shortcuts import render
 from django.urls import get_resolver
 from django.views import View
@@ -36,6 +38,10 @@ from .utils import (
     suggestion_by_hint_for_mouse_phenotype,
     suggestion_by_hint_for_pathway,
 
+)
+
+from .csv_service import (
+    parse_and_load_csv_file
 )
 
 # API view to list all routes in the Django site
@@ -106,10 +112,20 @@ class GetPheno(APIView):
 
 # CSVVVVV
 # Upload one or more entities in a comma-separated file
+@csrf_exempt
 @require_http_methods(["POST"])
 def upload_csv(request):
     # Implement the functionality for uploading a CSV
-    pass
+    filename = "drug_to_ae.csv"
+    filepath = os.path.join(os.getcwd(), filename)
+
+    # Open the CSV file and pass it to another function for processing
+    with open(filepath, "r") as csv_file:
+        reader = csv.reader(csv_file)
+        parse_and_load_csv_file(reader)
+
+    return HttpResponse('method completed', status=200)
+
 
 # Return the content of a previously uploaded comma-separated file
 @require_http_methods(["GET"])
