@@ -10,30 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-from pathlib import Path
 import environ
-from neomodel import config, db
-import atexit
+from pathlib import Path
 
 # Initialize environment variables
 env = environ.Env()
 
 # Read environment variables from .env file
 environ.Env.read_env()
-
-# Set up Neo4j database connection using environment variables
-config.DATABASE_URL = env("NEO4J_BOLT_URL")
-NEO4J_USERNAME = env("NEO4J_USERNAME")
-NEO4J_PASSWORD = env("NEO4J_PASSWORD")
-
-# Function to close Neo4j driver when the application exits
-def close_driver():
-    if db.driver:
-        db.driver.close()
-
-# Register the close_driver function to be called when the application exits
-atexit.register(close_driver)
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
