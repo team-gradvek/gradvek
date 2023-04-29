@@ -10,8 +10,13 @@ ENV NEO4J_AUTH=neo4j/gradvek1 \
     NEO4J_server_memory_pagecache_size=2G
 
 # Copy data, logs, import, and plugins folders
-COPY data /data
+COPY data /var/lib/neo4j/data
 COPY logs /logs
 COPY import /var/lib/neo4j/import
 COPY plugins /plugins
 
+# Expose Neo4j ports
+EXPOSE 7474 7473 7687
+
+# Start Neo4j
+CMD ["neo4j"]

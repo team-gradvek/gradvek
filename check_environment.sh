@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# Check for Python
-command -v python3 >/dev/null 2>&1 || {
-    echo >&2 "Python3 is required, but it's not installed. Please install Python3 and try again.";
-    exit 1;
-}
+# Check for Python and ensure it is version 3.11 or higher
+python_version=$(python3 -c 'import platform; major, minor, _ = platform.python_version_tuple(); print(f"{major}.{minor}")')
+if [[ "$python_version" < "3.11" ]]; then
+    echo >&2 "Python version 3.11 or higher is required, but you have version $python_version. Please install Python 3.10 or higher and try again."
+    exit 1
+fi
 
 # Check for pip3
 command -v pip3 >/dev/null 2>&1 || {
