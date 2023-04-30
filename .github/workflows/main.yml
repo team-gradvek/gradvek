@@ -97,8 +97,7 @@ jobs:
       - name: Cache Docker layers
         uses: actions/cache@v3
         with:
-          path: |
-            /tmp/buildx_cache
+          path: /tmp/.buildx-cache
           key: ${{ runner.os }}-${{ matrix.arch }}-${{ matrix.service }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.arch }}-${{ matrix.service }}
