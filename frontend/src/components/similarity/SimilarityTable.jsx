@@ -14,7 +14,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import theme from '@/styles/theme'
 
 
-const SimilarityTable = ({data, title, columns}) => {
+const SimilarityTable = ({data, title, columns, descriptor}) => {
 
   if (data.length == 0) {
     return (
@@ -55,7 +55,7 @@ const SimilarityTable = ({data, title, columns}) => {
            <Text color="muted">{item.similarity}</Text>
           </Td>
           <Td>
-           <Text color="muted">Mouse Phenotype</Text>
+           <Text color="muted">{descriptor}</Text>
           </Td>
         </Tr>
       ))}

@@ -27,23 +27,19 @@ const columns = [
 ]
 
 
-const TargetSimilarityMousePhenotype = () => {
+const TargetSimilarityPathway = () => {
 
   // Get data from URL
   const router = useRouter()
   const dataFromURL  = router.query
   const target = dataFromURL.target
-  const descriptor = "Mouse Phenotype"
-
-  console.log(dataFromURL)
+  const descriptor = "Pathway"
 
   const pageTitle = `Top 10 Targets Based on Similarity ${descriptor} for ${target}`
 
-  const { data, isLoading, isError } = targetSimilarityHook("pheno", target)
+  const { data, isLoading, isError } = targetSimilarityHook("pathway", target)
 
-  if (isError) {
-    return <p>Failed to Load</p>
-  }
+  if (isError) return <p>Failed to Load</p>
 
   if (isLoading) {
     return (
@@ -77,4 +73,4 @@ const TargetSimilarityMousePhenotype = () => {
   )
 }
 
-export default TargetSimilarityMousePhenotype
+export default TargetSimilarityPathway
