@@ -17,6 +17,7 @@ class SearchConfig(AppConfig):
         if os.environ.get('RUN_MAIN') != 'true':
             run_startup_tasks()
         else:
+            # If the application is started by the autoreloader, it still needs the Neo4j connection to be established
             wait_for_neo4j_connection()
 
 

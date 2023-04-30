@@ -61,7 +61,7 @@ jobs:
       - name: Set outputs
         id: build
         run: |
-          echo "::set-output name=images::${{ steps.docker_buildx_build.outputs.images }}"
+          echo "{images}={steps.docker_buildx_build.outputs.images}" >> $GITHUB_OUTPUT
 
 
   publish:
