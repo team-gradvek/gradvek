@@ -3,7 +3,7 @@ import targetSimilarityHook from '@/hooks/targetSimilarity';
 import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
-import { Box } from '@chakra-ui/react';
+import { Box, Heading, Text } from '@chakra-ui/react';
 import SimilarityTable from '@/components/similarity/SimilarityTable';
 
 const columns = [
@@ -39,7 +39,18 @@ const TargetSimilarityPathway = () => {
 
   const { data, isLoading, isError } = targetSimilarityHook("pathway", target)
 
-  if (isError) return <p>Failed to Load</p>
+  if (isError) {
+    return (
+      <>
+       <ResultsLayout>
+          <Box p={5} w="100%">
+            <Heading size='md' mb={4}>Server Error</Heading>
+            <Text size='md' mb={4}>Please try again later</Text>
+          </Box>
+        </ResultsLayout>
+      </>
+    )
+  }
 
   if (isLoading) {
     return (

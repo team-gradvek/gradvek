@@ -42,7 +42,16 @@ const TargetSimilarityMousePhenotype = () => {
   const { data, isLoading, isError } = targetSimilarityHook("pheno", target)
 
   if (isError) {
-    return <p>Failed to Load</p>
+    return (
+      <>
+       <ResultsLayout>
+          <Box p={5} w="100%">
+            <Heading size='md' mb={4}>Server Error</Heading>
+            <Text size='md' mb={4}>Please try again later</Text>
+          </Box>
+        </ResultsLayout>
+      </>
+    )
   }
 
   if (isLoading) {

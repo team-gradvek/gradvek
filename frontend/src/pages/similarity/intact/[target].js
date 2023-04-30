@@ -39,7 +39,18 @@ const TargetSimilarityPathway = () => {
 
   const { data, isLoading, isError } = targetSimilarityHook("intact", target)
 
-  if (isError) return <p>Failed to Load</p>
+  if (isError) {
+    return (
+      <>
+       <ResultsLayout>
+          <Box p={5} w="100%">
+            <Heading size='md' mb={4}>Server Error</Heading>
+            <Text size='md' mb={4}>Please try again later</Text>
+          </Box>
+        </ResultsLayout>
+      </>
+    )
+  }
 
   if (isLoading) {
     return (
