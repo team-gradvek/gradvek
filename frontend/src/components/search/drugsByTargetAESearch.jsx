@@ -68,28 +68,30 @@ function DrugsByTargetAESearch() {
         router.push(`drugsByTargetAE/${selectedTypeAheadTarget[0].symbol}/${selectedTypeAheadAE[0].meddraId}`)
       }
 
-      const filterByCallbackTarget = (option, props) => {
-        const query = props.text.toLowerCase();
-        const nameMatch = option.name ? option.name.toLowerCase().includes(query) : false;
-        const descriptionMatch = option.description ? option.description.toLowerCase().includes(query) : false;
+      // const filterByCallbackTarget = (option, props) => {
+      //   const query = props.text.toLowerCase();
+      //   const nameMatch = option.name ? option.name.toLowerCase().includes(query) : false;
+      //   const descriptionMatch = option.description ? option.description.toLowerCase().includes(query) : false;
         
-        return nameMatch || descriptionMatch;
-      };
+      //   return nameMatch || descriptionMatch;
+      // };
+      const filterByFieldsTarget = ['adverseEventId', 'meddraId'];
       
-      const filterByCallbackAE = (option, props) => {
-        const query = props.text.toLowerCase();
-        const meddraIdMatch = option.meddraId ? option.meddraId.toLowerCase().includes(query) : false;
-        const adverseEventIdMatch = option.adverseEventId ? option.adverseEventId.toLowerCase().includes(query) : false;
+      // const filterByCallbackAE = (option, props) => {
+      //   const query = props.text.toLowerCase();
+      //   const meddraIdMatch = option.meddraId ? option.meddraId.toLowerCase().includes(query) : false;
+      //   const adverseEventIdMatch = option.adverseEventId ? option.adverseEventId.toLowerCase().includes(query) : false;
         
-        return meddraIdMatch || adverseEventIdMatch;
-      };
+      //   return meddraIdMatch || adverseEventIdMatch;
+      // };
+      const filterByFieldsAE = ['adverseEventId', 'meddraId'];
       
       return (
         <TabPanel className={styles.searchInput}>
           <Text mb="4">Search drugs associated with a target and adverse event</Text>
 
           <AsyncTypeahead
-            filterBy={filterByCallbackTarget}
+            filterBy={filterByFieldsTarget}
             id="target-search"
             isLoading={isLoading}
             labelKey="symbol"
@@ -117,7 +119,7 @@ function DrugsByTargetAESearch() {
          
          <Box mt={2}>
           <AsyncTypeahead
-            filterBy={filterByCallbackAE}
+            filterBy={filterByFieldsAE}
             id="ae-search"
             isLoading={isLoading}
             labelKey="meddraId"

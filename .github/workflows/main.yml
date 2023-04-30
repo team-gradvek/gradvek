@@ -17,7 +17,6 @@ jobs:
       strategy:
         matrix:
           service: ["backend", "frontend"]
-          arch: ["amd64", "arm64"]
       steps:
         - name: Checkout code
           uses: actions/checkout@v3
@@ -61,7 +60,6 @@ jobs:
     strategy:
       matrix:
         service: ["backend", "frontend"]
-        arch: ["amd64", "arm64"]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -98,17 +96,16 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-${{ matrix.arch }}-${{ matrix.service }}
+          key: ${{ runner.os }}-${{ matrix.service }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.arch }}-${{ matrix.service }}
-            ${{ runner.os }}-${{ matrix.arch }}
+            ${{ runner.os }}-$-${{ matrix.service }}
             ${{ runner.os }}-
 
       - name: Build Docker images
         uses: docker/build-push-action@v4
         with:
           context: ./${{ matrix.service }}
-          platforms: linux/${{ matrix.arch }}
+          platforms: linux/amd64,linux/arm64
           push: false
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:latest
           cache-from: type=local,src=/tmp/.buildx-cache
@@ -127,7 +124,6 @@ jobs:
     strategy:
       matrix:
         service: ["backend", "frontend"]
-        arch: ["amd64", "arm64"]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -150,7 +146,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./${{ matrix.service }}
-          platforms: linux/${{ matrix.arch }}
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:latest
           cache-from: type=local,src=/tmp/.buildx-cache
