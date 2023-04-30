@@ -38,18 +38,23 @@ function TargetToAESearch() {
         router.push(`targetToAdverseEvents/${selectedTypeAhead[0].symbol}`)
       }
 
-      const filterByFields = ['symbol', 'description'];
-
+      const filterByCallback = (option, props) => {
+        const query = props.text.toLowerCase();
+        const symbolMatch = option.symbol ? option.symbol.toLowerCase().includes(query) : false;
+        const descriptionMatch = option.description ? option.description.toLowerCase().includes(query) : false;
+        return symbolMatch || descriptionMatch;
+      };
+      
 
       return (
         <TabPanel className={styles.searchInput}>
           <Text mb="4">Find adverse events that include this target</Text>
         <AsyncTypeahead
-          filterBy={filterByFields}
+          filterBy={filterByCallback}
           id="target-to-ae-search"
           isLoading={isLoading}
           labelKey="symbol"
-          minLength={2}
+          minLength={1}
           onSearch={handleSearch}
           options={options}
           maxResults={25}

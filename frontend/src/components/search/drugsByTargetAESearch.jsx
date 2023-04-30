@@ -68,20 +68,32 @@ function DrugsByTargetAESearch() {
         router.push(`drugsByTargetAE/${selectedTypeAheadTarget[0].symbol}/${selectedTypeAheadAE[0].meddraId}`)
       }
 
-      const filterByFieldsTarget = ['name', 'description'];
-      const filterByFieldsAE = ['meddraId', 'adverseEventId'];
-
-
+      const filterByCallbackTarget = (option, props) => {
+        const query = props.text.toLowerCase();
+        const nameMatch = option.name ? option.name.toLowerCase().includes(query) : false;
+        const descriptionMatch = option.description ? option.description.toLowerCase().includes(query) : false;
+        
+        return nameMatch || descriptionMatch;
+      };
+      
+      const filterByCallbackAE = (option, props) => {
+        const query = props.text.toLowerCase();
+        const meddraIdMatch = option.meddraId ? option.meddraId.toLowerCase().includes(query) : false;
+        const adverseEventIdMatch = option.adverseEventId ? option.adverseEventId.toLowerCase().includes(query) : false;
+        
+        return meddraIdMatch || adverseEventIdMatch;
+      };
+      
       return (
         <TabPanel className={styles.searchInput}>
           <Text mb="4">Search drugs associated with a target and adverse event</Text>
 
           <AsyncTypeahead
-            filterBy={filterByFieldsTarget}
+            filterBy={filterByCallbackTarget}
             id="target-search"
             isLoading={isLoading}
             labelKey="symbol"
-            minLength={2}
+            minLength={1}
             onSearch={handleSearchTarget}
             options={optionsTarget}
             maxResults={25}
@@ -105,11 +117,11 @@ function DrugsByTargetAESearch() {
          
          <Box mt={2}>
           <AsyncTypeahead
-            filterBy={filterByFieldsAE}
+            filterBy={filterByCallbackAE}
             id="ae-search"
             isLoading={isLoading}
             labelKey="meddraId"
-            minLength={2}
+            minLength={1}
             onSearch={handleSearchAE}
             options={optionsAE}
             maxResults={25}

@@ -1,53 +1,98 @@
 import os
 import time
 import pyarrow.parquet as pq
+from neomodel import config, db
 from neo4j import GraphDatabase
 from graphdatascience import GraphDataScience
-
-# Set the URI and AUTH for the neo4j database
-URI = "bolt://localhost:7687"
-AUTH = ("neo4j", "gradvek1")
-
-# Use Neo4j URI and credentials according to your setup
-gds = GraphDataScience(URI, auth=AUTH)
 
 """
 Open Targets Neo4j Importer
 
 This script imports Open Targets data into a Neo4j database. It processes various types of data, including targets,
-FDA adverse events, molecules, mechanisms of action, mouse phenotypes, and diseases, and imports them as nodes and
-edges into the database.
+pathways, FDA adverse events, molecules, mechanisms of action, mouse phenotypes, diseases, interactions, and
+baseline expressions, and imports them as nodes and edges into the database.
 
-The script is designed to read parquet data from the 'opentarget' folder, where each data type should be stored in its own
-subfolder. To add a new data type, create a subfolder with the appropriate name and add the necessary node and edge
-query generators to the 'data_type_query_generators' dictionary.
+How this file uses the data retrieved by the 'get_datasets.py' file:
 
-Neo4j queries are generated and executed for each data type. Nodes are first imported into the database, followed by the
-edges. Queries use the APOC library for parallelized batch processing, which significantly improves performance.
+1. The script reads data from parquet files stored in the 'opentarget' folder. Parquet files are a columnar storage file
+   format optimized for use with big data processing frameworks. Each data type is stored in its own subfolder.
 
-How the script works:
+2. The data in the parquet files is converted to tables using the PyArrow library. These tables are then converted
+   to pandas DataFrames for easier manipulation.
 
-1. Iterates over each data type in the input directory for node query generators
-2. Creates indexes for nodes to improve performance in edge query generation
-3. Iterates over each data type in the input directory for edge query generators
+3. The script processes the data using node and edge query generator functions defined for each data type. These
+   generator functions take the DataFrames as input, extract the required properties, and create Cypher queries to
+   create or update nodes and edges in the Neo4j database.
 
-To update the script for new data types:
+4. The script uses the APOC library for parallelized batch processing of Neo4j Cypher queries. Make sure to have the
+   APOC plugin installed in your Neo4j instance before running the script.
 
-1. Create a folder for the new data type in the 'opentarget' folder - the folder name will be the data type name
-2. Add the data type name to the 'data_type_query_generators' dictionary - the key will be the data type name and the
-value will be a tuple containing the node query generator and edge query generator for that data type
-3. Add 'create_cypher_query_<data_type_name>' functions for the node and edge query generators as needed for the new type
+Main function overview:
 
-Important note: This script uses the APOC library for parallelized batch processing of Neo4j queries. Make sure to have
-the APOC plugin installed in your Neo4j instance before running the script.
+- The script first sets the dataset name and checks if the data files are up-to-date.
+- It then defines a dictionary called 'data_type_query_generators', which maps data types to lists of node and edge
+  query generator functions.
+- It creates indexes for nodes to improve query performance.
+- The script iterates over each data type for the node query generators, and then does the same for edge query
+  generators, executing them in two separate loops to ensure all node generators are run before the edge generators.
+
+Adding a new data type to the 'data_type_query_generators' dictionary:
+
+1. Define the node and edge query generator functions for the new data type.
+2. Add the data type name as the key and a tuple containing the node and edge query generator functions as the value.
+
+Creating query generator functions (for nodes and relationships):
+
+1. Define a function that takes a 'table' as its argument. This table is obtained by converting a parquet file to a
+   table using PyArrow (handled in main you don't need to define this) and then the function converts that table to a pandas DataFrame.
+2. Extract the required properties from the DataFrame and prepare the data for the Cypher query.
+3. Create an APOC query for creating or merging nodes or relationships in batch, using the prepared data.
+4. Return a list of queries to be executed, including the dataset creation query and the node/relationship creation query.
+
+As long at the function is defined and added to the 'data_type_query_generators' dictionary, the script will run it.
+
 """
+
+
+
+def ensure_neo4j_connection():
+    NEO4J_BOLT_URL = os.getenv('NEO4J_DOCKER_URL', 'bolt://neo4j:gradvek1@localhost:7687')
+    config.DATABASE_URL = NEO4J_BOLT_URL
+
+    def establish_neo4j_connection():
+        db.set_connection(NEO4J_BOLT_URL)
+
+    def check_neo4j_connection():
+        try:
+            query = "MATCH (n) RETURN COUNT(n) AS node_count"
+            results, meta = db.cypher_query(query)
+
+            # Check if the query was successful
+            if results is not None:
+                return True
+            else:
+                return False
+        except Exception as e:
+            # print(f"Neo4j connection error: {e}")
+            return False
+    
+    if not check_neo4j_connection():
+        establish_neo4j_connection()
+
 
 # Dataset name
 data_version = None
 
 def set_dataset_name():
     global data_version
-    with open("platform.conf", "r") as file:
+
+    # Get the current script's directory instead of the working directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Construct the path to the platform.conf file
+    conf_file = os.path.join(current_dir, "platform.conf")
+
+    with open(conf_file, "r") as file:
         for line in file:
             # Remove whitespace from the beginning and end of the line
             stripped_line = line.strip()
@@ -64,51 +109,56 @@ def set_dataset_name():
         print("Dataset version in platform.conf file:", data_version)
 
 def update_check():
-    #Find first entry in neo4j and get the dataset version from it
     try:
-        with GraphDatabase.driver(URI, auth=AUTH) as driver:
-            driver.verify_connectivity()
-            with driver.session() as session:
-                result = session.run("MATCH (n) RETURN n LIMIT 1")
+        # Query the first entry in Neo4j
+        results, _ = db.cypher_query("MATCH (n) RETURN n LIMIT 1")
+        
+        # Check if there is any result
+        if results and len(results) > 0:
+            # Get the dataset from the first entry if it exists
+            node = results[0][0]
+            dataset = node.get('dataset', None)
+            
+            if dataset is not None:
+                # Get the dataset version from that entry
+                first_7_digits = dataset[:7]
+                print("Neo4J Dataset version:", first_7_digits)
 
-                # Check if there is any result
-                if result.peek():
-                    # Get the dataset from the first entry
-                    dataset = result.peek()['n']['dataset']
-                    # Get the dataset version from that entry
-                    first_7_digits = dataset[:7]
-                    print("Neo4J Dataset version:", first_7_digits)
-
-        #close neo4j driver
-        driver.close()
-
-        #If the dataset version from the entry in neo4j matches that from our conf file, there's no need to update the neo4j db
-        if first_7_digits == data_version:
-            print("Data in neo4j is already up to date")
-            return False
+                # If the dataset version from the entry in neo4j matches that from our conf file, there's no need to update the neo4j db
+                if first_7_digits == data_version:
+                    return False
+                else:
+                    print("Data version in neo4j doesnt match the data version in conf file. Clearing neo4j db and reloading db")
+                    return True
+            else:
+                # Node does not have a dataset property
+                print("Node does not have a dataset property")
+                return True
         else:
-            print("Data version in neo4j doesnt match the data version in conf file. Clearing neo4j db and reloading db")
+            # No nodes found in neo4j
+            print("No nodes found in neo4j. Reloading data")
             return True
         
     except Exception as e:
-       print("Didnt find neo4j entry or dataset version. Reloading data")
-       return True
+        # Error occurred while querying neo4j
+        print("Error occurred while querying neo4j: {}".format(str(e)))
+        print("Reloading data")
+        return True
 
 
-def main():
+def parse_datasets():
+    # Check and set the neo4j connection
+    ensure_neo4j_connection()
     # Set the dataset name
     set_dataset_name()
-    # Get the current working directory
-    current_dir = os.getcwd()
+    # Get the current script's directory instead of the working directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
     # Set the input directory for the opentarget data
-    input_dir = f"{current_dir}/opentarget"
+    input_dir = os.path.join(current_dir, "opentarget")
 
     #Check if data files are updated via platform.conf file data version. If so, clear the neo4j db and reload data from files
-    if True or update_check(): # change this to 'if True:' when doing dev work
+    if update_check(): # change this to 'if True:' when doing dev work
         # clear_neo4j_database()
-        # TODO:
-        # Action (edge) - appears to not use any data source?
-        # Gene (entity), Involves (edge) - these seem to only come from csv
 
         # Define data_type_query_generators, a dictionary that maps data types to lists of query generators.
         # Each list contains multiple node or edge query generator functions for the respective data type.
@@ -121,15 +171,9 @@ def main():
             "mousePhenotypes": ([create_cypher_query_mouse_phenotypes], [create_cypher_query_associated_mouse_phenotypes]),
             "diseases": ([create_cypher_query_diseases], []),
             "interactions":([],[create_cypher_query_interactions]),
-            "baseExpressions":([create_cypher_query_baseline_expression],[create_cypher_query_hgene, create_cypher_query_hprotein])
-            # "targets": ([], []),
-            # "fda": ([], []),
-            # "molecule": ([], []),
-            # "mechanismOfAction": ([], []),
-            # "mousePhenotypes": ([], []),
-            # "diseases": ([], []),
-            # "interactions":([],[]),
-            # "baseExpressions":([],[create_cypher_query_hgene, create_cypher_query_hprotein])
+            "baseExpressions":([create_cypher_query_baseline_expression],[create_cypher_query_hgene, create_cypher_query_hprotein]),
+            "pathways":([create_cypher_query_pathway_types],[create_cypher_query_pathways_relation]),
+            # "gwasTraitProfile":([create_cypher_query_gwas],[create_cypher_query_gwas_relation])
         }
 
 
@@ -187,38 +231,22 @@ def generate_queries(data_type, data_type_path, query_generator):
     # List all parquet files in the data_type_path
     files = [file for file in os.listdir(data_type_path) if file.endswith(".parquet")]
 
-    # Connect to the neo4j database
-    with GraphDatabase.driver(URI, auth=AUTH) as driver:
-        driver.verify_connectivity()
+    for n, file in enumerate(files):
+        print(f"Processing {query_generator.__name__} file {n+1}/{len(files)}")
+        file_path = os.path.join(data_type_path, file)
+        try:
+            table = pq.read_table(file_path)
+        except Exception as e:
+            print(f"Error reading file {file}: {e}")
+            continue
 
-        # Iterate over each file and read its content
-        for n, file in enumerate(files):
-            print(f"Processing {query_generator.__name__} file {n+1}/{len(files)}")
-            file_path = os.path.join(data_type_path, file)
-            try:
-                table = pq.read_table(file_path)
-            except Exception as e:
-                print(f"Error reading file {file}: {e}")
-                continue
+        # Generate queries for the current table
+        queries = query_generator(table)
 
-            try:
-                # Generate queries for the current table
-                queries = query_generator(table)
-
-                # Create a function to execute multiple queries within a single transaction
-                def execute_queries(tx, queries):
-                    for query, params in queries:
-                        tx.run(query, params)
-
-                # Execute the queries concurrently within a single transaction, uses the execute_write method if available
-                with driver.session() as session:
-                    if hasattr(session, 'execute_write'):
-                        session.execute_write(execute_queries, queries)
-                    else:
-                        session.write_transaction(execute_queries, queries)
-
-            except Exception as e:
-                print(f"Error generating queries for file {file}: {e}")
+        # Execute the queries concurrently within a single transaction
+        with db.transaction:
+            for query, params in queries:
+                db.cypher_query(query, params=params)
 
 
 # Generate Cypher query for Dataset nodes
@@ -275,6 +303,7 @@ def create_cypher_query_targets(table):
         'symbol': 'approvedSymbol'
     })
 
+# From legacy code -- not sure function or data that corresponds to this
 def create_cypher_query_pathways(table):
     # Convert the table to a pandas DataFrame
     df = table.to_pandas()
@@ -333,6 +362,60 @@ def create_cypher_query_diseases(table):
         'diseaseId': 'id'
     })
 
+# Generate Cypher queries for Disease nodes
+def create_cypher_query_pathway_types(table):
+    df = table.to_pandas()
+    node_label = 'TargetPathway'
+
+    dataset = f"{data_version} {node_label}"
+    # Prepare data for the Cypher query
+    data = []
+    for _, row in df.iterrows():
+        if row['pathways'] is None:
+            continue
+        for pathway in row['pathways']:
+            data.append({
+                'id': pathway['id'],
+                'name': pathway['name']
+            })
+
+    # APOC query for creating Evidence nodes in batch
+    query = """
+    CALL apoc.periodic.iterate(
+        'UNWIND $props as prop RETURN prop',
+        'MERGE (:TargetPathway {id: prop.id, name: prop.name, dataset: $dataset})',
+        {params: {props: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+    )
+    """
+    # Include the dataset creation query
+    dataset_query = create_dataset_cypher_query(node_label)
+    # Return a list of queries to be executed
+    return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
+
+# Generate Cypher queries for GWAS nodes
+def create_cypher_query_gwas(table):
+    df = table.to_pandas()
+    # large data volume, filter to speed it up
+    df = df['trait_efos'].explode('trait_efos').drop_duplicates()
+
+    node_label = 'Gwas'
+    dataset = f"{data_version} {node_label}"
+    # Prepare data for the Cypher query
+    data = [{'id': x} for x in df]
+
+    # APOC query for creating Evidence nodes in batch
+    query = """
+    CALL apoc.periodic.iterate(
+        'UNWIND $props as prop RETURN prop',
+        'MERGE (:Gwas {id: prop.id, dataset: $dataset})',
+        {params: {props: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
+    )
+    """
+    # Include the dataset creation query
+    dataset_query = create_dataset_cypher_query(node_label)
+    # Return a list of queries to be executed
+    return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
+
 
 # Generate Cypher queries for hGene nodes
 def create_cypher_query_baseline_expression(table):
@@ -367,20 +450,44 @@ def create_cypher_query_baseline_expression(table):
 
 # Create indexes in the database for the nodes before running edge queries
 def create_indexes():
-    with GraphDatabase.driver(URI, auth=AUTH) as driver:
-        driver.verify_connectivity()
-        with driver.session() as session:
-            session.run("CREATE INDEX chemblId_index IF NOT EXISTS FOR (d:Drug) ON (d.chemblId)")
-            session.run("CREATE INDEX ensembleId_index IF NOT EXISTS FOR (t:Target) ON (t.ensembleId)")
-            session.run("CREATE INDEX pathwayId_index IF NOT EXISTS FOR (p:Pathway) ON (p.pathwayId)")
-            session.run("CREATE INDEX meddraId_index IF NOT EXISTS FOR (a:AdverseEvent) ON (a.meddraId)")
-            session.run("CREATE INDEX mousePhenotypeId_index IF NOT EXISTS FOR (a:MousePhenotype) ON (a.mousePhenotypeId)")
-            session.run("CREATE INDEX diseaseId_index IF NOT EXISTS FOR (a:Disease) ON (a.diseaseId)")
-            session.run("CREATE INDEX dataset_index IF NOT EXISTS FOR (a:Dataset) ON (a.dataset)")
-            session.run("CREATE INDEX efo_code_index IF NOT EXISTS FOR (a:Baseline_Expression) ON (a.efo_code)")
+    db.cypher_query("CREATE INDEX chemblId_index IF NOT EXISTS FOR (d:Drug) ON (d.chemblId)")
+    db.cypher_query("CREATE INDEX ensembleId_index IF NOT EXISTS FOR (t:Target) ON (t.ensembleId)")
+    db.cypher_query("CREATE INDEX pathwayId_index IF NOT EXISTS FOR (p:Pathway) ON (p.pathwayId)")
+    db.cypher_query("CREATE INDEX meddraId_index IF NOT EXISTS FOR (a:AdverseEvent) ON (a.meddraId)")
+    db.cypher_query("CREATE INDEX mousePhenotypeId_index IF NOT EXISTS FOR (a:MousePhenotype) ON (a.mousePhenotypeId)")
+    db.cypher_query("CREATE INDEX diseaseId_index IF NOT EXISTS FOR (a:Disease) ON (a.diseaseId)")
+    db.cypher_query("CREATE INDEX dataset_index IF NOT EXISTS FOR (a:Dataset) ON (a.dataset)")
+    db.cypher_query("CREATE INDEX baseline_expression_index IF NOT EXISTS FOR (a:Baseline_Expression) ON (a.efo_code)")
+    db.cypher_query("CREATE INDEX targetpathway_index IF NOT EXISTS FOR (a:TargetPathway) ON (a.id)")
+    db.cypher_query("CREATE INDEX gwas_index IF NOT EXISTS FOR (a:Gwas) ON (a.id)")
 
 
-# TODO Add function to handle generation of Cypher queries for edge creation similar to how nodes are handled
+
+# Parse the Gwas data and create a list of Cypher queries to insert the data into the database
+def create_cypher_query_gwas_relation(table):
+    df = table.to_pandas()
+    df = df[['gene_id','trait_efos']].explode('trait_efos').drop_duplicates()
+    node_label = 'GwasRelation'
+    dataset = f"{data_version} {node_label}"
+    data = []
+    for _, row in df.iterrows():
+        data.append({
+            'gwas': row['trait_efos'],
+            'ensembleId': row['gene_id'],
+        })
+    # APOC query for merging relationships between Drug and Target nodes
+    query = """
+    CALL apoc.periodic.iterate(
+        'UNWIND $data as item RETURN item',
+        'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Gwas {id: item.gwas})
+         MERGE (from)-[:GWAS_RELATION {dataset: $dataset}]->(to)',
+        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
+    )
+    """
+    # Include the dataset creation query
+    dataset_query = create_dataset_cypher_query(node_label)
+    # Return a list of queries to be executed
+    return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
 
 # Parse the mechanism of action data and create a list of Cypher queries to insert the data into the database
 def create_cypher_query_mechanism_of_action(table):
@@ -474,16 +581,8 @@ def create_cypher_query_associated_with(table):
     return [(dataset_query, {}), (query, {'data': data, 'dataset': dataset})]
 
 def clear_neo4j_database():
-    URI = "bolt://localhost:7687"
-    AUTH = ("neo4j", "gradvek1")
-    # Connect to Neo4j database
-    driver = GraphDatabase.driver(URI, auth=AUTH)
-    with driver.session() as session:
-        # Delete all nodes and relationships in the database
-        session.run("MATCH (n) DETACH DELETE n")
-
-    # Close the Neo4j driver
-    driver.close()
+    # Delete all nodes and relationships in the database
+    db.cypher_query("MATCH (n) DETACH DELETE n")
 
 # Parse the mouse phenotypes data and create a list of Cypher queries to add associatedWith relationships to the database
 def create_cypher_query_associated_mouse_phenotypes(table):
@@ -507,6 +606,32 @@ def create_cypher_query_associated_mouse_phenotypes(table):
         'MATCH (from:Target {ensembleId: item.targetFromSourceId}), (to:MousePhenotype {mousePhenotypeId: item.modelPhenotypeId})
          MERGE (from)-[:MOUSE_PHENOTYPE {dataset: $dataset, weight: item.weight}]->(to)',
         {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
+    )
+    """
+    return [(query, {'data': data, 'dataset': dataset})]
+
+def create_cypher_query_pathways_relation(table):
+    df = table.to_pandas()
+    node_label = 'Pathways'
+    dataset = f"{data_version} {node_label}"
+    data = []
+    for _, row in df.iterrows():
+        if row['targetId'] is None or row['pathways'] is None:
+            continue
+        # Append data for each combination of chembl_id and meddraCode
+        for j in row['pathways']:
+            data.append({
+                'targetId': row['targetId'],
+                'pathway': j['id'],
+                'weight': 1
+        })
+    # APOC query for creating relationships between Target and Pathway nodes
+    query = """
+    CALL apoc.periodic.iterate(
+        'UNWIND $data as item RETURN item',
+        'MATCH (from:Target {ensembleId: item.targetId}), (to:TargetPathway {id: item.pathway})
+         MERGE (from)-[:PATHWAY {dataset: $dataset, weight: item.weight}]->(to)',
+        {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: true}
     )
     """
     return [(query, {'data': data, 'dataset': dataset})]
@@ -584,11 +709,14 @@ def create_cypher_query_hgene(table):
             })
 
     # APOC query for creating Pathway nodes in batch
+    # When there are redundant nodes with different rna_value, the average value is used
     query = """
         CALL apoc.periodic.iterate(
             'UNWIND $data as item RETURN item',
             'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Baseline_Expression {efo_code: item.efo_code})
-            MERGE (from)-[:HGENE {dataset: $dataset, rna_value: item.rna_value}]->(to)',
+            MERGE (from)-[rel:HGENE {dataset: $dataset}]->(to)
+            ON CREATE SET rel.rna_value = item.rna_value
+            ON MATCH SET rel.rna_value = (rel.rna_value + item.rna_value) / 2',
             {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
         )
         """
@@ -620,7 +748,9 @@ def create_cypher_query_hprotein(table):
         CALL apoc.periodic.iterate(
             'UNWIND $data as item RETURN item',
             'MATCH (from:Target {ensembleId: item.ensembleId}), (to:Baseline_Expression {efo_code: item.efo_code})
-            MERGE (from)-[:HPROTEIN {dataset: $dataset, protein_level: item.protein_level}]->(to)',
+            MERGE (from)-[rel:HPROTEIN {dataset: $dataset}]->(to)
+            ON CREATE SET rel.protein_level = item.protein_level
+            ON MATCH SET rel.protein_level = (rel.protein_level + item.protein_level) / 2',
             {params: {data: $data, dataset: $dataset}, batchSize: 1000, parallel: false}
         )
         """
@@ -631,5 +761,5 @@ def create_cypher_query_hprotein(table):
 
 # Main function call
 if __name__ == "__main__":
-    main()
+    parse_datasets()
 

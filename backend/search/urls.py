@@ -3,6 +3,13 @@ from .views import (
     GetActions,
     Datasets,
     GetAdverseEventTargetPath,
+    GetGwas,
+    GetHGene,
+    GetHProtein,
+    GetIntact,
+    GetPathway,
+    GetReactome,
+    GetSignor,
     RoutesListAPIView,
     CountView,
     GetAdverseEventByTargetView,
@@ -21,6 +28,13 @@ app_name = "search"
 urlpatterns = [
 
     path('api/pheno/<str:target>/', GetPheno.as_view(), name='pheno'),
+    path('api/gwas/<str:target>/', GetGwas.as_view(), name='gwas'),
+    path('api/hgene/<str:target>/', GetHGene.as_view(), name='hgene'),
+    path('api/hprotein/<str:target>/', GetHProtein.as_view(), name='hprotein'),
+    path('api/intact/<str:target>/', GetIntact.as_view(), name='intact'),
+    path('api/pathway/<str:target>/', GetPathway.as_view(), name='pathway'),
+    path('api/reactome/<str:target>/', GetReactome.as_view(), name='reactome'),
+    path('api/signor/<str:target>/', GetSignor.as_view(), name='signor'),
 
     # Return the list of routes in the Django site
     path('api/routes/', RoutesListAPIView.as_view(), name='api-routes-list'),

@@ -1,89 +1,89 @@
-# Installation
+# GradVek
+GradVek (GRaph of ADVerse Event Knowledge) is a project aimed at providing an interface for searching drug target information and finding adverse events for similar targets. It includes a Django backend, a Neo4j database, and a Next.js frontend.
 
-[First Pull](#first-pull)  
-[How to run frontend and backend](#how-to-run-the-frontend-and-backend)  
-[Makefile commands](#makefile-commands)  
-[Errors](#errors)
+### Table of Contents
+* [Setup](#Setup)  
+* [Running the project](#running-the-project)  
+* [Makefile commands](#makefile-commands)  
+* [Errors](#errors)  
 
-# First Pull
+## Setup
+Follow these steps to set up the GradVek project:
 
-## 0. Check Environment and Get Dependencies
-Run the check_environment.sh script to check if you have the necessary tools and dependencies in your current environment.
-```bash
-./check_environment.sh
+### 1. Clone the repository
+```Bash
+git clone https://github.com/team-gradvek/gradvek
+cd gradvek
 ```
 
-## 1. (OPTIONAL) Setup python environment 
-Note: If you create a Python env (with a different name), add it to the .gitingore file
+### 2. (OPTIONAL) If you want to use a virtual environment for Python, first navigate to the backend folder and follow these steps:
 
-`cd` into `backend` folder
-
-```
+```Bash
+cd backend
 pip3 install virtualenv
 python3 -m venv env
 source env/bin/activate
 ```
-
-## 2. Install Python modules
-Note: if you created a Python env in step 1, install the modules inside the environement. 
+Note: if you created a Python env install the modules inside the environment.   
 To start the env:
 
 ```
 source env/bin/activate 
 ```
+
 To stop the env:
+
 ```
 deactivate 
 ```
+### 3. Check your environment
+Note: if you created a Python env install the modules inside the environment.   
+Run the check_environment.sh script to verify that your environment has the necessary tools and dependencies:
+```Bash
+./check_environment.sh
+```
+Windows: you may need to change `python3` for `python`  
 
-Update to Python 3.11  
-```
-https://www.python.org/downloads/
-```
+### 4. Add `.env` file inside Django project
 
-Get Django  
-
-MacOS/Linux:
-```
- brew install django-completion
-```
-Windows:
-```
-https://docs.djangoproject.com/en/4.1/howto/windows/
-```
-Update to Python 3.11  
-```
-https://www.python.org/downloads/
-```
-
-Get Django  
-
-MacOS/Linux:
-```
- brew install django-completion
-```
-Windows:
-```
-https://docs.djangoproject.com/en/4.1/howto/windows/
-```
-
-`cd` into `backend` folder
+`cd backend/gradvekbackend `
 
 ```
-pip3 install -r requirements.txt
+SECRET_KEY=
+NEO4J_USERNAME=
+NEO4J_PASSWORD=
+NEO4J_BOLT_URL=
 ```
-## 3. Run Django Migration
+The secret keys can be found in the team's private repository at https://github.com/team-gradvek/env.
 
-`cd` into `backend` folder
 
+## Running the project
+### 1. Install Node.js modules and Run the Next.js frontend
+
+Navigate to the frontend folder and install the required Node.js modules:
+```Bash
+cd frontend
+npm i
 ```
+https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+
+```bash
+cd frontend
+npm run dev
+```
+Open your browser and navigate to http://localhost:3000/.
+
+### 2. Run the Django backend
+
+#### 2.1 Run Django migrations:
+Note: For the names of the nine descriptors used in this project, we constructed a basic Django model. This can be changed in the future.
+
+```Bash
 python3 manage.py migrate
 ```
 https://stackoverflow.com/questions/29980211/django-1-8-whats-the-difference-between-migrate-and-makemigrations
 
-## 4. (OPTIONAL) Run Admin Config
-
-
+#### 2.2 Run Admin Config
 `cd` into `backend` folder  
 
 Create a user:
@@ -91,96 +91,44 @@ Create a user:
 ```
 python3 manage.py createsuperuser
 ```
-Run the backend server:
-```
+#### 2.3 Run Django backend
+```bash
+cd backend
 python3 manage.py runserver
 ```
-test at : http://localhost:8000/admin/  
+Visit http://localhost:8000/ to ensure the backend is running.
+Note: The Neo4j database must be running for the backend to work.
 
 
-## 5. Install node_modules
+## Makefile commands
 
-`cd` into `frontend` folder
+| Command                       | Description                                                  |
+|-------------------------------|--------------------------------------------------------------|
+| `make` or `make run-all`      | Run the complete application in Docker                       |
+| `make help`                   | Show help for each of the Makefile recipes                   |
+| `make check-environment`      | Check the environment for the correct tools and dependencies |
+| `make get-datasets`           | Fetch the Parquet datasets                                   |
+| `make send-data`              | Parse the Parquet datasets and insert them into the database |
+| `make run-neo4j`              | Start the Neo4j database                                     |
+| `make stop-all`               | Stop all parts using Docker Compose                          |
+| `make stop-neo4j`             | Stop the Neo4j database                                      |
+| `make remove-neo4j-data-logs` | Remove Neo4j data and logs                                 |
+| `make clean`                  | Stop and remove all parts, and clean up data and logs        |
+| `make run-frontend`           | Run the Next.js frontend                                     |
+| `make run-backend`            | Run the Django backend                                       |
+| `make stop-frontend`          | Stop the Next.js frontend                                    |
+| `make stop-backend`           | Stop the Django backend                                      |
 
-Browse to the `frontend` folder and install modules
-```
-npm i
-```
-https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+_Note: The Neo4j database must be running for the `make send-data` or the `make run-backend` command to work._
 
-## 6. Add .env file inside Django project
-
-Add `.env` file inside `backend/gradvekbackend` dir
-```
-SECRET_KEY=
-NEO4J_USERNAME=
-NEO4J_PASSWORD=
-NEO4J_BOLT_URL=
-```
-
-Secret keys are inside https://github.com/team-gradvek/env
-
-# How to run the frontend and backend
-## 1. Run Frontend
-
-`cd` into frontend folder
-
-```
-npm run dev
-```
-http://localhost:3000/
-
-## 2.  Run Backend
-
-`cd` into backend folder
-
-```
-python3 manage.py runserver
-```
-http://localhost:8000/
-
-
-# Makefile commands
-
-## 1. Start the Neo4j Database
-```bash
-make run-neo4j
-```
-## 2. Stop the Neo4j Database
-```bash
-make stop-neo4j
-```
-
-## 3. Clean the Neo4j Database
-
-```bash
-make clean
-```
-## 4. Get Datasets
-
-To fetch the parquet data sets, run the `get_datasets.py` script in the `datasets` folder. This will download the data sets and save them in the `datasets/opentarget` folder. 
-
-```bash
-make get-datasets
-```
-
-## 5. Send Data to Neo4j
-
-To parse the parquet data sets to insert into the database, run the `parse_datasets.py` script in the `datasets` folder. This will parse the data sets send the appropriate data to the database. 
-
-This must have the Neo4j database running in order to work.
-
-```bash
-make send-data
-```
 
 # Errors
 
 ## How to resolve  SSL: CERTIFICATE_VERIFY_FAILED error 
 https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
-```
-"Once upon a time I stumbled with this issue. If you're using macOS go to Macintosh HD > Applications > Python3.6 folder (or whatever version of python you're using) > double click on "Install Certificates.command" file. :D"
-```
+
+"Once upon a time I stumbled with this issue. If you're using macOS go to Macintosh HD > Applications > Python3.6 folder (or whatever version of python you're using) > double click on "Install Certificates.command" file."
+
 ## Neo4j/Docker Connection Errors
 https://stackoverflow.com/questions/42397751/neo4j-in-docker-max-heap-size-causes-hard-crash-137/42398497#42398497
 
