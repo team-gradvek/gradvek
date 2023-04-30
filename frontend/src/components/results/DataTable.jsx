@@ -11,45 +11,14 @@ import {
   Th,
   Thead,
   Tr,
-  Button,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   Card, CardBody, 
 } from '@chakra-ui/react'
-import DrugTable from './DrugTable'
-import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-// import getAdverseEvent from "../../hooks/targetToAdverseEventHook"
-
-// @TODO Refactor this when request is made
-import { drugs } from '../data/FetchDrugData'
-
-const drugTableColumns = [
-  {
-    id: 1,
-    name: 'Drug Name'
-  }, 
-  {
-    id: 2,
-    name: 'ID'
-  }, 
-  {
-    id: 3,
-    name: 'Weight'
-  }
-]
+import DataTableSkeleton from './DataTableSkeleton'
 
 
-const DataTable = ({data, title, columns}) => {
 
-  // const { data, isLoading, isError } = getAdverseEvent(id)
-  const { isOpen, onOpen, onClose } = useDisclosure()
+const DataTable = ({title, columns, data, isError, isLoading}) => {
 
   if (data.length == 0) {
     return (
@@ -60,6 +29,30 @@ const DataTable = ({data, title, columns}) => {
             <Text size='md' mb={4}>No Data Available</Text>
           </CardBody>
         </Card>
+      </>
+    )
+  }
+  
+
+  if (isError) {
+    return (
+      <>
+        <Card>
+          <CardBody>
+            <Heading size='md' mb={4}>{title}</Heading>
+            <Text size='md' mb={4}>An Error Occurred. Please try again.</Text>
+          </CardBody>
+        </Card>
+      </>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <>
+      <Box p={5} w="100%">
+        <DataTableSkeleton />
+      </Box>
       </>
     )
   }
@@ -80,7 +73,6 @@ const DataTable = ({data, title, columns}) => {
         <Tr key={item.id}>
           <Td>
             <HStack spacing="3">
-              {/* <Checkbox /> */}
               <Avatar name={item.name} boxSize="10" />
               <Box>
                 <Text className="capitalize" fontWeight="medium">{item.name}</Text>
@@ -100,23 +92,6 @@ const DataTable = ({data, title, columns}) => {
       ))}
     </Tbody>
   </Table>
-  <Modal isOpen={isOpen} onClose={onClose} size="xl">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Associated Drugs</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Box w="200px">
-            <DrugTable 
-              columns={drugTableColumns}
-              data={drugs}
-              />
-            </Box>
-          </ModalBody>
-          <ModalFooter>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
   </>
   )
 }
