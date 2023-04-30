@@ -58,9 +58,14 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+      - name: Set outputs
+        id: build
+        run: |
+          echo "::set-output name=images::${{ steps.docker_buildx_build.outputs.images }}"
+
 
   publish:
-    if: (github.event_name == 'pull_request' && github.ref == 'refs/heads/main') ||  github.event.inputs.NON_MAIN_DEPLOY == 'TRUE'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     environment: ns_dockerhub
@@ -84,14 +89,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push Docker images
+      - name: Push Docker image
         uses: docker/build-push-action@v4
         with:
           context: ./${{ matrix.service }}
-          platforms: linux/${{ matrix.arch }}
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:${{ matrix.arch }}-${{ github.sha }}
-          cache-from: type=gha
 
 
   # deploy:
