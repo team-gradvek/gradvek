@@ -1,8 +1,8 @@
 # Makefile
 
-# Variables
-# Set the Docker Compose file for running Neo4j
-DOCKER_COMPOSE_FILE := docker-compose-neo4j-local-test.yml
+# Define compose files
+DOCKER_COMPOSE_FILE := docker-compose.yml
+DOCKER_COMPOSE_FILE_NEO4j := docker-compose-neo4j-local-test.yml
 
 # Get the current user ID and group ID
 CURRENT_UID := $(shell id -u)
@@ -12,8 +12,8 @@ CURRENT_GID := $(shell id -g)
 export CURRENT_UID
 export CURRENT_GID
 
-# Default Target: Run Neo4j using Docker Compose
-default: run-neo4j
+# Default Target: Run all parts using Docker Compose
+default: run-all
 
 # Display help for each command in the Makefile
 .PHONY: help
@@ -38,29 +38,41 @@ send-data: # Send data to Neo4j using the parse_datasets.py script
 	$(info Make: Sending data to Neo4j.)
 	@cd backend/datasets && python3 parse_datasets.py
 
-# Run the Neo4j container using Docker Compose
+# Run all parts using Docker Compose
+.PHONY: run-all
+run-all: # Run all parts using Docker Compose
+	$(info Make: Running all parts using Docker Compose.)
+	@docker-compose -f $(DOCKER_COMPOSE_FILE) up -d
+
+# Run Neo4j using Docker Compose
 .PHONY: run-neo4j
 run-neo4j: # Run Neo4j using Docker Compose
 	$(info Make: Running Neo4j using Docker Compose.)
-	@docker-compose -f $(DOCKER_COMPOSE_FILE) up -d
+	@docker-compose -f $(DOCKER_COMPOSE_FILE_NEO4j) up -d neo4j
 
-# Stop the Neo4j container without removing the data and logs
+# Stop all parts using Docker Compose
+.PHONY: stop-all
+stop-all: # Stop all parts using Docker Compose
+	$(info Make: Stopping all parts using Docker Compose.)
+	@docker-compose -f $(DOCKER_COMPOSE_FILE) down
+
+# Stop Neo4j container without removing the data and logs
 .PHONY: stop-neo4j
-stop-neo4j: # Stop the Neo4j container
+stop-neo4j: # Stop Neo4j container
 	$(info Make: Stopping Neo4j container.)
-	@docker-compose -f $(DOCKER_COMPOSE_FILE) stop
+	@docker-compose -f $(DOCKER_COMPOSE_FILE_NEO4j) stop neo4j
 
 # Remove Neo4j data and logs without stopping the container
-.PHONY: remove-data-logs
-remove-data-logs: # Remove Neo4j data and logs
+.PHONY: remove-neo4j-data-logs
+remove-neo4j-data-logs: # Remove Neo4j data and logs
 	$(info Make: Removing Neo4j data and logs.)
 	@rm -rf ./neo4j/data/*
 	@rm -rf ./neo4j/logs/*
 
-# Remove the Neo4j container, data, and logs
+# Remove all parts, data, and logs
 .PHONY: clean
-clean: # Stop and remove the Neo4j container and clean up data and logs
-	$(info Make: Stopping Neo4j container and cleaning up data and logs.)
+clean: # Stop and remove all parts, and clean up data and logs
+	$(info Make: Stopping all parts and cleaning up data and logs.)
 	@docker-compose -f $(DOCKER_COMPOSE_FILE) down
 	@rm -rf ./neo4j/data/*
 	@rm -rf ./neo4j/logs/*
@@ -77,3 +89,14 @@ run-backend: # Run the Django backend
 	$(info Make: Running the Django backend.)
 	@cd backend && python3 manage.py runserver
 
+# Stop the Next.js frontend
+.PHONY: stop-frontend
+stop-frontend: # Stop the Next.js frontend
+	$(info Make: Stopping the Next.js frontend.)
+	@cd frontend && npm run stop
+
+# Stop the Django backend
+.PHONY: stop-backend
+stop-backend: # Stop the Django backend
+	$(info Make: Stopping the Django backend.)
+	@cd backend && killall -9 python3
