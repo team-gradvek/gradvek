@@ -1,21 +1,33 @@
 from neomodel import db
-from search.models import MousePheno
+from search.models import (
+    MousePheno,
+    Hgene,
+    Hprotein,
+    Intact,
+    Pathway,
+    Reactome,
+    Signor,
+    Gwas,
+    )
+
+
+descriptors = {
+    "mousepheno": ["MousePhenotype","MOUSE_PHENOTYPE", MousePheno],
+    "hgene": ["Baseline_Expression", "HGENE", Hgene],
+    "hprotein": ["Baseline_Expression", "HPROTEIN", Hprotein],
+    "intact": ["Target", "INTACT", Intact],
+    "pathway": ["TargetPathway", "PATHWAY", Pathway],
+    "reactome": ["Target", "REACTOME", Reactome],
+    "signor": ["Target", "SIGNOR", Signor],
+    "gwas": ["Gwas","GWAS_RELATION", Gwas],
+}
+
 
 def node_similarity(descriptor):
 
-    descriptors = {
-        "mousepheno": ["MousePhenotype","MOUSE_PHENOTYPE"],
-        "hgene": ["Baseline_Expression", "HGENE"],
-        "hprotein": ["Baseline_Expression", "HPROTEIN"],
-        "intact": ["Target", "INTACT"],
-        "pathway": ["TargetPathway", "PATHWAY"],
-        "reactome": ["Target", "REACTOME"],
-        "signor": ["Target", "SIGNOR"],
-        "gwas": ["Gwas","GWAS_RELATION"],
-    }
- 
     type_name = descriptors.get(descriptor)[0]
     edge_name = descriptors.get(descriptor)[1]
+    model_class = descriptors.get(descriptor)[2]
 
     # Check if the graph already exists in the database
     exists = db.cypher_query(
@@ -53,14 +65,17 @@ def node_similarity(descriptor):
         '''
     )[0]
 
-    # TODO HARD CODED TO REFACTOR
-    if descriptor == "mousepheno":
-        print(f"Creating {descriptor} objects...")
+    create_objects_to_db(descriptor, results, model_class)
+    print(f"{descriptor} objects done!")
 
-        for row in results:
-            MousePheno.objects.create(
-                target1=row[0],
-                target2=row[1],
-                similarity=row[2]
-            )
-        print(f"{descriptor} objects done!")
+
+def create_objects_to_db(descriptor, results, model_class):
+    
+    print(f"Creating {descriptor} objects...")
+
+    for row in results:
+        model_class.objects.create(
+            target1=row[0],
+            target2=row[1],
+            similarity=row[2]
+        )

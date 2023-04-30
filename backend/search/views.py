@@ -114,7 +114,7 @@ class GetActions(APIView):
 #             return JsonResponse({'error': str(e)}, status=400)
 
 def mouse(request):
-    descriptor = "mousepheno"
+    descriptor = "hgene"
     fetch_similarity(descriptor)
     print("DONE!")
     return HttpResponse('DONE', status=500)
