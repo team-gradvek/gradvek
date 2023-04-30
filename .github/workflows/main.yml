@@ -113,13 +113,13 @@ jobs:
           push: false
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:latest
           cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new'
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
 
       - name: Move cache
         run: |
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
           rm -rf /tmp/.buildx-cache
-          
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
   publish:
     if: (github.event_name == 'push' && github.ref == 'refs/heads/main') ||  github.event.inputs.NON_MAIN_DEPLOY == 'TRUE'
     needs: build
