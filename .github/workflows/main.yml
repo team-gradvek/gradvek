@@ -111,7 +111,7 @@ jobs:
           context: ./${{ matrix.service }}
           platforms: linux/${{ matrix.arch }}
           push: false
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:${{ matrix.arch }}-${{ github.sha }}'
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new'
 
@@ -153,9 +153,7 @@ jobs:
           context: ./${{ matrix.service }}
           platforms: linux/${{ matrix.arch }}
           push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:${{ matrix.arch }}-${{ github.sha }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:latest
           cache-from: type=local,src=/tmp/.buildx-cache
 
 
