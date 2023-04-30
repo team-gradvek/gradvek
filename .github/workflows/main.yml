@@ -117,9 +117,9 @@ jobs:
 
       - name: Move cache
         run: |
-          rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-
+          rm -rf /tmp/.buildx-cache
+          
   publish:
     if: (github.event_name == 'push' && github.ref == 'refs/heads/main') ||  github.event.inputs.NON_MAIN_DEPLOY == 'TRUE'
     needs: build
