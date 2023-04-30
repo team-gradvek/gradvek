@@ -100,3 +100,9 @@ stop-frontend: # Stop the Next.js frontend
 stop-backend: # Stop the Django backend
 	$(info Make: Stopping the Django backend.)
 	@cd backend && killall -9 python3
+
+# Run all parts using Docker Compose
+.PHONY: run-deployed
+run-deployed: # Run all parts using Docker Compose
+	$(info Make: Running all parts using Docker Compose.)
+	@docker-compose -f docker-compose-published.yml up -d
