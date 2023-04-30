@@ -53,13 +53,13 @@ jobs:
             cd frontend
             npm ci
 
-  build:
+  build-publish:
     needs: dependencies
     runs-on: ubuntu-latest
     environment: ns_dockerhub
     strategy:
       matrix:
-        service: ["backend", "frontend"]
+        service: ["backend", "frontend", "neo4j"]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -106,7 +106,7 @@ jobs:
         with:
           context: ./${{ matrix.service }}
           platforms: linux/amd64,linux/arm64
-          push: false
+          push: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') ||  github.event.inputs.NON_MAIN_DEPLOY == 'TRUE' }}
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
@@ -116,40 +116,7 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
-  publish:
-    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') ||  github.event.inputs.NON_MAIN_DEPLOY == 'TRUE'
-    needs: build
-    runs-on: ubuntu-latest
-    environment: ns_dockerhub
-    strategy:
-      matrix:
-        service: ["backend", "frontend"]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-        with:
-          platforms: all
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v2.1.0
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: ./${{ matrix.service }}
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:latest
-          cache-from: type=local,src=/tmp/.buildx-cache
 
 
   # deploy:
