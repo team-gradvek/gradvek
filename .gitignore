@@ -23,3 +23,11 @@ neo4j/plugins/
 .vscode
 
 
+# Django
+*.sqlite3
+backend/search/migrations/*
+!backend/search/migrations/__init__.py
+
+
+
+
