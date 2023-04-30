@@ -66,7 +66,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Add steps to restore cached dependencies here
       - name: Restore backend dependencies
         if: matrix.service == 'backend'
         uses: actions/cache@v3
@@ -154,7 +153,9 @@ jobs:
           context: ./${{ matrix.service }}
           platforms: linux/${{ matrix.arch }}
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:${{ matrix.arch }}-${{ github.sha }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:${{ matrix.arch }}-${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:latest
           cache-from: type=local,src=/tmp/.buildx-cache
 
 
