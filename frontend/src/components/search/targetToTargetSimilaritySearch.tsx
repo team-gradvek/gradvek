@@ -39,13 +39,6 @@ function TargetToTargetSimilaritySearch() {
         router.push(`targetToAdverseEvents/${selectedTypeAhead[0].symbol}`)
       }
 
-      // const filterByCallback = (option, props) => {
-      //   const query = props.text.toLowerCase();
-      //   const nameMatch = option.name ? option.name.toLowerCase().includes(query) : false;
-      //   const descriptionMatch = option.description ? option.description.toLowerCase().includes(query) : false;
-        
-      //   return nameMatch || descriptionMatch;
-      // };
       const filterByFields = ['namel', 'description'];
       
 

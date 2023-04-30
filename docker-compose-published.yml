@@ -26,6 +26,9 @@ services:
       - "8000:8000"
     environment:
       - NEO4J_DOCKER_URL=bolt://neo4j:gradvek1@neo4j:7687
+      - NEO4J_DOCKER_USERNAME = neo4j
+      - NEO4J_DOCKER_PASSWORD = gradvek1
+      - SECRET_KEY=#put your secret key here
     networks:
       - gradvek_network
   

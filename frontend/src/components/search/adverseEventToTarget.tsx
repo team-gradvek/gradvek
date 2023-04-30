@@ -38,13 +38,6 @@ function AdverseEventToTargetSearch() {
         router.push(`adverseEventToTarget/${selectedTypeAhead[0].meddraId}`)
       }
 
-      // const filterByCallback = (option, props) => {
-      //   const query = props.text.toLowerCase();
-      //   const adverseEventIdMatch = option.adverseEventId ? option.adverseEventId.toLowerCase().includes(query) : false;
-      //   const meddraIdMatch = option.meddraId ? option.meddraId.toLowerCase().includes(query) : false;
-        
-      //   return adverseEventIdMatch || meddraIdMatch;
-      // };
       const filterByFields = ['adverseEventId', 'meddraId'];
 
       return (

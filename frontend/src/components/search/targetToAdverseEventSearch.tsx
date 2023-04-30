@@ -38,12 +38,6 @@ function TargetToAESearch() {
         router.push(`targetToAdverseEvents/${selectedTypeAhead[0].symbol}`)
       }
 
-      // const filterByCallback = (option, props) => {
-      //   const query = props.text.toLowerCase();
-      //   const symbolMatch = option.symbol ? option.symbol.toLowerCase().includes(query) : false;
-      //   const descriptionMatch = option.description ? option.description.toLowerCase().includes(query) : false;
-      //   return symbolMatch || descriptionMatch;
-      // };
       const filterByFields = ['symbol', 'description'];
       
 
