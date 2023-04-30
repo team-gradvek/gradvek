@@ -28,15 +28,6 @@ from .queries.node_similarity import node_similarity
 # from .queries.signor import get_signor
 
 
-# # For easily access each of the model classes programmatically, create a key-value map.
-# MODEL_ENTITIES = {
-#     'Drug': Drug,
-
-# }
-
-URI = "bolt://localhost:7687"
-AUTH = ("neo4j", "gradvek1")
-
 def fetch_actions(target):
     ACTIONS = get_actions(target)
     return ACTIONS
@@ -46,9 +37,9 @@ def fetch_datasets():
     return DATASETS
 
 # TODO ADD to startup instead
-# def fetch_similarity(descriptor):
-#     node_similarity(descriptor)
-#     return print("DONE !")
+def fetch_similarity(descriptor):
+    node_similarity(descriptor)
+    return print("DONE !")
 
 
 # def fetch_pheno():

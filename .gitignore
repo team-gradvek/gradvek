@@ -23,9 +23,9 @@ neo4j/plugins/
 # .env commiting this on purpose as its a required nextjs public environment variable
 .vscode
 
-
 # Django
 *.sqlite3
+db.sqlite3
 
 
 

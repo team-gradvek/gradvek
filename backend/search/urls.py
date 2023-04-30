@@ -3,18 +3,19 @@ from .views import (
     GetActions,
     Datasets,
     GetAdverseEventTargetPath,
-    GetGwas,
-    GetHGene,
-    GetHProtein,
-    GetIntact,
-    GetPathway,
-    GetReactome,
-    GetSignor,
+    # GetGwas,
+    # GetHGene,
+    # GetHProtein,
+    # GetIntact,
+    # GetPathway,
+    # GetReactome,
+    # GetSignor,
     RoutesListAPIView,
     CountView,
     GetAdverseEventByTargetView,
-    GetPheno,
+    # GetPheno,
     SuggestHintView,
+    GetSimilarity
 
 )
 from django.urls import path
@@ -27,10 +28,14 @@ app_name = "search"
 
 urlpatterns = [
 
-    path('api/pheno/<str:target>/', GetPheno.as_view(), name='pheno'),
+    path('api/mouse/', views.mouse, name='mouse'),
+
+    # TODO refactor descriptors with one similarity function
+    path('api/similarity/<str:descriptor>/<str:target>/', GetSimilarity.as_view(), name='similarity'),
+
     # path('api/gwas/<str:target>/', GetGwas.as_view(), name='gwas'),
-    # path('api/hgene/<str:target>/', GetHGene.as_view(), name='hgene'),
-    # path('api/hprotein/<str:target>/', GetHProtein.as_view(), name='hprotein'),
+    # path('api/hgene/<str:target>/', GetHgene.as_view(), name='hgene'),
+    # path('api/hprotein/<str:target>/', GetHprotein.as_view(), name='hprotein'),
     # path('api/intact/<str:target>/', GetIntact.as_view(), name='intact'),
     # path('api/pathway/<str:target>/', GetPathway.as_view(), name='pathway'),
     # path('api/reactome/<str:target>/', GetReactome.as_view(), name='reactome'),

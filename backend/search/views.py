@@ -14,8 +14,31 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 
 
-from .models import Descriptor, Action, MousePheno
-from .serializers import DescriptorSerializer, ActionsSerializer, MousePhenoSerializer
+from .models import (
+    Descriptor,
+    Action, 
+    MousePheno,
+    Hgene,
+    Hprotein,
+    Intact,
+    Pathway,
+    Reactome,
+    Signor,
+    Gwas,
+    )
+
+from .serializers import (
+    DescriptorSerializer, 
+    ActionsSerializer, 
+    MousePhenoSerializer,
+    HgeneSerializer,
+    HproteinSerializer,
+    IntactSerializer,
+    PathwaySerializer,
+    ReactomeSerializer,
+    SignorSerializer,
+    GwasSerializer,
+    )
 
 
 from .utils import (
@@ -66,8 +89,6 @@ class DescriptorListView(generics.ListAPIView):
     serializer_class = DescriptorSerializer
 
 
-
-
 class GetActions(APIView):
     """
     Return an array of all actions or specific to a target
@@ -87,13 +108,58 @@ class GetActions(APIView):
         return Response(actions, status=status.HTTP_200_OK)
  
 
+#         try: 
+#             target = self.kwargs["target"]
+#         except Exception as e:
+#             return JsonResponse({'error': str(e)}, status=400)
 
-class GetPheno(generics.ListAPIView):
-    serializer_class = MousePhenoSerializer
+def mouse(request):
+    descriptor = "mousepheno"
+    fetch_similarity(descriptor)
+    print("DONE!")
+    return HttpResponse('DONE', status=500)
 
-    def get_queryset(self):
-        target = self.kwargs['target']
-        return MousePheno.objects.filter(target1=target)   
+descriptor_classes = {
+    "mousepheno" : [MousePheno, MousePhenoSerializer],
+    "hgene": [Hgene, HgeneSerializer],
+    "hprotein": [Hprotein, HproteinSerializer],
+    "intact": [Intact, IntactSerializer],
+    "pathway": [Pathway, PathwaySerializer],
+    "reactome": [Reactome, ReactomeSerializer],
+    "signor": [Signor, SignorSerializer],
+    "gwas": [Gwas, GwasSerializer],
+}
+
+class GetSimilarity(APIView):
+    """
+    List all node similarity scores associated to a target
+    """
+    def get(self, request,  *args, **kwargs):
+
+        try: 
+            target = self.kwargs['target']
+            descriptor_type = self.kwargs['descriptor']
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+        descriptor_model = descriptor_classes.get( descriptor_type)[0]
+        descriptor_serializer = descriptor_classes.get( descriptor_type)[1]
+
+        scores = descriptor_model.objects.filter(target1=target) 
+        serializer = descriptor_serializer(scores, many=True)
+        return Response(serializer.data)
+
+
+# class GetSimilarity(generics.ListAPIView):
+#         # try: 
+#         #     target = self.kwargs["target"]
+#         # except Exception as e:
+#         #     return JsonResponse({'error': str(e)}, status=400)
+#     serializer_class = MousePhenoSerializer
+
+#     def get_queryset(self):
+#         target = self.kwargs['target']
+#         return MousePheno.objects.filter(target1=target)   
  
 # class GetPheno(APIView):
 #     """
@@ -113,142 +179,6 @@ class GetPheno(generics.ListAPIView):
 
 #         # Return the result as a JSON response
 #         return Response(pheno, status=status.HTTP_200_OK)  
-    
-
-# class GetGwas(APIView):
-#     """
-#      Return most similar targets - 
-#      GWAS similarity descending order
-#     """
-#     def get(self, request,  *args, **kwargs):
-
-#         # Check if a target is in the requested path
-#         try: 
-#             target = self.kwargs["target"]
-#         except Exception as e:
-#             return JsonResponse({'error': str(e)}, status=400)
-        
-#         # Get cypher query results
-#         gwas = fetch_gwas(target)
-
-#         # Return the result as a JSON response
-#         return Response(gwas, status=status.HTTP_200_OK)  
-
-
-# class GetHGene(APIView):
-#     """
-#      Return most similar targets - 
-#      hGene similarity descending order
-#     """
-#     def get(self, request,  *args, **kwargs):
-
-#         # Check if a target is in the requested path
-#         try: 
-#             target = self.kwargs["target"]
-#         except Exception as e:
-#             return JsonResponse({'error': str(e)}, status=400)
-        
-#         # Get cypher query results
-#         hgene = fetch_hgene(target)
-
-#         # Return the result as a JSON response
-#         return Response(hgene, status=status.HTTP_200_OK)  
-
-
-# class GetHProtein(APIView):
-#     """
-#      Return most similar targets - 
-#      hProtein similarity descending order
-#     """
-#     def get(self, request,  *args, **kwargs):
-
-#         # Check if a target is in the requested path
-#         try: 
-#             target = self.kwargs["target"]
-#         except Exception as e:
-#             return JsonResponse({'error': str(e)}, status=400)
-        
-#         # Get cypher query results
-#         hprotein = fetch_hprotein(target)
-
-#         # Return the result as a JSON response
-#         return Response(hprotein, status=status.HTTP_200_OK)  
-
-# class GetIntact(APIView):
-#     """
-#      Return most similar targets - 
-#      Intact similarity descending order
-#     """
-#     def get(self, request,  *args, **kwargs):
-
-#         # Check if a target is in the requested path
-#         try: 
-#             target = self.kwargs["target"]
-#         except Exception as e:
-#             return JsonResponse({'error': str(e)}, status=400)
-        
-#         # Get cypher query results
-#         intact = fetch_intact(target)
-
-#         # Return the result as a JSON response
-#         return Response(intact, status=status.HTTP_200_OK)  
-
-# class GetPathway(APIView):
-#     """
-#      Return most similar targets - 
-#      Pathway similarity descending order
-#     """
-#     def get(self, request,  *args, **kwargs):
-
-#         # Check if a target is in the requested path
-#         try: 
-#             target = self.kwargs["target"]
-#         except Exception as e:
-#             return JsonResponse({'error': str(e)}, status=400)
-        
-#         # Get cypher query results
-#         pathway = fetch_pathway(target)
-
-#         # Return the result as a JSON response
-#         return Response(pathway, status=status.HTTP_200_OK)  
-
-# class GetReactome(APIView):
-#     """
-#      Return most similar targets - 
-#      Reactome similarity descending order
-#     """
-#     def get(self, request,  *args, **kwargs):
-
-#         # Check if a target is in the requested path
-#         try: 
-#             target = self.kwargs["target"]
-#         except Exception as e:
-#             return JsonResponse({'error': str(e)}, status=400)
-        
-#         # Get cypher query results
-#         reactome = fetch_reactome(target)
-
-#         # Return the result as a JSON response
-#         return Response(reactome, status=status.HTTP_200_OK)  
-
-# class GetSignor(APIView):
-#     """
-#      Return most similar targets - 
-#      Signor similarity descending order
-#     """
-#     def get(self, request,  *args, **kwargs):
-
-#         # Check if a target is in the requested path
-#         try: 
-#             target = self.kwargs["target"]
-#         except Exception as e:
-#             return JsonResponse({'error': str(e)}, status=400)
-        
-#         # Get cypher query results
-#         signor = fetch_signor(target)
-
-#         # Return the result as a JSON response
-#         return Response(signor, status=status.HTTP_200_OK)  
 
 
 # Return an array of actions for the specified target
