@@ -14,7 +14,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import theme from '@/styles/theme'
 
 
-const MouseTable = ({data, title, columns}) => {
+const SimilarityTable = ({data, title, columns}) => {
 
   if (data.length == 0) {
     return (
@@ -65,4 +65,4 @@ const MouseTable = ({data, title, columns}) => {
   )
 }
 
-export default MouseTable
+export default SimilarityTable

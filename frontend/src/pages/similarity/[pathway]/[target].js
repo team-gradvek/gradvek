@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import DataTable from '@/components/results/DataTable'
 import targetSimilarityMousePhenotype from '@/hooks/targetSimilarityMousePhenotypeHook';
 import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
@@ -28,7 +27,7 @@ const columns = [
 ]
 
 
-const TargetSimilarityMousePhenotype = () => {
+const TargetSimilarityPathway = () => {
 
   // Get data from URL
   const router = useRouter()
@@ -59,7 +58,7 @@ const TargetSimilarityMousePhenotype = () => {
         </Head>
       <Box p={5} w="100%">
       <SimilarityTable
-          title={`Top 10 Targets Based on Similarity (Mouse Phenotype) for ${target}`}
+          title={`Top 10 Targets Based on Similarity (Pathway) for ${target}`}
           data={data}
           id={target} 
           columns={columns}
@@ -70,4 +69,4 @@ const TargetSimilarityMousePhenotype = () => {
   )
 }
 
-export default TargetSimilarityMousePhenotype
+export default TargetSimilarityPathway
