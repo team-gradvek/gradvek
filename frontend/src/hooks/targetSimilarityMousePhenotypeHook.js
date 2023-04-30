@@ -5,7 +5,7 @@ function targetSimilarityMousePhenotype(id) {
 
   const fetcher = url => axios.get(url).then(res => res.data)
 
-  const { data, error, isLoading } = useSWR(`http://localhost:8000/api/pheno/${id}`, fetcher)
+  const { data, error, isLoading } = useSWR(`http://localhost:8000/api/pheno/${encodeURIComponent(id)}`, fetcher)
   
   return {
     data: data,
