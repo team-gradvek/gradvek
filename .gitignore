@@ -10,6 +10,7 @@ datasets/opentarget/interactions/*.snappy*.parquet*
 datasets/opentarget/baseExpressions/*.snappy*.parquet*
 datasets/opentarget/gwasTraitProfile/*.snappy*.parquet*
 datasets/opentarget/pathways/*.snappy*.parquet*
+datasets/opentarget/gwasTraitProfile/*.snappy*.parquet*
 *.snappy*.parquet*
 platform.conf
 *.tmp
@@ -25,8 +26,7 @@ neo4j/plugins/
 
 # Django
 *.sqlite3
-backend/search/migrations/*
-!backend/search/migrations/__init__.py
+
 
 
 
