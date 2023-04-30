@@ -65,7 +65,7 @@ jobs:
 
 
   publish:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') ||  github.event.inputs.NON_MAIN_DEPLOY == 'TRUE'
     needs: build
     runs-on: ubuntu-latest
     environment: ns_dockerhub
