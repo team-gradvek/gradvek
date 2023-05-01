@@ -79,17 +79,17 @@ urlpatterns = [
 
     # These paths define API routes for querying paths from a target to one or all adverse events
     # associated with it, optionally filtered by drug and action.
-    # target: Symbol, ae: meddraId, drug_id: chemblId
-    path('api/ae/path/<str:target>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target'),
-    path('api/ae/path/<str:target>/<str:ae>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae'),
-    path('api/ae/path/<str:target>/<str:ae>/<str:drug_id>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae_drug'),
+    # target_symbol: Symbol, adverse_event: meddraId, drug_id: chemblId
+    path('api/ae/path/<str:target_symbol>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target'),
+    path('api/ae/path/<str:target_symbol>/<str:adverse_event>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae'),
+    path('api/ae/path/<str:target_symbol>/<str:adverse_event>/<str:drug_id>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae_drug'),
 
-    # These paths define API routes for querying paths from a adverse event to one or all targets
+    # These paths define API routes for querying paths from an adverse event to one or all targets
     # associated with it, optionally filtered by drug and action.
-    # ae: meddraId, target: Symbol  drug_id: chemblId
-    path('api/target/path/<str:ae>/', GetTargetAdverseEventPath.as_view(), name='get_paths_ae'),
-    path('api/target/path/<str:ae>/<str:target>/', GetTargetAdverseEventPath.as_view(), name='get_paths_ae_target'),
-    path('api/target/path/<str:ae>/<str:target>/<str:drug_id>/', GetTargetAdverseEventPath.as_view(), name='get_paths_ae_target_drug'),
+    # adverse_event: meddraId, target_symbol: Symbol, drug_id: chemblId
+    path('api/target/path/<str:adverse_event>/', GetTargetAdverseEventPath.as_view(), name='get_paths_ae'),
+    path('api/target/path/<str:adverse_event>/<str:target_symbol>/', GetTargetAdverseEventPath.as_view(), name='get_paths_ae_target'),
+    path('api/target/path/<str:adverse_event>/<str:target_symbol>/<str:drug_id>/', GetTargetAdverseEventPath.as_view(), name='get_paths_ae_target_drug'),
 
     # Return an array of Cytoscape entities representing paths from a target to one or all adverse events associated with it, optionally filtered by drug and action
     path('api/count/', CountAllView.as_view(), name='count_all'),
