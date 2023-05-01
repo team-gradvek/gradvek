@@ -18,14 +18,8 @@ from .Cytoscape import Node, Relationship
 # Import query functions
 from .queries.actions import get_actions
 from .queries.datasets import DATASETS
-from .queries.node_similarity import get_node_similarity_results
-# from .queries.gwas import get_gwas
-# from .queries.hgene import get_hgene
-# from .queries.hprotein import get_hprotein
-# from .queries.intact import get_intact
-# from .queries.pathway import get_pathway
-# from .queries.reactome import get_reactome
-# from .queries.signor import get_signor
+# from .queries.node_similarity import get_node_similarity_results
+
 
 
 def fetch_actions(target):
@@ -37,42 +31,10 @@ def fetch_datasets():
     return DATASETS
 
 # TODO ADD to startup instead
-def fetch_similarity(descriptor):
-    get_node_similarity_results(descriptor)
-    return print("DONE !")
+# def fetch_similarity(descriptor):
+#     get_node_similarity_results(descriptor)
+#     return print("DONE !")
 
-
-# def fetch_pheno():
-#     RESULTS = get_pheno()
-#     return RESULTS
-
-# def fetch_gwas(target):
-#     RESULTS = get_gwas(target)
-#     return RESULTS
-
-# def fetch_hgene(target):
-#     RESULTS = get_hgene(target)
-#     return RESULTS
-
-# def fetch_hprotein(target):
-#     RESULTS = get_hprotein(target)
-#     return RESULTS
-
-# def fetch_intact(target):
-#     RESULTS = get_intact(target)
-#     return RESULTS
-
-# def fetch_pathway(target):
-#     RESULTS = get_pathway(target)
-#     return RESULTS
-
-# def fetch_reactome(target):
-#     RESULTS = get_reactome(target)
-#     return RESULTS
-
-# def fetch_signor(target):
-#     RESULTS = get_signor(target)
-#     return RESULTS
 
 def update_dataset_status(dataset_name, enabled):
     query = f"MATCH (d:Dataset {{ dataset: '{dataset_name}' }}) SET d.enabled={enabled}"

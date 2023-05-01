@@ -19,7 +19,7 @@ descriptors = {
     "pathway": ["TargetPathway", "PATHWAY", Pathway],
     "reactome": ["Target", "REACTOME", Reactome],
     "signor": ["Target", "SIGNOR", Signor],
-    "gwas": ["Gwas","GWAS_RELATION", Gwas],
+    # "gwas": ["Gwas","GWAS_RELATION", Gwas],
 }
 
 
