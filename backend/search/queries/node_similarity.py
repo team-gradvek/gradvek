@@ -23,7 +23,7 @@ descriptors = {
 }
 
 
-def node_similarity(descriptor):
+def get_node_similarity_results(descriptor):
 
     type_name = descriptors.get(descriptor)[0]
     edge_name = descriptors.get(descriptor)[1]
