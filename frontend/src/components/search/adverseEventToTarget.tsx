@@ -6,6 +6,7 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import styles from "../../styles/Search.module.css"
 import theme from '@/styles/theme';
 import { useRouter } from 'next/router';
+import { filter } from 'core-js/core/array';
 
 // Typeahead URI - DJANGO BACKEND
 const SEARCH_URI =  process.env.NEXT_PUBLIC_HOST + '/api/suggest/adverse_event'
@@ -38,7 +39,7 @@ function AdverseEventToTargetSearch() {
         router.push(`adverseEventToTarget/${selectedTypeAhead[0].meddraId}`)
       }
 
-      const filterByFields = ['adverseEventId', 'meddraId'];
+      const filterByFields = ['adverseEventId'];
 
       return (
         <TabPanel className={styles.searchInput}>
@@ -54,7 +55,7 @@ function AdverseEventToTargetSearch() {
           maxResults={25}
           placeholder="Search for an Adverse Event..."
           onChange={handleChange}
-          inputProps={{ autoComplete: "off"}}
+          inputProps={{ autoComplete: "off", required: true}}
           renderMenuItemChildren={(ae) => (
             <>
               <Flex direction={"row"} className={styles.results}>

@@ -1,45 +1,42 @@
 import { useRouter } from 'next/router'
-import targetSimilarityHook from '@/hooks/targetSimilarity';
-import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
-import { Box } from '@chakra-ui/react';
-import SimilarityTable from '@/components/similarity/SimilarityTable';
+import { Box, Text, Heading } from '@chakra-ui/react';
+import Skeleton from 'react-loading-skeleton';
+import getPathwayData from '@/hooks/pathwaysHook'
+import PathsKG from '@/components/graph/PathsKG';
 
 const columns = [
   {
     id: 1,
-    name: 'Input'
+    name: 'Adverse Event'
   }, 
   {
     id: 2,
-    name: 'Target'
+    name: 'ID'
 
   },
   {
     id: 3,
-    name: 'Similarity Score'
+    name: 'Weights'
   },
   {
     id: 4,
-    name: 'Descriptor'
-  },
+    name: 'Dataset'
+  }
 ]
 
 
-const TargetSimilarityMousePhenotype = () => {
+const TargetToAdverseEventsKG = () => {
 
   // Get data from URL
   const router = useRouter()
   const dataFromURL  = router.query
   const target = dataFromURL.target
-  const descriptor = "Mouse Phenotype"
 
-  console.log(dataFromURL)
+  const pageTitle = `Adverse Event Paths for ${target}`
 
-  const pageTitle = `Top 10 Targets Based on Similarity ${descriptor} for ${target}`
-
-  const { data, isLoading, isError } = targetSimilarityHook("pheno", target)
+  const { data, isLoading, isError } = getPathwayData(target)
 
   if (isError) {
     return (
@@ -59,7 +56,7 @@ const TargetSimilarityMousePhenotype = () => {
       <>
       <ResultsLayout>
       <Box p={5} w="100%">
-        <DataTableSkeleton />
+        <Skeleton />
       </Box>
       </ResultsLayout>
       </>
@@ -73,17 +70,15 @@ const TargetSimilarityMousePhenotype = () => {
           <title>{pageTitle}</title>
         </Head>
       <Box p={5} w="100%">
-      <SimilarityTable
+          <PathsKG
           title={pageTitle}
+          target={target}
           data={data}
-          id={target} 
-          columns={columns}
-          descriptor={descriptor}
-          />
-          </Box>
+           />
+      </Box>
     </ResultsLayout>
     </>
   )
 }
 
-export default TargetSimilarityMousePhenotype
+export default TargetToAdverseEventsKG

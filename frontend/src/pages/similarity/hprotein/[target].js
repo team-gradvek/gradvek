@@ -3,7 +3,7 @@ import targetSimilarityHook from '@/hooks/targetSimilarity';
 import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
-import { Box } from '@chakra-ui/react';
+import { Box, Heading, Text } from '@chakra-ui/react';
 import SimilarityTable from '@/components/similarity/SimilarityTable';
 
 const columns = [
@@ -27,19 +27,17 @@ const columns = [
 ]
 
 
-const TargetSimilarityMousePhenotype = () => {
+const TargetSimilarityPathway = () => {
 
   // Get data from URL
   const router = useRouter()
   const dataFromURL  = router.query
   const target = dataFromURL.target
-  const descriptor = "Mouse Phenotype"
-
-  console.log(dataFromURL)
+  const descriptor = "hProtein"
 
   const pageTitle = `Top 10 Targets Based on Similarity ${descriptor} for ${target}`
 
-  const { data, isLoading, isError } = targetSimilarityHook("pheno", target)
+  const { data, isLoading, isError } = targetSimilarityHook("hprotein", target)
 
   if (isError) {
     return (
@@ -86,4 +84,4 @@ const TargetSimilarityMousePhenotype = () => {
   )
 }
 
-export default TargetSimilarityMousePhenotype
+export default TargetSimilarityPathway
