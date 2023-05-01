@@ -38,7 +38,7 @@ function TargetToAESearch() {
       }
 
       const filterByFields = ['symbol'];
-      
+
       return (
         <TabPanel className={styles.searchInput}>
           <Text mb="4">Find adverse events that include this target</Text>
