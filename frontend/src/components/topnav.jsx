@@ -30,7 +30,7 @@ import {
                   
                     <Button colorScheme='grey' variant="link" key="Search"><Link href='/'>Search </Link></Button>
                             
-                    <Button colorScheme='grey' variant="link" key="API"><Link href='/'>API</Link></Button>
+                    <Button colorScheme='grey' variant="link" key="Settings"><Link href='/settings'>Settings</Link></Button>
                  
                     <Button colorScheme='grey' variant="link" key="Documentation"><Link href='https://github.com/team-gradvek/gradvek'>Documentation</Link></Button>
                 

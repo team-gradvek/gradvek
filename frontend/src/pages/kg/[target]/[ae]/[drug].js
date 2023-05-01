@@ -1,45 +1,26 @@
 import { useRouter } from 'next/router'
-import targetSimilarityHook from '@/hooks/targetSimilarity';
 import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
-import { Box } from '@chakra-ui/react';
-import SimilarityTable from '@/components/similarity/SimilarityTable';
-
-const columns = [
-  {
-    id: 1,
-    name: 'Input'
-  }, 
-  {
-    id: 2,
-    name: 'Target'
-
-  },
-  {
-    id: 3,
-    name: 'Similarity Score'
-  },
-  {
-    id: 4,
-    name: 'Descriptor'
-  },
-]
+import { Box, Text, Heading } from '@chakra-ui/react';
+import getPathwayData from '@/hooks/pathwaysHook'
+import PathsKG from '@/components/graph/PathsKG';
 
 
-const TargetSimilarityMousePhenotype = () => {
+const TargetToAdverseEvents = () => {
 
   // Get data from URL
   const router = useRouter()
   const dataFromURL  = router.query
-  const target = dataFromURL.target
-  const descriptor = "Mouse Phenotype"
 
   console.log(dataFromURL)
+  const target = dataFromURL.target
+  const ae = dataFromURL.ae
+  const drug = dataFromURL.drug
 
-  const pageTitle = `Top 10 Targets Based on Similarity ${descriptor} for ${target}`
+  const pageTitle = `Adverse Event Paths for ${target} with Adverse Event ID: ${ae} and Drug ID: ${drug}`
 
-  const { data, isLoading, isError } = targetSimilarityHook("pheno", target)
+  const { data, isLoading, isError } = getPathwayData(`${target}/${ae}/${drug}`)
 
   if (isError) {
     return (
@@ -73,17 +54,15 @@ const TargetSimilarityMousePhenotype = () => {
           <title>{pageTitle}</title>
         </Head>
       <Box p={5} w="100%">
-      <SimilarityTable
+      <PathsKG
           title={pageTitle}
+          target={target}
           data={data}
-          id={target} 
-          columns={columns}
-          descriptor={descriptor}
-          />
-          </Box>
+           />
+      </Box>
     </ResultsLayout>
     </>
   )
 }
 
-export default TargetSimilarityMousePhenotype
+export default TargetToAdverseEvents

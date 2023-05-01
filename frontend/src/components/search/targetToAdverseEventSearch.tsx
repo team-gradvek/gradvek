@@ -4,7 +4,6 @@ import { TabPanel, Flex, Text, Center, Button } from '@chakra-ui/react'
 import React, { useState } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import styles from "../../styles/Search.module.css"
-import Link from 'next/link';
 import theme from '@/styles/theme';
 import { useRouter } from 'next/router';
 
@@ -38,8 +37,7 @@ function TargetToAESearch() {
         router.push(`targetToAdverseEvents/${selectedTypeAhead[0].symbol}`)
       }
 
-      const filterByFields = ['symbol', 'description'];
-      
+      const filterByFields = ['symbol'];
 
       return (
         <TabPanel className={styles.searchInput}>
@@ -55,7 +53,7 @@ function TargetToAESearch() {
           maxResults={25}
           placeholder="Search for a Target..."
           onChange={handleChange}
-          inputProps={{ autoComplete: "off"}}
+          inputProps={{ autoComplete: "off", required: true}}
           renderMenuItemChildren={(target) => (
             <>
               <Flex direction={"row"} className={styles.results}>
