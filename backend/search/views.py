@@ -31,6 +31,7 @@ from .utils import (
     get_all_routes,
     get_cytoscape_entities_as_json,
     get_entity_count,
+    get_paths_ae_target_drug,
     get_paths_target_ae_drug,
     get_weights_by_target,
     update_dataset_status,
@@ -368,6 +369,27 @@ class GetAdverseEventTargetPath(APIView):
         # Retrieve Cytoscape entities representing paths from a target to one or all adverse events.
         # The target, action types, adverse event, and drug_id are used as filters for the query.
         entities = get_paths_target_ae_drug(target, actions, ae, drug_id, count)
+        result = get_cytoscape_entities_as_json(entities)
+
+        # Return the JSON representation of the resulting entities.
+        return JsonResponse(result, safe=False)
+
+class GetTargetAdverseEventPath(APIView):
+    # This function finds paths between the given target, adverse events, and drugs. 
+    # It returns the results as a list of paths.
+    def get(self, request, ae, target=None, drug_id=None):
+        # Get the list of action types from the request's query parameters, if any.
+        actions = request.GET.getlist('action_types')
+        actions = actions if actions else None
+        
+        # Get the count parameter from the request's query parameters, if any, and convert it to an integer.
+        count = request.GET.get('count', None)
+        if count:
+            count = int(count)
+
+        # Retrieve Cytoscape entities representing paths from a target to one or all adverse events.
+        # The target, action types, adverse event, and drug_id are used as filters for the query.
+        entities = get_paths_ae_target_drug(ae, actions, target, drug_id, count)
         result = get_cytoscape_entities_as_json(entities)
 
         # Return the JSON representation of the resulting entities.

@@ -285,7 +285,7 @@ def get_paths_target_ae_drug(target, action_types=None, adverse_event=None, drug
 
     # Filter the results based on the adverse_event parameter, if provided.
     if adverse_event:
-        target_query += f" AND nae.adverse_event_id = '{adverse_event}'"
+        target_query += f" AND nae.meddraId = '{adverse_event}'"
 
     # Filter the results based on the drug parameter, if provided.
     if drug:
@@ -341,6 +341,66 @@ def get_paths_target_ae_drug(target, action_types=None, adverse_event=None, drug
 
     # Return the list of paths found.
     return results
+
+def get_paths_ae_target_drug(adverse_event, action_types=None, target=None, drug=None, count=None):
+    enabled_datasets_query = "MATCH (nd:Dataset {enabled: true}) WITH COLLECT(nd.dataset) AS enabledSets"
+
+    ae_query = f"""
+        {enabled_datasets_query}
+        MATCH path=(nae:AdverseEvent)-[raw:ASSOCIATED_WITH]-(nd:Drug)-[rt:TARGETS]-(nt:Target)
+        WHERE nae.dataset IN enabledSets
+            AND raw.dataset IN enabledSets
+            AND nd.dataset IN enabledSets
+            AND rt.dataset IN enabledSets
+            AND nt.dataset IN enabledSets
+            AND toUpper(nae.meddraId) = '{adverse_event.upper()}'
+    """
+
+    if target:
+        ae_query += f" AND toUpper(nt.symbol) = '{target.upper()}'"
+
+    if drug:
+        ae_query += f" AND nd.drug_id = '{drug}'"
+
+    ae_query += " RETURN path"
+
+    path_query = f"""
+        {enabled_datasets_query}
+        MATCH path=(nae:AdverseEvent)-[raw:ASSOCIATED_WITH]-(nd:Drug)-[rt:TARGETS]-(nt:Target)-[rpi:PARTICIPATES_IN]-(np:Pathway)
+        WHERE nae.dataset IN enabledSets
+            AND raw.dataset IN enabledSets
+            AND nd.dataset IN enabledSets
+            AND rt.dataset IN enabledSets
+            AND nt.dataset IN enabledSets
+            AND rpi.dataset IN enabledSets
+            AND np.dataset IN enabledSets
+            AND toUpper(nae.meddraId) = '{adverse_event.upper()}'
+    """
+
+    if target:
+        path_query += f" AND toUpper(nt.symbol) = '{target.upper()}'"
+
+    if drug:
+        path_query += f" AND nd.drug_id = '{drug}'"
+
+    path_query += " RETURN path"
+
+    single_ae_query = f"""
+        {enabled_datasets_query}
+        MATCH path=(nae:AdverseEvent)
+        WHERE nae.dataset IN enabledSets
+            AND toUpper(nae.meddraId) = '{adverse_event.upper()}'
+        RETURN path
+    """
+
+    cypher_query = f"{ae_query} UNION {path_query} UNION {single_ae_query}"
+
+    results, _ = db.cypher_query(cypher_query)
+
+    return results
+
+
+
 
 def get_cytoscape_entities_as_json(paths):
     """
