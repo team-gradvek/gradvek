@@ -1,6 +1,6 @@
 // Search by Target to Adverse Event
 // Data of Interest: https://platform.opentargets.org/target/ENSG00000151577
-import { TabPanel, Flex, Text, Center, Button } from '@chakra-ui/react'
+import { TabPanel, Flex, Text, Center, Button, Checkbox, CheckboxGroup, Stack, Box } from '@chakra-ui/react'
 import React, { useState } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import styles from "../../styles/Search.module.css"
@@ -31,28 +31,39 @@ function TargetToTargetSimilaritySearch() {
       };
 
       const handleChange = (selectedOptions) => {
-        setSelectedTypeAhead(selectedOptions.symbol);
+        setSelectedTypeAhead(selectedOptions);
       };
+
+      // Get all checked descriptors
+      const [checkedValues, setCheckedValues] = useState([]);
+
+      const handleCheckboxChange = (checkedValues) => {
+        setCheckedValues(checkedValues);
+        console.log(checkedValues)
+      };
+
 
       // @TODO Refactor this to be one reusable method
       const handleButtonClick = () => {
-        router.push(`targetToAdverseEvents/${selectedTypeAhead[0].symbol}`)
+        openDescriptorData();
       }
 
-      const filterByCallback = (option, props) => {
-        const query = props.text.toLowerCase();
-        const nameMatch = option.name ? option.name.toLowerCase().includes(query) : false;
-        const descriptionMatch = option.description ? option.description.toLowerCase().includes(query) : false;
-        
-        return nameMatch || descriptionMatch;
+      const openDescriptorData = () => {
+        checkedValues.forEach((value) => handleOpenNewTab(value))
+      }
+
+      const handleOpenNewTab = (value) => {
+        const url = `/similarity/${value}/${selectedTypeAhead[0].symbol}`;
+        window.open(url, "_blank");
       };
       
+      const filterByFields = ["symbol"];
 
       return (
         <TabPanel className={styles.searchInput}>
           <Text mb="4">Find targets based on similarity score to this target</Text>
         <AsyncTypeahead
-          filterBy={filterByCallback}
+          filterBy={filterByFields}
           id="target-to-target-search"
           isLoading={isLoading}
           labelKey="symbol"
@@ -62,7 +73,7 @@ function TargetToTargetSimilaritySearch() {
           maxResults={25}
           placeholder="Search for a Target..."
           onChange={handleChange}
-          inputProps={{ autoComplete: "off"}}
+          inputProps={{ autoComplete: "on", required: true}}
           renderMenuItemChildren={(target) => (
             <>
               <Flex direction={"row"} className={styles.results}>
@@ -76,6 +87,21 @@ function TargetToTargetSimilaritySearch() {
             </>
           )}
         />
+        <Box my={2}>
+        <CheckboxGroup colorScheme='blue' defaultValue={['reactome']} onChange={handleCheckboxChange} value={checkedValues}>
+                <Stack spacing={[1, 5]} direction={['column', 'row']}>
+                {["hgene", "hprotein", "intact", "mouse", "pathway", "reactome", "signor"].map((item, index) => (
+                  <Checkbox
+                    key={index}
+                    value={item}
+                    className='capitalize'
+                  >
+                    {item}
+                  </Checkbox>
+                ))}
+                </Stack>
+              </CheckboxGroup>
+        </Box>
         <Center>
           <Button size="lg" bg={theme.brand.secondary} color="white" mt="5" onClick={handleButtonClick}>Search</Button>
         </Center>
