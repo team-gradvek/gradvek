@@ -16,7 +16,7 @@ from django.http import HttpResponse, JsonResponse
 
 from .models import (
     Descriptor,
-    Action, 
+    # Action, 
     MousePheno,
     Hgene,
     Hprotein,
@@ -29,7 +29,6 @@ from .models import (
 
 from .serializers import (
     DescriptorSerializer, 
-    ActionsSerializer, 
     MousePhenoSerializer,
     HgeneSerializer,
     HproteinSerializer,
@@ -82,9 +81,11 @@ class RoutesListAPIView(generics.GenericAPIView):
         routes = get_all_routes(resolver.url_patterns)
         return Response(routes)  # Return the list of routes as a JSON response
 
-# Collect Descriptors list from sqlite and format it to send back
-#  to next.js
+
 class DescriptorListView(generics.ListAPIView):
+    """
+    Collect Descriptors list from Django db and format it
+    """
     queryset = Descriptor.objects.all()
     serializer_class = DescriptorSerializer
 
@@ -106,13 +107,7 @@ class GetActions(APIView):
     
         # Return the result as a JSON response
         return Response(actions, status=status.HTTP_200_OK)
- 
 
-# def mouse(request):
-#     descriptor = "hgene"
-#     fetch_similarity(descriptor)
-#     print("DONE!")
-#     return HttpResponse('DONE', status=500)
 
 descriptor_classes = {
     "mousepheno" : [MousePheno, MousePhenoSerializer],

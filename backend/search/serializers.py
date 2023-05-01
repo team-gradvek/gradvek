@@ -1,28 +1,24 @@
 from rest_framework import serializers
 
-from .models import Descriptor, Action,  MousePheno, Hgene, Hprotein, Intact, Pathway, Reactome, Signor, Gwas
-# from .models import Target
-# from .models import AdverseEvent
+from .models import (
+    Descriptor, 
+    MousePheno, 
+    Hgene, 
+    Hprotein, 
+    Intact, 
+    Pathway, 
+    Reactome, 
+    Signor, 
+    Gwas
+)
 
-# Collect data from database and format it to send back
-#  to next.js
+
+# Translate Django models into other text-based format
+
 class DescriptorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Descriptor
         fields = ["name"]
-
-
-class ActionsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Action
-        fields = ["action"]
-        # fields = ["action", "count"]
-
-# TODO inheritence class with Model Serializer ?
-# class MousePhenoSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = MousePheno
-#         fields = ["target1", "target2", "similarity"]
 
 class NodeSimilaritySerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,7 +28,6 @@ class MousePhenoSerializer(NodeSimilaritySerializer):
     class Meta:
         model = MousePheno
         fields = ["target2", "similarity"]
-        # fields = '__all__'
 
 class HgeneSerializer(NodeSimilaritySerializer):
     class Meta:
@@ -46,6 +41,7 @@ class HproteinSerializer(NodeSimilaritySerializer):
 
 class IntactSerializer(NodeSimilaritySerializer):
     class Meta:
+        model = Intact
         fields = ["target2", "similarity"]
 
 class PathwaySerializer(NodeSimilaritySerializer):

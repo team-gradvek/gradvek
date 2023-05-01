@@ -18,7 +18,7 @@ from .Cytoscape import Node, Relationship
 # Import query functions
 from .queries.actions import get_actions
 from .queries.datasets import DATASETS
-from .queries.node_similarity import node_similarity
+from .queries.node_similarity import get_node_similarity_results
 # from .queries.gwas import get_gwas
 # from .queries.hgene import get_hgene
 # from .queries.hprotein import get_hprotein
@@ -38,7 +38,7 @@ def fetch_datasets():
 
 # TODO ADD to startup instead
 def fetch_similarity(descriptor):
-    node_similarity(descriptor)
+    get_node_similarity_results(descriptor)
     return print("DONE !")
 
 
