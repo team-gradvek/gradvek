@@ -108,16 +108,11 @@ class GetActions(APIView):
         return Response(actions, status=status.HTTP_200_OK)
  
 
-#         try: 
-#             target = self.kwargs["target"]
-#         except Exception as e:
-#             return JsonResponse({'error': str(e)}, status=400)
-
-def mouse(request):
-    descriptor = "hgene"
-    fetch_similarity(descriptor)
-    print("DONE!")
-    return HttpResponse('DONE', status=500)
+# def mouse(request):
+#     descriptor = "hgene"
+#     fetch_similarity(descriptor)
+#     print("DONE!")
+#     return HttpResponse('DONE', status=500)
 
 descriptor_classes = {
     "mousepheno" : [MousePheno, MousePhenoSerializer],
@@ -142,8 +137,8 @@ class GetSimilarity(APIView):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
-        descriptor_model = descriptor_classes.get( descriptor_type)[0]
-        descriptor_serializer = descriptor_classes.get( descriptor_type)[1]
+        descriptor_model = descriptor_classes.get(descriptor_type)[0]
+        descriptor_serializer = descriptor_classes.get(descriptor_type)[1]
 
         scores = descriptor_model.objects.filter(target1=target) 
         serializer = descriptor_serializer(scores, many=True)
