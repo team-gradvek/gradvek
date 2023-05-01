@@ -23,7 +23,7 @@ neo4j/plugins/
 # .env commiting this on purpose as its a required nextjs public environment variable
 .vscode
 
-# Django
+# There is also a .gitignore inside the Django backend dir
 *.sqlite3
 db.sqlite3
 
