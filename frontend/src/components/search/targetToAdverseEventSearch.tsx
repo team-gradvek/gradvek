@@ -4,7 +4,6 @@ import { TabPanel, Flex, Text, Center, Button } from '@chakra-ui/react'
 import React, { useState } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import styles from "../../styles/Search.module.css"
-import Link from 'next/link';
 import theme from '@/styles/theme';
 import { useRouter } from 'next/router';
 
@@ -38,19 +37,14 @@ function TargetToAESearch() {
         router.push(`targetToAdverseEvents/${selectedTypeAhead[0].symbol}`)
       }
 
-      const filterByCallback = (option, props) => {
-        const query = props.text.toLowerCase();
-        const symbolMatch = option.symbol ? option.symbol.toLowerCase().includes(query) : false;
-        const descriptionMatch = option.description ? option.description.toLowerCase().includes(query) : false;
-        return symbolMatch || descriptionMatch;
-      };
+      const filterByFields = ['symbol'];
       
 
       return (
         <TabPanel className={styles.searchInput}>
           <Text mb="4">Find adverse events that include this target</Text>
         <AsyncTypeahead
-          filterBy={filterByCallback}
+          filterBy={filterByFields}
           id="target-to-ae-search"
           isLoading={isLoading}
           labelKey="symbol"
@@ -60,7 +54,7 @@ function TargetToAESearch() {
           maxResults={25}
           placeholder="Search for a Target..."
           onChange={handleChange}
-          inputProps={{ autoComplete: "off"}}
+          inputProps={{ autoComplete: "off", required: true}}
           renderMenuItemChildren={(target) => (
             <>
               <Flex direction={"row"} className={styles.results}>

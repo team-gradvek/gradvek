@@ -6,6 +6,7 @@ import {
   Text,
   useColorMode
 } from '@chakra-ui/react'
+import Link from 'next/link';
 
 export default function Footer() {
 
@@ -34,12 +35,12 @@ export default function Footer() {
           
           <Stack spacing="4" minW="36" flex="1">
             <Text fontSize="sm" fontWeight="semibold" color="subtle">
-              About
+              Pathways
             </Text>
             <Stack spacing="3" shouldWrapChildren>
-              <Button variant="link">Contact</Button>
-              <Button variant="link">Team</Button>
-              <Button variant="link">License</Button>
+              <Button variant="link"><Link href='/pathways/drd3'>Target</Link></Button>
+              <Button variant="link"><Link href='/pathways/drd3/10034010'>Target + AE</Link></Button>
+              <Button variant="link"><Link href='/pathways/drd3/LEVODOPA'>Target + AE + Drug</Link></Button>
             </Stack>
           </Stack>
           <Stack spacing="4" minW="36" flex="1">
