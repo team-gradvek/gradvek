@@ -69,7 +69,9 @@ function DrugsByTargetAESearch() {
       }
 
       const filterByFieldsTarget = ['name', 'description'];
+
       const filterByFieldsAE = ['meddraId', 'adverseEventId'];
+
       
       return (
         <TabPanel className={styles.searchInput}>
