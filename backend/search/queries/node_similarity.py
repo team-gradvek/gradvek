@@ -23,7 +23,19 @@ descriptors = {
 }
 
 
+def save_to_db():
+    """
+    Save Neo4j similarity results to Django db
+    """
+    for key, _ in descriptors.items():
+        get_node_similarity_results(key)
+
+
 def get_node_similarity_results(descriptor):
+    """
+    Get all node similarity results associated to descriptor from Neo4j db
+    Use the Neo4j Graph Data Science library - stream mode
+    """
 
     type_name = descriptors.get(descriptor)[0]
     edge_name = descriptors.get(descriptor)[1]
@@ -70,12 +82,18 @@ def get_node_similarity_results(descriptor):
 
 
 def create_objects_to_db(descriptor, results, model_class):
-    
+    """"
+    Save the results to the Django db based on the Descriptor Model
+    """
     print(f"Creating {descriptor} objects...")
 
     for row in results:
+        # Fields need to match Django model
         model_class.objects.create(
             target1=row[0],
             target2=row[1],
             similarity=row[2]
         )
+
+if __name__ == "__main__":
+    save_to_db()

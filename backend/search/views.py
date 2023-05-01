@@ -69,8 +69,11 @@ from .utils import (
 
 )
 
-# API view to list all routes in the Django site
+
 class RoutesListAPIView(generics.GenericAPIView):
+    """
+    API view to list all routes in the Django site
+    """
     # Override the get_queryset method to return None, as we don't deal with a queryset
     def get_queryset(self):
         return None
@@ -126,56 +129,23 @@ class GetSimilarity(APIView):
     """
     def get(self, request,  *args, **kwargs):
 
+        # Check if a target and descriptor is in the requested path
         try: 
             target = self.kwargs['target']
             descriptor_type = self.kwargs['descriptor']
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
+        # Get model and serializer class names
         descriptor_model = descriptor_classes.get(descriptor_type)[0]
         descriptor_serializer = descriptor_classes.get(descriptor_type)[1]
 
-        scores = descriptor_model.objects.filter(target1=target) 
+        # Get all objects from the Django db that match the given parameters
+        scores = descriptor_model.objects.filter(target1=target)
+        # Translate Django models into other text-based format
         serializer = descriptor_serializer(scores, many=True)
         return Response(serializer.data)
 
-
-# class GetSimilarity(generics.ListAPIView):
-#         # try: 
-#         #     target = self.kwargs["target"]
-#         # except Exception as e:
-#         #     return JsonResponse({'error': str(e)}, status=400)
-#     serializer_class = MousePhenoSerializer
-
-#     def get_queryset(self):
-#         target = self.kwargs['target']
-#         return MousePheno.objects.filter(target1=target)   
- 
-# class GetPheno(APIView):
-#     """
-#      Return most similar targets - 
-#      Mouse Phenotype similarity descending order
-#     """
-#     def get(self, request,  *args, **kwargs):
-
-#         # Check if a target is in the requested path
-#         try: 
-#             target = self.kwargs["target"]
-#         except Exception as e:
-#             return JsonResponse({'error': str(e)}, status=400)
-        
-#         # Get cypher query results
-#         pheno = fetch_pheno(target)
-
-#         # Return the result as a JSON response
-#         return Response(pheno, status=status.HTTP_200_OK)  
-
-
-# Return an array of actions for the specified target
-#actions/{target}
-
-
-# Trying to copy paths from gradvek 1.0
 
 # Upload one or more entities in a comma-separated file
 @require_http_methods(["POST"])
