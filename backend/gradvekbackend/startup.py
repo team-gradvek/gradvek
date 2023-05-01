@@ -1,4 +1,5 @@
 import atexit
+import os
 import time
 from django.conf import settings
 from django.core.management import call_command
@@ -20,6 +21,8 @@ environ.Env.read_env()
 
 NEO4J_USERNAME = env("NEO4J_USERNAME")
 NEO4J_PASSWORD = env("NEO4J_PASSWORD")
+NEO4J_BOLT_URL = env("NEO4J_BOLT_URL")
+NEO4J_DOCKER_URL = os.getenv("NEO4J_DOCKER_URL", default=None)
 
 
 # Function to close Neo4j driver when the application exits
@@ -51,10 +54,17 @@ def wait_for_neo4j_connection():
     # delay between each attempt.
     retry = 0
     max_retries = 10
+
+    # Use NEO4J_DOCKER_URL environment variable if available
+    if NEO4J_DOCKER_URL:
+        neo4j_url = NEO4J_DOCKER_URL
+    else:
+        neo4j_url = NEO4J_BOLT_URL
+    
+    config.DATABASE_URL = neo4j_url
+    
     while retry < max_retries:
         try:
-            # Set up Neo4j database connection using environment variables
-            config.DATABASE_URL = env("NEO4J_BOLT_URL")
             if check_neo4j_connection():
                 print("Neo4j connection established.")
                 break
@@ -66,6 +76,7 @@ def wait_for_neo4j_connection():
             retry += 1
             print(f"Waiting for Neo4j connection... ({retry}/{max_retries})")
             time.sleep(5)
+
 
 
 def run_startup_tasks():

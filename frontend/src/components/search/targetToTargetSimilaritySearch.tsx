@@ -39,18 +39,24 @@ function TargetToTargetSimilaritySearch() {
         router.push(`targetToAdverseEvents/${selectedTypeAhead[0].symbol}`)
       }
 
-      const filterByFields = ['name', 'description'];
-
+      const filterByCallback = (option, props) => {
+        const query = props.text.toLowerCase();
+        const nameMatch = option.name ? option.name.toLowerCase().includes(query) : false;
+        const descriptionMatch = option.description ? option.description.toLowerCase().includes(query) : false;
+        
+        return nameMatch || descriptionMatch;
+      };
+      
 
       return (
         <TabPanel className={styles.searchInput}>
           <Text mb="4">Find targets based on similarity score to this target</Text>
         <AsyncTypeahead
-          filterBy={filterByFields}
+          filterBy={filterByCallback}
           id="target-to-target-search"
           isLoading={isLoading}
           labelKey="symbol"
-          minLength={2}
+          minLength={1}
           onSearch={handleSearch}
           options={options}
           maxResults={25}

@@ -1,32 +1,10 @@
 import { useRouter } from 'next/router'
-import DataTable from '@/components/results/DataTable'
-import getAdverseEvent from "../../hooks/targetToAdverseEventHook"
 import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
-import { Box, Card, CardBody, Text, Heading } from '@chakra-ui/react';
-import PathKG from '@/components/graph/PathsKG';
+import { Box, Text, Heading } from '@chakra-ui/react';
 import getPathwayData from '@/hooks/pathwaysHook'
-
-const columns = [
-  {
-    id: 1,
-    name: 'Adverse Event'
-  }, 
-  {
-    id: 2,
-    name: 'ID'
-
-  },
-  {
-    id: 3,
-    name: 'Weights'
-  },
-  {
-    id: 4,
-    name: 'Dataset'
-  }
-]
+import PathsKG from '@/components/graph/PathsKG';
 
 
 const TargetToAdverseEvents = () => {
@@ -34,12 +12,17 @@ const TargetToAdverseEvents = () => {
   // Get data from URL
   const router = useRouter()
   const dataFromURL  = router.query
+
+  console.log(dataFromURL)
   const target = dataFromURL.target
+  const ae = dataFromURL.ae
+  const drug = dataFromURL.drug
 
-  const { adverseEvent, isLoading, isError } = getAdverseEvent(target)
-  const { data, isLoading: isLoadingPath, isError:isErrorPath } = getPathwayData(target)
+  const pageTitle = `Adverse Event Paths for ${target} with Adverse Event ID: ${ae} and Drug ID: ${drug}`
 
-  if (isError || isErrorPath) {
+  const { data, isLoading, isError } = getPathwayData(`${target}/${ae}/${drug}`)
+
+  if (isError) {
     return (
       <>
        <ResultsLayout>
@@ -52,7 +35,7 @@ const TargetToAdverseEvents = () => {
     )
   }
 
-  if (isLoading || isLoadingPath) {
+  if (isLoading) {
     return (
       <>
       <ResultsLayout>
@@ -68,16 +51,14 @@ const TargetToAdverseEvents = () => {
     <>
     <ResultsLayout>
         <Head>
-          <title>Target to Adverse Events Results</title>
+          <title>{pageTitle}</title>
         </Head>
       <Box p={5} w="100%">
-        <DataTable
-          title={`Adverse Events for ${target}`}
-          id={target} 
+      <PathsKG
+          title={pageTitle}
           target={target}
-          columns={columns}
-          data={adverseEvent}
-          />
+          data={data}
+           />
       </Box>
     </ResultsLayout>
     </>

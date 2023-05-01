@@ -1,0 +1,41 @@
+version: "3.9"
+
+networks:
+  gradvek_network:
+    driver: bridge
+
+services:
+  neo4j:
+    build: ./neo4j
+    image: gradvek_neo4j
+    user: "${CURRENT_UID}:${CURRENT_GID}"
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./neo4j/data:/data
+      - ./neo4j/logs:/logs
+      - ./neo4j/import:/var/lib/neo4j/import
+      - ./neo4j/plugins:/plugins
+    networks:
+      - gradvek_network
+
+  backend:
+    build: ./backend
+    image: gradvek_backend
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    environment:
+      - NEO4J_DOCKER_URL=bolt://neo4j:gradvek1@neo4j:7687
+    networks:
+      - gradvek_network
+  
+  frontend:
+    build: ./frontend
+    image: gradvek_frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - gradvek_network
+

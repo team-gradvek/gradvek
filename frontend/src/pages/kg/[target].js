@@ -1,12 +1,10 @@
 import { useRouter } from 'next/router'
-import DataTable from '@/components/results/DataTable'
-import getAdverseEvent from "../../hooks/targetToAdverseEventHook"
-import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
-import { Box, Card, CardBody, Text, Heading } from '@chakra-ui/react';
-import PathKG from '@/components/graph/PathsKG';
+import { Box, Text, Heading } from '@chakra-ui/react';
+import Skeleton from 'react-loading-skeleton';
 import getPathwayData from '@/hooks/pathwaysHook'
+import PathsKG from '@/components/graph/PathsKG';
 
 const columns = [
   {
@@ -29,17 +27,18 @@ const columns = [
 ]
 
 
-const TargetToAdverseEvents = () => {
+const TargetToAdverseEventsKG = () => {
 
   // Get data from URL
   const router = useRouter()
   const dataFromURL  = router.query
   const target = dataFromURL.target
 
-  const { adverseEvent, isLoading, isError } = getAdverseEvent(target)
-  const { data, isLoading: isLoadingPath, isError:isErrorPath } = getPathwayData(target)
+  const pageTitle = `Adverse Event Paths for ${target}`
 
-  if (isError || isErrorPath) {
+  const { data, isLoading, isError } = getPathwayData(target)
+
+  if (isError) {
     return (
       <>
        <ResultsLayout>
@@ -52,12 +51,12 @@ const TargetToAdverseEvents = () => {
     )
   }
 
-  if (isLoading || isLoadingPath) {
+  if (isLoading) {
     return (
       <>
       <ResultsLayout>
       <Box p={5} w="100%">
-        <DataTableSkeleton />
+        <Skeleton />
       </Box>
       </ResultsLayout>
       </>
@@ -68,20 +67,18 @@ const TargetToAdverseEvents = () => {
     <>
     <ResultsLayout>
         <Head>
-          <title>Target to Adverse Events Results</title>
+          <title>{pageTitle}</title>
         </Head>
       <Box p={5} w="100%">
-        <DataTable
-          title={`Adverse Events for ${target}`}
-          id={target} 
+          <PathsKG
+          title={pageTitle}
           target={target}
-          columns={columns}
-          data={adverseEvent}
-          />
+          data={data}
+           />
       </Box>
     </ResultsLayout>
     </>
   )
 }
 
-export default TargetToAdverseEvents
+export default TargetToAdverseEventsKG

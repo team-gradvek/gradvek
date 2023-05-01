@@ -1,32 +1,10 @@
 import { useRouter } from 'next/router'
-import DataTable from '@/components/results/DataTable'
-import getAdverseEvent from "../../hooks/targetToAdverseEventHook"
+import PathTable from '@/components/results/PathTable'
 import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
 import { Box, Card, CardBody, Text, Heading } from '@chakra-ui/react';
-import PathKG from '@/components/graph/PathsKG';
 import getPathwayData from '@/hooks/pathwaysHook'
-
-const columns = [
-  {
-    id: 1,
-    name: 'Adverse Event'
-  }, 
-  {
-    id: 2,
-    name: 'ID'
-
-  },
-  {
-    id: 3,
-    name: 'Weights'
-  },
-  {
-    id: 4,
-    name: 'Dataset'
-  }
-]
 
 
 const TargetToAdverseEvents = () => {
@@ -36,10 +14,9 @@ const TargetToAdverseEvents = () => {
   const dataFromURL  = router.query
   const target = dataFromURL.target
 
-  const { adverseEvent, isLoading, isError } = getAdverseEvent(target)
-  const { data, isLoading: isLoadingPath, isError:isErrorPath } = getPathwayData(target)
+  const { data, isLoading, isError } = getPathwayData(target)
 
-  if (isError || isErrorPath) {
+  if (isError) {
     return (
       <>
        <ResultsLayout>
@@ -52,7 +29,7 @@ const TargetToAdverseEvents = () => {
     )
   }
 
-  if (isLoading || isLoadingPath) {
+  if (isLoading) {
     return (
       <>
       <ResultsLayout>
@@ -68,15 +45,14 @@ const TargetToAdverseEvents = () => {
     <>
     <ResultsLayout>
         <Head>
-          <title>Target to Adverse Events Results</title>
+          <title>Target to Adverse Events Path</title>
         </Head>
       <Box p={5} w="100%">
-        <DataTable
-          title={`Adverse Events for ${target}`}
-          id={target} 
-          target={target}
-          columns={columns}
-          data={adverseEvent}
+        <PathTable
+          title={`Adverse Event Paths for ${target}`}
+          data={data}
+          isLoading={isLoading}
+          isError={isError}
           />
       </Box>
     </ResultsLayout>

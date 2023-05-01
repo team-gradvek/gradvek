@@ -21,5 +21,6 @@ neo4j/import/
 neo4j/plugins/
 # .env commiting this on purpose as its a required nextjs public environment variable
 .vscode
-
-
+# Neovis Config For Testing:
+utils/neo4j.js
+components/graph/NeoGraph.jsx
