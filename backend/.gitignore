@@ -86,6 +86,8 @@ __pycache__/
 local_settings.py
 
 .env
+
+# Django db should not be put under version control
 db.sqlite3
 
 # Ignore everything in _migrations apart from __init__.py.
