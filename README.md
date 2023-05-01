@@ -112,14 +112,17 @@ Note: The Neo4j database must be running for the backend to work.
 | `make run-neo4j`              | Start the Neo4j database                                     |
 | `make stop-all`               | Stop all parts using Docker Compose                          |
 | `make stop-neo4j`             | Stop the Neo4j database                                      |
-| `make remove-neo4j-data-logs` | Remove Neo4j data and logs                                 |
+| `make remove-neo4j-data-logs` | Remove Neo4j data and logs                                   |
 | `make clean`                  | Stop and remove all parts, and clean up data and logs        |
 | `make run-frontend`           | Run the Next.js frontend                                     |
 | `make run-backend`            | Run the Django backend                                       |
 | `make stop-frontend`          | Stop the Next.js frontend                                    |
 | `make stop-backend`           | Stop the Django backend                                      |
+| `make run-deployed`           | Start the version of the application published to Docker hub |
+| `make stop-deployed`          | Stop the version of the application published to Docker hub  |
 
 _Note: The Neo4j database must be running for the `make send-data` or the `make run-backend` command to work._
+_Note: SECRET_KEY must be set in docker-compose-published.yml for `make run-deployed` command to work._
 
 
 # Errors

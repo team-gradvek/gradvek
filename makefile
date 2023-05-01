@@ -100,3 +100,15 @@ stop-frontend: # Stop the Next.js frontend
 stop-backend: # Stop the Django backend
 	$(info Make: Stopping the Django backend.)
 	@cd backend && killall -9 python3
+
+# Run the deployed version of the application from Docker Hub
+.PHONY: run-deployed
+run-deployed: # Run the deployed version of the application from Docker Hub
+	$(info Make: Running all parts using Docker Compose.)
+	@docker-compose -f docker-compose-published.yml up -d
+
+# Stop the (local) deployed version of the application pulled from Docker Hub
+.PHONY: stop-deployed
+stop-deployed: # Stop the (local) deployed version of the application pulled rom Docker Hub
+	$(info Make: Stopping all parts using Docker Compose.)
+	@docker-compose -f docker-compose-published.yml stop

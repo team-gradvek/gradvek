@@ -19,10 +19,14 @@ env = environ.Env()
 # Read environment variables from .env file
 environ.Env.read_env()
 
-NEO4J_USERNAME = env("NEO4J_USERNAME")
-NEO4J_PASSWORD = env("NEO4J_PASSWORD")
-NEO4J_BOLT_URL = env("NEO4J_BOLT_URL")
+
+NEO4J_DOCKER_USERNAME = os.getenv("NEO4J_DOCKER_USERNAME", default=None)
+NEO4J_DOCKER_PASSWORD = os.getenv("NEO4J_DOCKER_PASSWORD", default=None)
 NEO4J_DOCKER_URL = os.getenv("NEO4J_DOCKER_URL", default=None)
+NEO4J_USERNAME = env("NEO4J_USERNAME", default=NEO4J_DOCKER_USERNAME)
+NEO4J_PASSWORD = env("NEO4J_PASSWORD", default=NEO4J_DOCKER_PASSWORD)
+NEO4J_BOLT_URL = env("NEO4J_BOLT_URL", default=None)
+
 
 
 # Function to close Neo4j driver when the application exits
