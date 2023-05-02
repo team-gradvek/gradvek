@@ -86,4 +86,12 @@ __pycache__/
 local_settings.py
 
 .env
-# removing for dev db.sqlite3
+
+# Django db should not be put under version control
+db.sqlite3
+
+# Ignore everything in _migrations apart from __init__.py.
+# git rm --cached 0001_initial.py
+_migrations/*
+!_migrations/__init__.py
+search/migrations/0001_initial.py

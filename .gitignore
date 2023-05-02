@@ -10,6 +10,7 @@ datasets/opentarget/interactions/*.snappy*.parquet*
 datasets/opentarget/baseExpressions/*.snappy*.parquet*
 datasets/opentarget/gwasTraitProfile/*.snappy*.parquet*
 datasets/opentarget/pathways/*.snappy*.parquet*
+datasets/opentarget/gwasTraitProfile/*.snappy*.parquet*
 *.snappy*.parquet*
 platform.conf
 *.tmp
@@ -21,6 +22,13 @@ neo4j/import/
 neo4j/plugins/
 # .env commiting this on purpose as its a required nextjs public environment variable
 .vscode
+
+# There is also a .gitignore inside the Django backend dir
+*.sqlite3
+db.sqlite3
+
+
+
 # Neovis Config For Testing:
 utils/neo4j.js
 components/graph/NeoGraph.jsx
