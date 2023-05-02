@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router'
-import DataTable from '@/components/results/DataTable'
-import targetSimilarityMousePhenotype from '@/hooks/targetSimilarityMousePhenotypeHook';
+import targetSimilarityHook from '@/hooks/targetSimilarity';
 import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
 import { Box } from '@chakra-ui/react';
-import MouseTable from '@/components/similarity/MouseTable';
+import SimilarityTable from '@/components/similarity/SimilarityTable';
 
 const columns = [
   {
@@ -34,10 +33,26 @@ const TargetSimilarityMousePhenotype = () => {
   const router = useRouter()
   const dataFromURL  = router.query
   const target = dataFromURL.target
+  const descriptor = "Mouse Phenotype"
 
-  const { data, isLoading, isError } = targetSimilarityMousePhenotype(target)
+  console.log(dataFromURL)
 
-  if (isError) return <p>Failed to Load</p>
+  const pageTitle = `Top 10 Targets Based on Similarity ${descriptor} for ${target}`
+
+  const { data, isLoading, isError } = targetSimilarityHook("pheno", target)
+
+  if (isError) {
+    return (
+      <>
+       <ResultsLayout>
+          <Box p={5} w="100%">
+            <Heading size='md' mb={4}>Server Error</Heading>
+            <Text size='md' mb={4}>Please try again later</Text>
+          </Box>
+        </ResultsLayout>
+      </>
+    )
+  }
 
   if (isLoading) {
     return (
@@ -55,14 +70,15 @@ const TargetSimilarityMousePhenotype = () => {
     <>
     <ResultsLayout>
         <Head>
-          <title>Target Similarity (Mouse Phenotype)</title>
+          <title>{pageTitle}</title>
         </Head>
       <Box p={5} w="100%">
-      <MouseTable
-          title={`Top 10 Targets Based on Similarity (Mouse Phenotype) for ${target}`}
+      <SimilarityTable
+          title={pageTitle}
           data={data}
           id={target} 
           columns={columns}
+          descriptor={descriptor}
           />
           </Box>
     </ResultsLayout>

@@ -69,9 +69,9 @@ function DrugsByTargetAESearch() {
       }
 
       const filterByFieldsTarget = ['name', 'description'];
+
       const filterByFieldsAE = ['meddraId', 'adverseEventId'];
-
-
+      
       return (
         <TabPanel className={styles.searchInput}>
           <Text mb="4">Search drugs associated with a target and adverse event</Text>
@@ -81,13 +81,13 @@ function DrugsByTargetAESearch() {
             id="target-search"
             isLoading={isLoading}
             labelKey="symbol"
-            minLength={2}
+            minLength={1}
             onSearch={handleSearchTarget}
             options={optionsTarget}
             maxResults={25}
             placeholder="Search for a Target..."
             onChange={handleChangeTarget}
-            inputProps={{ autoComplete: "off"}}
+            inputProps={{ autoComplete: "off", required: true}}
             renderMenuItemChildren={(target) => (
               <>
                 <Flex direction={"row"} className={styles.results}>
@@ -109,13 +109,13 @@ function DrugsByTargetAESearch() {
             id="ae-search"
             isLoading={isLoading}
             labelKey="meddraId"
-            minLength={2}
+            minLength={1}
             onSearch={handleSearchAE}
             options={optionsAE}
             maxResults={25}
             placeholder="Search for a AE..."
             onChange={handleChangeAE}
-            inputProps={{ autoComplete: "off"}}
+            inputProps={{ autoComplete: "off", required: true}}
             renderMenuItemChildren={(ae) => (
               <>
                 <Flex direction={"row"} className={styles.results}>

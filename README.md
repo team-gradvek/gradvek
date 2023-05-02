@@ -101,31 +101,29 @@ Note: The Neo4j database must be running for the backend to work.
 
 
 ## Makefile commands
-### 1. Start the Neo4j database
-```bash
-make run-neo4j
-```
-### 2. Stop the Neo4j database
-```bash
-make stop-neo4j
-```
-### 3. Clean the Neo4j database
-```bash
-make clean
-```
-### 4. Get datasets
-To fetch the Parquet datasets, run the `get_datasets.py` script in the datasets folder:
 
-```bash
-make get-datasets
-```
-### 5. Send data to Neo4j
-To parse the Parquet datasets and insert them into the database, run the parse_datasets.py script in the datasets folder:
+| Command                       | Description                                                  |
+|-------------------------------|--------------------------------------------------------------|
+| `make` or `make run-all`      | Run the complete application in Docker                       |
+| `make help`                   | Show help for each of the Makefile recipes                   |
+| `make check-environment`      | Check the environment for the correct tools and dependencies |
+| `make get-datasets`           | Fetch the Parquet datasets                                   |
+| `make send-data`              | Parse the Parquet datasets and insert them into the database |
+| `make run-neo4j`              | Start the Neo4j database                                     |
+| `make stop-all`               | Stop all parts using Docker Compose                          |
+| `make stop-neo4j`             | Stop the Neo4j database                                      |
+| `make remove-neo4j-data-logs` | Remove Neo4j data and logs                                   |
+| `make clean`                  | Stop and remove all parts, and clean up data and logs        |
+| `make run-frontend`           | Run the Next.js frontend                                     |
+| `make run-backend`            | Run the Django backend                                       |
+| `make stop-frontend`          | Stop the Next.js frontend                                    |
+| `make stop-backend`           | Stop the Django backend                                      |
+| `make run-deployed`           | Start the version of the application published to Docker hub |
+| `make stop-deployed`          | Stop the version of the application published to Docker hub  |
 
-```bash
-make send-data
-```
-Note: The Neo4j database must be running for this command to work.
+_Note: The Neo4j database must be running for the `make send-data` or the `make run-backend` command to work._
+_Note: SECRET_KEY must be set in docker-compose-published.yml for `make run-deployed` command to work._
+
 
 # Errors
 

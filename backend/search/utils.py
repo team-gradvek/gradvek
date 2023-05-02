@@ -253,7 +253,7 @@ def get_paths_target_ae_drug(target, action_types=None, adverse_event=None, drug
 
     # Filter the results based on the adverse_event parameter, if provided.
     if adverse_event:
-        target_query += f" AND nae.adverse_event_id = '{adverse_event}'"
+        target_query += f" AND nae.meddraId = '{adverse_event}'"
 
     # Filter the results based on the drug parameter, if provided.
     if drug:
@@ -309,6 +309,100 @@ def get_paths_target_ae_drug(target, action_types=None, adverse_event=None, drug
 
     # Return the list of paths found.
     return results
+
+def get_paths_ae_target_drug(adverse_event, action_types=None, target=None, drug=None, count=None):
+    """
+    This function finds paths between the given adverse event, targets, and drugs.
+    It returns the results as a list of paths.
+    Args:
+        adverse_event (str): The ID (meddraId) of the adverse event.
+        action_types (list, optional): A list of action types to filter the results by.
+        target (str, optional): The symbol of a specific protein target.
+        drug (str, optional): The ID of a specific drug to filter the results by.
+        count (int, optional): The maximum number of results to return.
+    Returns:
+        list: A list of paths between the given adverse event, targets, and drugs.
+    """
+
+    # Find active datasets and store them in the enabledSets variable.
+    enabled_datasets_query = "MATCH (nd:Dataset {enabled: true}) WITH COLLECT(nd.dataset) AS enabledSets"
+
+    # Construct the AE_QUERY segment to find drugs associated with the adverse event and target proteins.
+    ae_query = f"""
+        {enabled_datasets_query}
+        MATCH path=(nae:AdverseEvent)-[raw:ASSOCIATED_WITH]-(nd:Drug)-[rt:TARGETS]-(nt:Target)
+        WHERE nae.dataset IN enabledSets
+            AND raw.dataset IN enabledSets
+            AND nd.dataset IN enabledSets
+            AND rt.dataset IN enabledSets
+            AND nt.dataset IN enabledSets
+            AND toUpper(nae.meddraId) = '{adverse_event.upper()}'
+    """
+
+    # Filter the results based on the target parameter, if provided.
+    if target:
+        ae_query += f" AND toUpper(nt.symbol) = '{target.upper()}'"
+
+    # Filter the results based on the drug parameter, if provided.
+    if drug:
+        ae_query += f" AND nd.drug_id = '{drug}'"
+
+    # Add RETURN clause for ae_query
+    ae_query += " RETURN path"
+
+    # Construct the PATH_QUERY segment to find pathways in which the target participates.
+    path_query = f"""
+        {enabled_datasets_query}
+        MATCH path=(nt:Target)-[rpi:PARTICIPATES_IN]-(np:Pathway)
+        WHERE nt.dataset IN enabledSets
+            AND rpi.dataset IN enabledSets
+            AND np.dataset IN enabledSets
+    """
+
+    # Filter the results based on the target parameter, if provided.
+    if target:
+        path_query += f" AND toUpper(nt.symbol) = '{target.upper()}'"
+
+    # Add RETURN clause for path_query
+    path_query += " RETURN path"
+
+    # Construct the DRUG_TARGET_QUERY segment to find targets of drugs related to the specified target.
+    drug_target_query = f"""
+        {enabled_datasets_query}
+        MATCH path=(nd:Drug)-[rt:TARGETS]-(nt:Target)
+        WHERE nd.dataset IN enabledSets
+            AND rt.dataset IN enabledSets
+            AND nt.dataset IN enabledSets
+    """
+
+    # Filter the results based on the target parameter, if provided.
+    if target:
+        drug_target_query += f" AND toUpper(nt.symbol) = '{target.upper()}'"
+
+    # Filter the results based on the drug parameter, if provided.
+    if drug:
+        drug_target_query += f" AND nd.drug_id = '{drug}'"
+    
+    # Add RETURN clause for drug_target_query
+    drug_target_query += " RETURN path"
+
+    # Construct the SINGLE_AE_QUERY segment to find the specified adverse event itself.
+    single_ae_query = f"""
+        {enabled_datasets_query}
+        MATCH path=(nae:AdverseEvent)
+        WHERE nae.dataset IN enabledSets
+            AND toUpper(nae.meddraId) = '{adverse_event.upper()}'
+        RETURN path
+    """
+    # Combine all segments of the Cypher query.
+    cypher_query = f"{ae_query} UNION {path_query} UNION {drug_target_query} UNION {single_ae_query}"
+
+    # Run the Cypher query and retrieve the results.
+    results, _ = db.cypher_query(cypher_query)
+
+    # Return the list of paths found.
+    return results
+
 
 def get_cytoscape_entities_as_json(paths):
     """

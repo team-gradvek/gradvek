@@ -10,6 +10,7 @@ from .views import (
     # GetPathway,
     # GetReactome,
     # GetSignor,
+    GetTargetAdverseEventPath,
     RoutesListAPIView,
     CountView,
     GetAdverseEventByTargetView,
@@ -27,6 +28,15 @@ app_name = "search"
 
 
 urlpatterns = [
+
+    path('api/pheno/<str:target>/', GetPheno.as_view(), name='pheno'),
+    path('api/gwas/<str:target>/', GetGwas.as_view(), name='gwas'),
+    path('api/hgene/<str:target>/', GetHGene.as_view(), name='hgene'),
+    path('api/hprotein/<str:target>/', GetHProtein.as_view(), name='hprotein'),
+    path('api/intact/<str:target>/', GetIntact.as_view(), name='intact'),
+    path('api/pathway/<str:target>/', GetPathway.as_view(), name='pathway'),
+    path('api/reactome/<str:target>/', GetReactome.as_view(), name='reactome'),
+    path('api/signor/<str:target>/', GetSignor.as_view(), name='signor'),
 
     # Return the list of routes in the Django site
     path('api/routes/', RoutesListAPIView.as_view(), name='api-routes-list'),
@@ -70,11 +80,17 @@ urlpatterns = [
 
     # These paths define API routes for querying paths from a target to one or all adverse events
     # associated with it, optionally filtered by drug and action.
-    # target: Drug Symbol, ae: meddraId, drug_id: chemblId
-    path('api/ae/path/<str:target>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae'),
-    path('api/ae/path/<str:target>/<str:ae>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae_ae'),
-    path('api/ae/path/<str:target>/<str:ae>/<str:drug_id>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae_drug'),
+    # target_symbol: Symbol, adverse_event: meddraId, drug_id: chemblId
+    path('api/ae/path/<str:target_symbol>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target'),
+    path('api/ae/path/<str:target_symbol>/<str:adverse_event>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae'),
+    path('api/ae/path/<str:target_symbol>/<str:adverse_event>/<str:drug_id>/', GetAdverseEventTargetPath.as_view(), name='get_paths_target_ae_drug'),
 
+    # These paths define API routes for querying paths from an adverse event to one or all targets
+    # associated with it, optionally filtered by drug and action.
+    # adverse_event: meddraId, target_symbol: Symbol, drug_id: chemblId
+    path('api/target/path/<str:adverse_event>/', GetTargetAdverseEventPath.as_view(), name='get_paths_ae'),
+    path('api/target/path/<str:adverse_event>/<str:target_symbol>/', GetTargetAdverseEventPath.as_view(), name='get_paths_ae_target'),
+    path('api/target/path/<str:adverse_event>/<str:target_symbol>/<str:drug_id>/', GetTargetAdverseEventPath.as_view(), name='get_paths_ae_target_drug'),
 
     # Return an array of Cytoscape entities representing paths from a target to one or all adverse events associated with it, optionally filtered by drug and action
     path('api/count/', CountAllView.as_view(), name='count_all'),
@@ -91,15 +107,6 @@ urlpatterns = [
     # Return an array of actions for the specified target
     path('api/actions/<str:target>/', views.actions, name='actions_target'),
 
-    # TODO Add some paths for retrieving similarity information?
-
-    # # Trying to copy paths from gradvek 1.0
-
-    # # Upload one or more entities in a comma-separated file
-    # path('api/csv/', views.upload_csv, name='upload_csv'),
-
-    # # Return the content of a previously uploaded comma-separated file
-    # path('api/csv/<str:file_id>/', views.get_csv, name='get_csv'),
 
     # # Clear out the database
     path('api/clear/', views.clear, name='clear'),

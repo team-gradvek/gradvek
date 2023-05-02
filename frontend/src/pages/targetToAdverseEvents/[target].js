@@ -4,7 +4,9 @@ import getAdverseEvent from "../../hooks/targetToAdverseEventHook"
 import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
-import { Box } from '@chakra-ui/react';
+import { Box, Card, CardBody, Text, Heading } from '@chakra-ui/react';
+import PathKG from '@/components/graph/PathsKG';
+import getPathwayData from '@/hooks/pathwaysHook'
 
 const columns = [
   {
@@ -35,10 +37,22 @@ const TargetToAdverseEvents = () => {
   const target = dataFromURL.target
 
   const { adverseEvent, isLoading, isError } = getAdverseEvent(target)
+  const { data, isLoading: isLoadingPath, isError:isErrorPath } = getPathwayData(target)
 
-  if (isError) return <p>Failed to Load</p>
+  if (isError || isErrorPath) {
+    return (
+      <>
+       <ResultsLayout>
+          <Box p={5} w="100%">
+            <Heading size='md' mb={4}>Server Error</Heading>
+            <Text size='md' mb={4}>Please try again later</Text>
+          </Box>
+        </ResultsLayout>
+      </>
+    )
+  }
 
-  if (isLoading) {
+  if (isLoading || isLoadingPath) {
     return (
       <>
       <ResultsLayout>
@@ -57,13 +71,14 @@ const TargetToAdverseEvents = () => {
           <title>Target to Adverse Events Results</title>
         </Head>
       <Box p={5} w="100%">
-      <DataTable
+        <DataTable
           title={`Adverse Events for ${target}`}
-          data={adverseEvent}
           id={target} 
+          target={target}
           columns={columns}
+          data={adverseEvent}
           />
-          </Box>
+      </Box>
     </ResultsLayout>
     </>
   )

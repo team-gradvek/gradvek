@@ -1,0 +1,182 @@
+name: Gradvek CI/CD
+
+on:
+  workflow_dispatch:
+    inputs:
+      NON_MAIN_DEPLOY:
+        description: 'Deploy from workflow dispatch'
+        required: false
+        default: 'true'
+  push:
+    branches:
+      - '**'
+
+jobs:
+  dependencies:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          service: ["backend", "frontend"]
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Cache backend dependencies
+          if: matrix.service == 'backend'
+          uses: actions/cache@v3
+          with:
+            path: backend/env
+            key: backend-deps-${{ hashFiles('backend/requirements.txt') }}
+            restore-keys: |
+              backend-deps-
+
+        - name: Cache frontend dependencies
+          if: matrix.service == 'frontend'
+          uses: actions/cache@v3
+          with:
+            path: frontend/node_modules
+            key: frontend-deps-${{ hashFiles('frontend/package-lock.json') }}
+            restore-keys: |
+              frontend-deps-
+
+        - name: Install backend dependencies
+          if: matrix.service == 'backend'
+          run: |
+            cd backend
+            python -m venv env
+            source env/bin/activate
+            pip install -r requirements.txt
+
+        - name: Install frontend dependencies
+          if: matrix.service == 'frontend'
+          run: |
+            cd frontend
+            npm ci
+
+  build-publish:
+    needs: dependencies
+    runs-on: ubuntu-latest
+    environment: ns_dockerhub
+    strategy:
+      matrix:
+        service: ["backend", "frontend", "neo4j"]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Restore backend dependencies
+        if: matrix.service == 'backend'
+        uses: actions/cache@v3
+        with:
+          path: backend/env
+          key: backend-deps-${{ hashFiles('backend/requirements.txt') }}
+          restore-keys: |
+            backend-deps-
+
+      - name: Restore frontend dependencies
+        if: matrix.service == 'frontend'
+        uses: actions/cache@v3
+        with:
+          path: frontend/node_modules
+          key: frontend-deps-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            frontend-deps-
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: all
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          install: true
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-${{ matrix.service }}
+          restore-keys: |
+            ${{ runner.os }}-$-${{ matrix.service }}
+            ${{ runner.os }}-
+      
+      - name: Login to DockerHub
+        if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') ||  github.event.inputs.NON_MAIN_DEPLOY == 'TRUE' }}
+        uses: docker/login-action@v2.1.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker images
+        uses: docker/build-push-action@v4
+        with:
+          context: ./${{ matrix.service }}
+          platforms: linux/amd64,linux/arm64
+          push: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') ||  github.event.inputs.NON_MAIN_DEPLOY == 'TRUE' }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gradvek-${{ matrix.service }}:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+  # deploy-ecs:
+  #   runs-on: ubuntu-latest
+  #   environment: production
+  #   needs: build-publish
+  #   strategy:
+  #     matrix:
+  #       service: ["backend", "frontend", "neo4j"]
+
+  #   env:
+  #     AWS_REGION: us-east-1
+  #     ECR_REPOSITORY: 924412001673.dkr.ecr.us-east-1.amazonaws.com/gradvek
+  #     CONTAINER_NAME: gradvek-${{ matrix.service }}
+  #     ECS_TASK_DEFINITION: .aws/task-definition.json
+  #     ECS_SERVICE: Gradvek-Service
+  #     ECS_CLUSTER: GradVek
+                                  
+
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ env.AWS_REGION }}
+
+  #     - name: Login to Amazon ECR
+  #       id: login-ecr
+  #       uses: aws-actions/amazon-ecr-login@v1
+
+  #     - name: Build, tag, and push image to Amazon ECR
+  #       id: build-image
+  #       env:
+  #         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+  #         IMAGE_TAG: ${{ github.sha }}
+  #       run: |
+  #         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/${{ matrix.service }}:$IMAGE_TAG ./${{ matrix.service }}
+  #         docker push $ECR_REGISTRY/$ECR_REPOSITORY/${{ matrix.service }}:$IMAGE_TAG
+  #         echo "image_${{ matrix.service }}=$ECR_REGISTRY/$ECR_REPOSITORY/${{ matrix.service }}:$IMAGE_TAG" >> $GITHUB_ENV
+
+  #     - name: Fill in the new image ID in the Amazon ECS task definition
+  #       id: task-def
+  #       uses: aws-actions/amazon-ecs-render-task-definition@v1
+  #       with:
+  #         task-definition: ${{ env.ECS_TASK_DEFINITION }}
+  #         container-name: ${{ env.CONTAINER_NAME }}
+  #         image: ${{ env["image_${{ matrix.service }}"] }}
+
+  #     - name: Deploy Amazon ECS task definition
+  #       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+  #       with:
+  #         task-definition: ${{ steps.task-def.outputs.task-definition }}
+  #         service: ${{ env.ECS_SERVICE }}
+  #         cluster: ${{ env.ECS_CLUSTER }}
+  #         wait-for-service-stability: true
