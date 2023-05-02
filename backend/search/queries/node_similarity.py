@@ -27,8 +27,15 @@ def save_to_db():
     """
     Save Neo4j similarity results to Django db
     """
-    for key, _ in descriptors.items():
-        get_node_similarity_results(key)
+    for descriptor, (type_name, edge_name, model_class) in descriptors.items():
+        # Check if the objects already exist in the database
+        if model_class.objects.exists():
+            print(f"{descriptor} objects already exist in database, skipping...")
+            continue
+        
+        # Get similarity results and save to database
+        get_node_similarity_results(descriptor)
+
 
 
 def get_node_similarity_results(descriptor):
@@ -77,7 +84,7 @@ def get_node_similarity_results(descriptor):
         '''
     )[0]
 
-    create_objects_to_db(descriptor, results, model_class)
+    # create_objects_to_db(descriptor, results, model_class)
     print(f"{descriptor} objects done!")
 
 
