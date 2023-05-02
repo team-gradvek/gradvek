@@ -3,7 +3,7 @@ import targetSimilarityHook from '@/hooks/targetSimilarity';
 import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
-import { Box } from '@chakra-ui/react';
+import { Box, Heading, Text } from '@chakra-ui/react';
 import SimilarityTable from '@/components/similarity/SimilarityTable';
 
 const columns = [
@@ -39,7 +39,7 @@ const TargetSimilarityMousePhenotype = () => {
 
   const pageTitle = `Top 10 Targets Based on Similarity ${descriptor} for ${target}`
 
-  const { data, isLoading, isError } = targetSimilarityHook("pheno", target)
+  const { data, isLoading, isError } = targetSimilarityHook("mousepheno", target)
 
   if (isError) {
     return (

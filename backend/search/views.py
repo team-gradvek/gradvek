@@ -13,21 +13,38 @@ from rest_framework.renderers import JSONRenderer
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 
-from .models import Descriptor, Action
-from .serializers import DescriptorSerializer, ActionsSerializer
+
+from .models import (
+    Descriptor,
+    # Action, 
+    MousePheno,
+    Hgene,
+    Hprotein,
+    Intact,
+    Pathway,
+    Reactome,
+    Signor,
+    Gwas,
+    )
+
+from .serializers import (
+    DescriptorSerializer, 
+    MousePhenoSerializer,
+    HgeneSerializer,
+    HproteinSerializer,
+    IntactSerializer,
+    PathwaySerializer,
+    ReactomeSerializer,
+    SignorSerializer,
+    GwasSerializer,
+    )
 
 
 from .utils import (
     count_all_entities,
     fetch_actions,
     fetch_datasets,
-    fetch_gwas,
-    fetch_hgene,
-    fetch_hprotein,
-    fetch_intact,
-    fetch_pathway,
-    fetch_reactome,
-    fetch_signor,
+    # fetch_similarity,
     get_all_routes,
     get_cytoscape_entities_as_json,
     get_entity_count,
@@ -36,7 +53,6 @@ from .utils import (
     get_weights_by_target,
     update_dataset_status,
     clear_neo4j_database,
-    fetch_pheno,
     suggestion_by_hint_for_target,
     suggestion_by_hint_for_adverse_event,
     suggestion_by_hint_for_disease,
@@ -46,8 +62,11 @@ from .utils import (
 
 )
 
-# API view to list all routes in the Django site
+
 class RoutesListAPIView(generics.GenericAPIView):
+    """
+    API view to list all routes in the Django site
+    """
     # Override the get_queryset method to return None, as we don't deal with a queryset
     def get_queryset(self):
         return None
@@ -58,9 +77,11 @@ class RoutesListAPIView(generics.GenericAPIView):
         routes = get_all_routes(resolver.url_patterns)
         return Response(routes)  # Return the list of routes as a JSON response
 
-# Collect Descriptors list from sqlite and format it to send back
-#  to next.js
+
 class DescriptorListView(generics.ListAPIView):
+    """
+    Collect Descriptors list from Django db and format it
+    """
     queryset = Descriptor.objects.all()
     serializer_class = DescriptorSerializer
 
@@ -82,169 +103,42 @@ class GetActions(APIView):
     
         # Return the result as a JSON response
         return Response(actions, status=status.HTTP_200_OK)
- 
- 
-class GetPheno(APIView):
-    """
-     Return most similar targets - 
-     Mouse Phenotype similarity descending order
-    """
-    def get(self, request,  *args, **kwargs):
 
-        # Check if a target is in the requested path
-        try: 
-            target = self.kwargs["target"]
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-        
-        # Get cypher query results
-        pheno = fetch_pheno(target)
 
-        # Return the result as a JSON response
-        return Response(pheno, status=status.HTTP_200_OK)  
-    
+descriptor_classes = {
+    "mousepheno" : [MousePheno, MousePhenoSerializer],
+    "hgene": [Hgene, HgeneSerializer],
+    "hprotein": [Hprotein, HproteinSerializer],
+    "intact": [Intact, IntactSerializer],
+    "pathway": [Pathway, PathwaySerializer],
+    "reactome": [Reactome, ReactomeSerializer],
+    "signor": [Signor, SignorSerializer],
+    "gwas": [Gwas, GwasSerializer],
+}
 
-class GetGwas(APIView):
+class GetSimilarity(APIView):
     """
-     Return most similar targets - 
-     GWAS similarity descending order
+    List all node similarity scores associated to a target
     """
     def get(self, request,  *args, **kwargs):
 
-        # Check if a target is in the requested path
+        # Check if a target and descriptor is in the requested path
         try: 
-            target = self.kwargs["target"]
+            target = self.kwargs['target']
+            descriptor_type = self.kwargs['descriptor']
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
-        
-        # Get cypher query results
-        gwas = fetch_gwas(target)
 
-        # Return the result as a JSON response
-        return Response(gwas, status=status.HTTP_200_OK)  
+        # Get model and serializer class names
+        descriptor_model = descriptor_classes.get(descriptor_type)[0]
+        descriptor_serializer = descriptor_classes.get(descriptor_type)[1]
 
+        # Get all objects from the Django db that match the given parameters
+        scores = descriptor_model.objects.filter(target1=target)
+        # Translate Django models into other text-based format
+        serializer = descriptor_serializer(scores, many=True)
+        return Response(serializer.data)
 
-class GetHGene(APIView):
-    """
-     Return most similar targets - 
-     hGene similarity descending order
-    """
-    def get(self, request,  *args, **kwargs):
-
-        # Check if a target is in the requested path
-        try: 
-            target = self.kwargs["target"]
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-        
-        # Get cypher query results
-        hgene = fetch_hgene(target)
-
-        # Return the result as a JSON response
-        return Response(hgene, status=status.HTTP_200_OK)  
-
-
-class GetHProtein(APIView):
-    """
-     Return most similar targets - 
-     hProtein similarity descending order
-    """
-    def get(self, request,  *args, **kwargs):
-
-        # Check if a target is in the requested path
-        try: 
-            target = self.kwargs["target"]
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-        
-        # Get cypher query results
-        hprotein = fetch_hprotein(target)
-
-        # Return the result as a JSON response
-        return Response(hprotein, status=status.HTTP_200_OK)  
-
-class GetIntact(APIView):
-    """
-     Return most similar targets - 
-     Intact similarity descending order
-    """
-    def get(self, request,  *args, **kwargs):
-
-        # Check if a target is in the requested path
-        try: 
-            target = self.kwargs["target"]
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-        
-        # Get cypher query results
-        intact = fetch_intact(target)
-
-        # Return the result as a JSON response
-        return Response(intact, status=status.HTTP_200_OK)  
-
-class GetPathway(APIView):
-    """
-     Return most similar targets - 
-     Pathway similarity descending order
-    """
-    def get(self, request,  *args, **kwargs):
-
-        # Check if a target is in the requested path
-        try: 
-            target = self.kwargs["target"]
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-        
-        # Get cypher query results
-        pathway = fetch_pathway(target)
-
-        # Return the result as a JSON response
-        return Response(pathway, status=status.HTTP_200_OK)  
-
-class GetReactome(APIView):
-    """
-     Return most similar targets - 
-     Reactome similarity descending order
-    """
-    def get(self, request,  *args, **kwargs):
-
-        # Check if a target is in the requested path
-        try: 
-            target = self.kwargs["target"]
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-        
-        # Get cypher query results
-        reactome = fetch_reactome(target)
-
-        # Return the result as a JSON response
-        return Response(reactome, status=status.HTTP_200_OK)  
-
-class GetSignor(APIView):
-    """
-     Return most similar targets - 
-     Signor similarity descending order
-    """
-    def get(self, request,  *args, **kwargs):
-
-        # Check if a target is in the requested path
-        try: 
-            target = self.kwargs["target"]
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-        
-        # Get cypher query results
-        signor = fetch_signor(target)
-
-        # Return the result as a JSON response
-        return Response(signor, status=status.HTTP_200_OK)  
-
-
-# Return an array of actions for the specified target
-#actions/{target}
-
-
-# Trying to copy paths from gradvek 1.0
 
 # Upload one or more entities in a comma-separated file
 @require_http_methods(["POST"])

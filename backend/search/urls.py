@@ -3,19 +3,20 @@ from .views import (
     GetActions,
     Datasets,
     GetAdverseEventTargetPath,
-    GetGwas,
-    GetHGene,
-    GetHProtein,
-    GetIntact,
-    GetPathway,
-    GetReactome,
-    GetSignor,
+    # GetGwas,
+    # GetHGene,
+    # GetHProtein,
+    # GetIntact,
+    # GetPathway,
+    # GetReactome,
+    # GetSignor,
     GetTargetAdverseEventPath,
     RoutesListAPIView,
     CountView,
     GetAdverseEventByTargetView,
-    GetPheno,
+    # GetPheno,
     SuggestHintView,
+    GetSimilarity
 
 )
 from django.urls import path
@@ -28,14 +29,14 @@ app_name = "search"
 
 urlpatterns = [
 
-    path('api/pheno/<str:target>/', GetPheno.as_view(), name='pheno'),
-    path('api/gwas/<str:target>/', GetGwas.as_view(), name='gwas'),
-    path('api/hgene/<str:target>/', GetHGene.as_view(), name='hgene'),
-    path('api/hprotein/<str:target>/', GetHProtein.as_view(), name='hprotein'),
-    path('api/intact/<str:target>/', GetIntact.as_view(), name='intact'),
-    path('api/pathway/<str:target>/', GetPathway.as_view(), name='pathway'),
-    path('api/reactome/<str:target>/', GetReactome.as_view(), name='reactome'),
-    path('api/signor/<str:target>/', GetSignor.as_view(), name='signor'),
+    # path('api/pheno/<str:target>/', GetPheno.as_view(), name='pheno'),
+    # path('api/gwas/<str:target>/', GetGwas.as_view(), name='gwas'),
+    # path('api/hgene/<str:target>/', GetHGene.as_view(), name='hgene'),
+    # path('api/hprotein/<str:target>/', GetHProtein.as_view(), name='hprotein'),
+    # path('api/intact/<str:target>/', GetIntact.as_view(), name='intact'),
+    # path('api/pathway/<str:target>/', GetPathway.as_view(), name='pathway'),
+    # path('api/reactome/<str:target>/', GetReactome.as_view(), name='reactome'),
+    # path('api/signor/<str:target>/', GetSignor.as_view(), name='signor'),
 
     # Return the list of routes in the Django site
     path('api/routes/', RoutesListAPIView.as_view(), name='api-routes-list'),
@@ -44,10 +45,10 @@ urlpatterns = [
     path("api/actions/", GetActions.as_view(), name='get_actions'),
     path('api/actions/<str:target>/', GetActions.as_view(), name='get_actions_target'),
 
-
     path("api/descriptors", views.DescriptorListView.as_view(), name="descriptors"),
 
-    # Trying to copy paths from gradvek 1.0
+    # Return list of all node similarity scores associated to a target
+    path('api/similarity/<str:descriptor>/<str:target>/', GetSimilarity.as_view(), name='similarity'),
 
     # Upload one or more entities in a comma-separated file
     path('api/csv/', views.upload_csv, name='upload_csv'),
@@ -106,15 +107,6 @@ urlpatterns = [
     # Return an array of actions for the specified target
     path('api/actions/<str:target>/', views.actions, name='actions_target'),
 
-    # TODO Add some paths for retrieving similarity information?
-
-    # # Trying to copy paths from gradvek 1.0
-
-    # # Upload one or more entities in a comma-separated file
-    # path('api/csv/', views.upload_csv, name='upload_csv'),
-
-    # # Return the content of a previously uploaded comma-separated file
-    # path('api/csv/<str:file_id>/', views.get_csv, name='get_csv'),
 
     # # Clear out the database
     path('api/clear/', views.clear, name='clear'),

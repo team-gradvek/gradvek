@@ -91,3 +91,7 @@ def run_startup_tasks():
     # Dynamically import parse_datasets module, this is done to better manage the neo4j connections
     parse_datasets_module = importlib.import_module('datasets.parse_datasets', package='datasets')
     parse_datasets_module.parse_datasets()
+
+    print("Saving similarity results to Django db...")
+    search_datasets_module = importlib.import_module('search.queries.node_similarity', package='search')
+    search_datasets_module.save_to_db()

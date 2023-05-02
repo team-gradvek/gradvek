@@ -1,4 +1,5 @@
 import os
+import sys
 from django.apps import AppConfig
 
 from gradvekbackend.startup import wait_for_neo4j_connection
@@ -11,10 +12,11 @@ class SearchConfig(AppConfig):
         # This hooks into the startup process of Django
         # and runs the startup tasks defined in
         # gradvekbackend.startup
-        
+
+        # Only run the startup tasks if the application is ready, not during migrations
         # Only run startup tasks in processes not spawned by the autoreloader
         # https://stackoverflow.com/a/28504072
-        if os.environ.get('RUN_MAIN') != 'true':
+        if ('runserver' in sys.argv) and (os.environ.get('RUN_MAIN') != 'true'):
             run_startup_tasks()
         else:
             # If the application is started by the autoreloader, it still needs the Neo4j connection to be established
