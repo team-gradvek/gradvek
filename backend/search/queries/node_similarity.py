@@ -84,7 +84,7 @@ def get_node_similarity_results(descriptor):
         '''
     )[0]
 
-    # create_objects_to_db(descriptor, results, model_class)
+    create_objects_to_db(descriptor, results, model_class)
     print(f"{descriptor} objects done!")
 
 
