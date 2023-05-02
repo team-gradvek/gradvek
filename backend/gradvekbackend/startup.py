@@ -7,7 +7,6 @@ import importlib
 import environ
 from neomodel import config, db
 from datasets.get_datasets import get_datasets
-from search.queries.node_similarity import save_to_db
 
 '''
  This file contains functions that are run when the Django application starts up. It is imported in
@@ -93,5 +92,6 @@ def run_startup_tasks():
     parse_datasets_module = importlib.import_module('datasets.parse_datasets', package='datasets')
     parse_datasets_module.parse_datasets()
 
-    # print("Saving similarity results to Django db...")
-    # save_to_db()
+    print("Saving similarity results to Django db...")
+    search_datasets_module = importlib.import_module('search.queries.node_similarity', package='search')
+    search_datasets_module.save_to_db()
