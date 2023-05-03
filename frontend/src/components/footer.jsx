@@ -26,12 +26,13 @@ export default function Footer() {
         <Stack direction="row" spacing="8">
           <Stack spacing="4" minW="36" flex="1">
             <Text fontSize="sm" fontWeight="semibold" color="subtle">
-              Gradvek
+              Data & Settings
             </Text>
             <Stack spacing="4" shouldWrapChildren>
-              <Button variant="link">Features</Button>
-              <Button variant="link">Documentation</Button>
+              <Button variant="link"><Link href='/settings'>Settings</Link></Button>
               <Button variant="link"><Link href='/settings/uploads'>Data Upload</Link></Button>
+              <Button variant="link"><Link href='https://github.com/team-gradvek/gradvek'>Documentation</Link></Button>
+              <Button variant="link"><Link href='https://platform.opentargets.org/downloads'>Open Target</Link></Button>
               <Button variant="link">API Docs</Button>
             </Stack>
           </Stack>
@@ -52,11 +53,12 @@ export default function Footer() {
           </Stack>
           <Stack spacing="4" minW="36" flex="1">
             <Text fontSize="sm" fontWeight="semibold" color="subtle">
-              Data
+              Sample Knowledge Graphs
             </Text>
             <Stack spacing="3" shouldWrapChildren>
-              <Button variant="link"><Link href='https://platform.opentargets.org/downloads'>Open Target</Link></Button>
-              <Button variant="link"><Link href='/settings'>Settings</Link></Button>
+              <Button variant="link"><Link href='/kg/DRD3'>Target KG</Link></Button>
+              <Button variant="link"><Link href='/kg/DRD3/extrapyramidal%20disorder'>Target with AE KG</Link></Button>
+              <Button variant="link"><Link href='/kg/DRD3/extrapyramidal%20disorder/LEVODOPA'>Target with AE and Drug KG</Link></Button>
             </Stack>
           </Stack>
           
