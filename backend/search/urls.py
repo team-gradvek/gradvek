@@ -39,7 +39,7 @@ urlpatterns = [
     # path('api/signor/<str:target>/', GetSignor.as_view(), name='signor'),
 
     # Return the list of routes in the Django site
-    path('api/routes/', RoutesListAPIView.as_view(), name='api-routes-list'),
+    path('api/routes/', RoutesListAPIView.as_view(), name='routes'),
     
     # Return an array of actions for the specified target
     path("api/actions/", GetActions.as_view(), name='get_actions'),

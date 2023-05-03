@@ -1,7 +1,32 @@
 from django.test import TestCase
-
+from django.test import SimpleTestCase
+from django.urls import reverse, resolve
+from search.views import RoutesListAPIView
+from django.urls import reverse
+from rest_framework import status
+from rest_framework.test import APITestCase
+# from search.serializers import MyModelSerializer
 
 from .models import Descriptor, NodeSimilarity, MousePheno, Hgene, Hprotein, Intact, Pathway, Reactome, Signor, Gwas
+
+
+
+class DescriptorListViewTests(APITestCase):
+    def setUp(self):
+        self.url = reverse('search:descriptors')
+        self.descriptor1 = Descriptor.objects.create(name='Pathway')
+        self.descriptor2 = Descriptor.objects.create(name='Reactome')
+
+    def test_get_descriptors_list(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+        # Check that the first descriptor in the response has the expected name
+        self.assertEqual(response.data[0]['name'], self.descriptor1.name)
+
+        # Check that the second descriptor in the response has the expected name
+        self.assertEqual(response.data[1]['name'], self.descriptor2.name)
 
 class DescriptorModelTests(TestCase):
     def setUp(self):
