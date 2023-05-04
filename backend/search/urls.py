@@ -73,7 +73,7 @@ urlpatterns = [
 
     # This route returns an array of adverse events associated with a specific target, optionally filtered by action types. It requires the drug target symbol as a path parameter
     # target: Drug Symbol
-    path('api/weight/<str:target>/', GetAdverseEventByTargetView.as_view(), name='get_adverse_event'),
+    path('api/weight/<str:target>/', GetAdverseEventByTargetView.as_view(), name='get_adverse_event_weights_from_ae'),
 
     # This route returns an array of weights (log likelihood ratios) of adverse events associated with a specific target. It requires the drug target symbol and adverse event ID (meddraId) as path parameters.
     # target: Drug Symbol, ae: meddraId
@@ -81,11 +81,11 @@ urlpatterns = [
 
     # This route returns an array of targets associated with a specific adverse event, optionally filtered by action types. It requires the meddraId as a path parameter
     # target: ae: meddraId
-    path('api/ae-weight/<str:ae>/', GetTargetByAdverseEventView.as_view(), name='get_adverse_event'),
+    path('api/ae-weight/<str:ae>/', GetTargetByAdverseEventView.as_view(), name='get_target_weights_from_ae'),
 
     # This route returns an array of weights (log likelihood ratios) of and adverse events association for several targets. It requires the adverse event ID (meddraId) and drug target symbol as path parameters.
     # target: Drug Symbol, ae: meddraId
-    path('api/ae-weight/<str:ae>/<str:target>/', GetTargetByAdverseEventView.as_view(), name='get_weights_target_ae'),
+    path('api/ae-weight/<str:ae>/<str:target>/', GetTargetByAdverseEventView.as_view(), name='get_weights_ae_target'),
 
     # These paths define API routes for querying paths from a target to one or all adverse events
     # associated with it, optionally filtered by drug and action.
