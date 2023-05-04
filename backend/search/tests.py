@@ -5,9 +5,59 @@ from search.views import RoutesListAPIView
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+from unittest.mock import patch
 # from search.serializers import MyModelSerializer
 
 from .models import Descriptor, NodeSimilarity, MousePheno, Hgene, Hprotein, Intact, Pathway, Reactome, Signor, Gwas
+
+
+
+class CountViewTests(APITestCase):
+    def test_get_entity_count(self):
+        """
+        Test that the count of a specific entity type is returned correctly.
+        """
+        type_string = "hgene"
+
+        # Mock the get_entity_count function to return a known value
+        with patch('search.views.CountView') as mock:
+            
+            mock.return_value = '8847039'
+
+            url = reverse('search:count_entity', kwargs={'type_string': type_string})
+            response = self.client.get(url)
+
+            # Check that the response has the expected status code and data
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.content.decode('utf-8'), '8847039')
+
+
+            
+            # data = json.loads(content)
+            # assert data == '8847039'
+
+            # Check that the get_entity_count function was called with the expected argument
+            # mock.assert_called_once_with(type_string)
+
+    # def test_get_entity_count_error(self):
+    #     """
+    #     Test that an error response is returned when get_entity_count raises an exception.
+    #     """
+    #     type_string = "invalid_entity_type"
+
+    #     # Mock the get_entity_count function to raise an exception
+    #     with patch('search.views.CountView') as mock_get_entity_count:
+    #         mock_get_entity_count.side_effect = Exception('Invalid entity type: invalid_entity_type')
+
+    #         url = reverse('search:count_entity', kwargs={'type_string': type_string})
+    #         response = self.client.get(url)
+
+    #         # Check that the response has the expected status code and error message
+    #         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    #         self.assertEqual(response.content.decode('utf-8'), {'error': 'Invalid entity type: invalid_entity_type'})
+
+    #         # Check that the get_entity_count function was called with the expected argument
+    #         mock_get_entity_count.assert_called_once_with(type_string)
 
 
 
