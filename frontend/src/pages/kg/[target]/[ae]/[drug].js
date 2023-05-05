@@ -18,7 +18,7 @@ const TargetToAdverseEvents = () => {
   const ae = dataFromURL.ae
   const drug = dataFromURL.drug
 
-  const pageTitle = `Adverse Event Paths for ${target} with Adverse Event ID: ${ae} and Drug ID: ${drug}`
+  const pageTitle = `Knowledge Graph for ${target} with Adverse Event ID: ${ae} and Drug ID: ${drug}`
 
   const { data, isLoading, isError } = getPathwayData(`${target}/${ae}/${drug}`)
 

@@ -34,7 +34,7 @@ const TargetToAdverseEventsKG = () => {
   const dataFromURL  = router.query
   const target = dataFromURL.target
 
-  const pageTitle = `Adverse Event Paths for ${target}`
+  const pageTitle = `Knowledge Graph for ${target}`
 
   const { data, isLoading, isError } = getPathwayData(target)
 
