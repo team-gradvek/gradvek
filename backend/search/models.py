@@ -40,3 +40,6 @@ class Signor(NodeSimilarity):
 
 class Gwas(NodeSimilarity):
     pass
+
+class AverageSimilarity(NodeSimilarity):
+    pass

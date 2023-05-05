@@ -8,6 +8,7 @@ from search.models import (
     Reactome,
     Signor,
     Gwas,
+    AverageSimilarity,
     )
 
 
@@ -20,22 +21,62 @@ descriptors = {
     "reactome": ["Target", "REACTOME", Reactome],
     "signor": ["Target", "SIGNOR", Signor],
     # "gwas": ["Gwas","GWAS_RELATION", Gwas],
+    "averagesimilarity": ["AverageSimilarity", "AVERAGE_SIMILARITY", AverageSimilarity],
 }
+
+def save_average_similarity_to_db(similarity_results):
+    """
+    Calculate and save average similarity scores to the Django db
+    """
+    if AverageSimilarity.objects.exists():
+        print("AverageSimilarity objects already exist in database, skipping...")
+        return
+
+    print("Creating AverageSimilarity objects...")
+
+    # Combine all similarity results into a single dictionary
+    combined_results = {}
+    for descriptor, results in similarity_results.items():
+        for row in results:
+            pair = tuple(sorted((row[0], row[1])))
+            if pair not in combined_results:
+                combined_results[pair] = []
+            combined_results[pair].append(row[2])
+
+    # Calculate average similarity scores and save to database
+    for pair, similarities in combined_results.items():
+        average_similarity = sum(similarities) / len(similarities)
+        AverageSimilarity.objects.create(
+            target1=pair[0],
+            target2=pair[1],
+            average_similarity=average_similarity
+        )
+
+    print("AverageSimilarity objects done!")
 
 
 def save_to_db():
     """
-    Save Neo4j similarity results to Django db
+    Save Neo4j similarity results to Django db and calculate average similarity
     """
+
+    # Dictionary to store similarity results for each descriptor
+    similarity_results = {}
+
     for descriptor, (type_name, edge_name, model_class) in descriptors.items():
+        if(descriptor == "averagesimilarity"):
+            continue
         # Check if the objects already exist in the database
         if model_class.objects.exists():
             print(f"{descriptor} objects already exist in database, skipping...")
             continue
-        
-        # Get similarity results and save to database
-        get_node_similarity_results(descriptor)
 
+        # Get similarity results and save to database
+        results = get_node_similarity_results(descriptor)
+        similarity_results[descriptor] = results
+
+    # Calculate and save average similarity scores to database
+    save_average_similarity_to_db(similarity_results)
 
 
 def get_node_similarity_results(descriptor):
