@@ -3,6 +3,7 @@ from .views import (
     GetActions,
     Datasets,
     GetAdverseEventTargetPath,
+    GetAverageSimilarity,
     # GetGwas,
     # GetHGene,
     # GetHProtein,
@@ -50,6 +51,7 @@ urlpatterns = [
 
     # Return list of all node similarity scores associated to a target
     path('api/similarity/<str:descriptor>/<str:target>/', GetSimilarity.as_view(), name='similarity'),
+    path('api/average_similarity/<str:target>/', GetAverageSimilarity.as_view(), name='average_similarity'),
 
     # Upload one or more entities in a comma-separated file
     path('api/csv/', views.upload_csv, name='upload_csv'),

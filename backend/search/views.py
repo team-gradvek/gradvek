@@ -1,3 +1,4 @@
+from collections import defaultdict
 import json
 from django.shortcuts import render
 from django.urls import get_resolver
@@ -21,6 +22,7 @@ from .models import (
     Hgene,
     Hprotein,
     Intact,
+    NodeSimilarity,
     Pathway,
     Reactome,
     Signor,
@@ -28,11 +30,14 @@ from .models import (
     )
 
 from .serializers import (
+    AverageNodeSimilaritySerializer,
+    AverageSimilaritySerializer,
     DescriptorSerializer, 
     MousePhenoSerializer,
     HgeneSerializer,
     HproteinSerializer,
     IntactSerializer,
+    NodeSimilaritySerializer,
     PathwaySerializer,
     ReactomeSerializer,
     SignorSerializer,
@@ -139,6 +144,49 @@ class GetSimilarity(APIView):
         # Translate Django models into other text-based format
         serializer = descriptor_serializer(scores, many=True)
         return Response(serializer.data)
+
+class GetAverageSimilarity(APIView):
+    """
+    List the average node similarity scores for a target across all descriptors
+    """
+    def get(self, request,  *args, **kwargs):
+
+        # Check if a target is in the requested path
+        try: 
+            target = self.kwargs['target']
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+        # Initialize empty defaultdict for storing results
+        descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": set()})
+        
+        # Iterate over all descriptor types
+        for descriptor_type, (descriptor_model, descriptor_serializer) in descriptor_classes.items():
+            # Get all objects from the Django db that match the given parameters
+            scores = descriptor_model.objects.filter(target1=target)
+            
+            # Calculate the sum, count and descriptors for each target2
+            for score in scores:
+                descriptor_results[score.target2]["total"] += score.similarity
+                descriptor_results[score.target2]["count"] += 1
+                descriptor_results[score.target2]["descriptors"].add(score.__class__.__name__)
+                
+        # Calculate the averages and sort results by average in descending order
+        average_scores = [
+            {
+                "target2": target2,
+                "average": total / count,
+                "descriptors": list(descriptors)
+            }
+            for target2, result in descriptor_results.items()
+            if (total := result["total"]) and (count := result["count"]) and (descriptors := result["descriptors"])
+        ]
+        average_scores.sort(key=lambda x: x["average"], reverse=True)
+
+        # Translate the results into the desired output format
+        serializer = AverageNodeSimilaritySerializer(average_scores, many=True)
+        return Response(serializer.data)
+
 
 
 # Upload one or more entities in a comma-separated file

@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from .models import (
-    AverageSimilarity,
     Descriptor, 
     MousePheno, 
     Hgene, 
@@ -65,7 +64,11 @@ class GwasSerializer(NodeSimilaritySerializer):
         model = Gwas
         fields = ["target2", "similarity"]
 
-class AverageSimilaritySerializer(NodeSimilaritySerializer):
-    class Meta:
-        model = AverageSimilarity
-        fields = ['target2', 'average_similarity']
+class AverageSimilaritySerializer(serializers.Serializer):
+    target2 = serializers.CharField()
+    average_similarity = serializers.FloatField()
+
+class AverageNodeSimilaritySerializer(serializers.Serializer):
+    target2 = serializers.CharField()
+    average = serializers.FloatField()
+    descriptors = serializers.ListField(child=serializers.CharField())
