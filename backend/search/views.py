@@ -50,6 +50,7 @@ from .utils import (
     get_entity_count,
     get_paths_ae_target_drug,
     get_paths_target_ae_drug,
+    get_weights_by_ae,
     get_weights_by_target,
     update_dataset_status,
     clear_neo4j_database,
@@ -212,7 +213,7 @@ class Datasets(APIView):
 
         return JsonResponse({}, status=200)
 
-# Return an array of adverse events associated with a specific target, optionally filtered by action
+# Return an array of adverse events associated with a specific target
 class GetAdverseEventByTargetView(APIView):
     def get(self, request, target, ae=None):
         # Extract query parameters
@@ -234,8 +235,30 @@ class GetAdverseEventByTargetView(APIView):
         # Return the result as a JSON response
         return Response(result, status=status.HTTP_200_OK)
 
+# Return an array of targets associated with a specific adverse event
+class GetTargetByAdverseEventView(APIView):
+    def get(self, request, ae, target=None):
+        # Extract query parameters
+        action_types = request.query_params.get('action_types')
+        drug = request.query_params.get('drug')
+        count = request.query_params.get('count')
 
-# Return an array of weights of adverse events associated with a specific target, optionally filtered by action
+        # Convert action_types to a list if provided
+        if action_types:
+            action_types = action_types.split(',')
+
+        # Convert count to an integer if provided
+        if count:
+            count = int(count)
+
+        # Call the helper function to get the results
+        result = get_weights_by_ae(ae, target, action_types, drug, count)
+
+        # Return the result as a JSON response
+        return Response(result, status=status.HTTP_200_OK)
+
+
+# Return an array of weights of adverse events associated with a specific target
 @require_http_methods(["GET"])
 def get_weights_target_ae(request, target, ae):
     # Implement the functionality for returning an array of weights of adverse events associated with a specific target
@@ -250,7 +273,7 @@ def get_paths_target_ae_drug_view(request, target, ae=None, drug_id=None):
 class GetAdverseEventTargetPath(APIView):
     """
     This view returns Cytoscape entities representing paths from a target to one or all adverse events,
-    optionally filtered by action types, adverse event, and drug_id.
+    optionally filtered by adverse event, and drug_id.
     """
     def get(self, request, target_symbol, adverse_event=None, drug_id=None):
         # Get the list of action types from the request's query parameters, if any.
@@ -273,7 +296,7 @@ class GetAdverseEventTargetPath(APIView):
 class GetTargetAdverseEventPath(APIView):
     """
     This view returns Cytoscape entities representing paths from an adverse event to one or all targets,
-    optionally filtered by action types, target_symbol, and drug_id.
+    optionally filtered by target_symbol, and drug_id.
     """
     def get(self, request, adverse_event, target_symbol=None, drug_id=None):
         # Get the list of action types from the request's query parameters, if any.
