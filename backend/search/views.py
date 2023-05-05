@@ -258,11 +258,7 @@ class GetSignor(APIView):
 @require_http_methods(["POST"])
 def upload_csv(request, csv_file):
     # Implement the functionality for uploading a CSV
-    #filename = "gradvek_target_disease_upload_test.csv"
-    #filepath = os.path.join(os.getcwd(), filename)
-
-    # Open the CSV file and pass it to another function for processing
-    #with open(filepath, "r") as csv_file:
+    # Open the CSV file and pass it to csv_service for processing
     reader = csv.reader(csv_file)
     return parse_and_load_csv_file(reader)
 

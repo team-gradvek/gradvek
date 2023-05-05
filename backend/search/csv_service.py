@@ -1,9 +1,6 @@
 from django.http import HttpResponse
 from neomodel import db
 
-URI = "bolt://localhost:7687"
-AUTH = ("neo4j", "gradvek1")
-
 # Dataset name
 data_version = None
 
