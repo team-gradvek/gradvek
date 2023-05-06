@@ -129,6 +129,13 @@ class GetSimilarity(APIView):
     """
     def get(self, request,  *args, **kwargs):
 
+        # Helper function to check if a target pair has already been processed
+        def is_processed(target_pair):
+            if target_pair in processed_pairs:
+                return True
+            processed_pairs.add(target_pair)
+            return False
+
         # Check if a target and descriptor is in the requested path
         try: 
             target = self.kwargs['target']
@@ -143,12 +150,18 @@ class GetSimilarity(APIView):
         # Get all objects from the Django db that match the given parameters
         scores = descriptor_model.objects.filter(Q(target1=target) | Q(target2=target))
 
+        # Initialize processed pairs set
+        processed_pairs = set()
+
         # Translate Django models into other text-based format
         serializer = descriptor_serializer(scores, many=True)
         response_data = []
 
         # Ensure that target1 is always the searched target
         for result in serializer.data:
+            target_pair = tuple(sorted([result['target1'], result['target2']]))
+            if is_processed(target_pair):
+                continue
             if result['target1'] == target:
                 response_data.append(result)
             else:
@@ -160,10 +173,19 @@ class GetSimilarity(APIView):
         
         return Response(response_data)
 
+
 class GetAverageSimilarity(APIView):
     """
     List the average node similarity scores for a target across all descriptors
     """
+
+    # Helper function to check if a target pair has already been processed
+    def is_processed(self, target_pair):
+        if target_pair in self.processed_pairs:
+            return True
+        self.processed_pairs.add(target_pair)
+        return False
+
     def get(self, request,  *args, **kwargs):
 
         # Check if a target is in the requested path
@@ -175,13 +197,20 @@ class GetAverageSimilarity(APIView):
         # Initialize empty defaultdict for storing results
         descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": set()})
         
+        # Initialize processed pairs set
+        self.processed_pairs = set()
+
         # Iterate over all descriptor types
         for descriptor_type, (descriptor_model, descriptor_serializer) in descriptor_classes.items():
             # Get all objects from the Django db that match the given parameters
             scores = descriptor_model.objects.filter(Q(target1=target) | Q(target2=target))
             
-            # Calculate the sum, count and descriptors for each target2
+            # Calculate the sum, count, and descriptors for each target2
             for score in scores:
+                target_pair = tuple(sorted([score.target1, score.target2]))
+                if self.is_processed(target_pair):
+                    continue
+
                 target2 = score.target1 if score.target1 != target else score.target2
                 descriptor_results[target2]["total"] += score.similarity
                 descriptor_results[target2]["count"] += 1
@@ -203,6 +232,7 @@ class GetAverageSimilarity(APIView):
         # Translate the results into the desired output format
         serializer = AverageNodeSimilaritySerializer(average_scores, many=True)
         return Response(serializer.data)
+
 
 
 class GetGlobalAverageSimilarity(APIView):
