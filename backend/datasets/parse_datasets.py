@@ -3,7 +3,6 @@ import time
 import pyarrow.parquet as pq
 from neomodel import config, db
 from neo4j import GraphDatabase
-from graphdatascience import GraphDataScience
 
 """
 Open Targets Neo4j Importer

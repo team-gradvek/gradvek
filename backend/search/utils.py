@@ -18,14 +18,8 @@ from .Cytoscape import Node, Relationship
 # Import query functions
 from .queries.actions import get_actions
 from .queries.datasets import DATASETS
-from .queries.mouse_pheno import get_pheno
-from .queries.gwas import get_gwas
-from .queries.hgene import get_hgene
-from .queries.hprotein import get_hprotein
-from .queries.intact import get_intact
-from .queries.pathway import get_pathway
-from .queries.reactome import get_reactome
-from .queries.signor import get_signor
+# from .queries.node_similarity import get_node_similarity_results
+
 
 
 def fetch_actions(target):
@@ -36,37 +30,11 @@ def fetch_actions(target):
 def fetch_datasets():
     return DATASETS
 
-def fetch_pheno(target):
-    RESULTS = get_pheno(target)
-    return RESULTS
+# TODO ADD to startup instead
+# def fetch_similarity(descriptor):
+#     get_node_similarity_results(descriptor)
+#     return print("DONE !")
 
-def fetch_gwas(target):
-    RESULTS = get_gwas(target)
-    return RESULTS
-
-def fetch_hgene(target):
-    RESULTS = get_hgene(target)
-    return RESULTS
-
-def fetch_hprotein(target):
-    RESULTS = get_hprotein(target)
-    return RESULTS
-
-def fetch_intact(target):
-    RESULTS = get_intact(target)
-    return RESULTS
-
-def fetch_pathway(target):
-    RESULTS = get_pathway(target)
-    return RESULTS
-
-def fetch_reactome(target):
-    RESULTS = get_reactome(target)
-    return RESULTS
-
-def fetch_signor(target):
-    RESULTS = get_signor(target)
-    return RESULTS
 
 def update_dataset_status(dataset_name, enabled):
     query = f"MATCH (d:Dataset {{ dataset: '{dataset_name}' }}) SET d.enabled={enabled}"
@@ -253,6 +221,116 @@ def get_weights_by_target(target, adverse_event=None, action_types=None, drug=No
 
     # Return the list of formatted results
     return formatted_results
+
+def get_weights_by_ae(adverse_event, target=None, action_types=None, drug=None, count=None):
+    """
+    Retrieve a list of protein targets and their associated log likelihood ratios (llr) for a given adverse event.
+    Args:
+        adverse_event (str): The ID (meddraId) of the adverse event.
+        target (str, optional): The symbol of a specific protein target.
+        action_types (list, optional): A list of action types to filter the results by.
+        drug (str, optional): The ID of a specific drug to filter the results by.
+        count (int, optional): The maximum number of results to return.
+    Returns:
+        list: A list of formatted results containing either protein targets or drugs and their associated llr.
+    """
+
+    # Find active datasets and store them in the enabledSets variable.
+    enabled_datasets_query = "MATCH (nd:Dataset {enabled: true}) WITH COLLECT(nd.dataset) AS enabledSets"
+
+    # Construct the ASSOCIATED_WITH segment of the query to find drugs associated with the specified adverse event.
+    associated_query = f"""
+        MATCH (nae:AdverseEvent)-[raw:ASSOCIATED_WITH]-(nd:Drug)
+        WHERE nae.dataset IN enabledSets
+            AND raw.dataset IN enabledSets
+            AND nd.dataset IN enabledSets
+            AND nae.meddraId = '{adverse_event}'
+    """
+
+    # Filter the results based on the drug parameter, if provided.
+    if drug:
+        associated_query += f" AND nd.drug_id = '{drug}'"
+
+    # Collect the drugs that are associated with the specified adverse event and store them in the associatedDrugs variable.
+    associated_query += " WITH enabledSets, COLLECT(nd) AS associatedDrugs"
+
+    # Construct the TARGETS segment of the query to find targets associated with the associated drugs.
+    target_query = f"""
+        MATCH (nt:Target)-[rt:TARGETS]-(nd:Drug)-[raw:ASSOCIATED_WITH]-(nae:AdverseEvent)
+        WHERE nt.dataset IN enabledSets
+            AND rt.dataset IN enabledSets
+            AND nd.dataset IN enabledSets
+            AND raw.dataset IN enabledSets
+            AND nae.dataset IN enabledSets
+            AND nd in associatedDrugs
+            AND nae.meddraId = '{adverse_event}'
+    """
+
+
+    # Filter the results based on the target parameter, if provided.
+    if target:
+        target_query += f" AND toUpper(nt.symbol) = '{target.upper()}'"
+
+    # Filter the results based on the action_types parameter, if provided.
+    if action_types:
+        action_types_str = ", ".join(
+            [f"'{action_type}'" for action_type in action_types])
+        target_query += f" AND rt.actionType IN [{action_types_str}]"
+
+    # Define the return clause based on whether a target is provided.
+    # Calculate the sum of the llr values for each target or drug.
+    if target:
+        return_query = " RETURN nd, sum(toFloat(raw.llr))"
+    else:
+        return_query = " RETURN nt, sum(toFloat(raw.llr))"
+
+    # Sort the results by the summed llr values in descending order.
+    return_query += " ORDER BY sum(toFloat(raw.llr)) desc"
+
+    # Limit the number of results returned based on the count parameter, if provided.
+    if count:
+        return_query += f" LIMIT {count}"
+
+    # Combine all query segments to form the final Cypher query.
+    cypher_query = f"{enabled_datasets_query}{associated_query}{target_query}{return_query}"
+
+    # Run the Cypher query and retrieve the results.
+    results, _ = db.cypher_query(cypher_query)
+
+    # print(cypher_query)
+
+    # Format the results
+    formatted_results = []
+
+    # Loop through the results obtained from the Cypher query to format the data for output.
+    # Each entry in the results is a tuple with the first item being a node (either a drug or target)
+    # and the second item being the summed Log Likelihood Ratio (LLR) value.
+    for res in results:
+        # If a target parameter was provided, the output should include information on the drugs.
+        if target:
+            entry = {
+                "drugId": res[0]["chemblId"],  # The Chembl ID of the drug node.
+                "weight": res[1],             # The summed LLR value for the association.
+                "drugName": res[0]["drugId"]  # The internal drug ID of the drug node.
+            }
+        # If a target parameter was not provided, the output should include information on the protein targets.
+        else:
+            entry = {
+                "llr": res[1],                                 # The summed LLR value for the association.
+                "id": res[0]["symbol"],                        # The symbol of the protein target node.
+                "type": "Target",                              # The type of node (in this case, Target).
+                "symbol": res[0]["symbol"],                    # The symbol of the protein target node.
+                "name": res[0]["name"],                        # The name of the protein target node.
+                "dataset": res[0]["dataset"]                   # The dataset the target node belongs to.
+            }
+
+        # Append the formatted entry to the list of formatted results.
+        formatted_results.append(entry)
+
+    # Return the list of formatted results
+    return formatted_results
+
+
 
 def get_paths_target_ae_drug(target, action_types=None, adverse_event=None, drug=None, count=None):
     """

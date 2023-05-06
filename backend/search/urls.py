@@ -3,19 +3,21 @@ from .views import (
     GetActions,
     Datasets,
     GetAdverseEventTargetPath,
-    GetGwas,
-    GetHGene,
-    GetHProtein,
-    GetIntact,
-    GetPathway,
-    GetReactome,
-    GetSignor,
+    # GetGwas,
+    # GetHGene,
+    # GetHProtein,
+    # GetIntact,
+    # GetPathway,
+    # GetReactome,
+    # GetSignor,
     GetTargetAdverseEventPath,
+    GetTargetByAdverseEventView,
     RoutesListAPIView,
     CountView,
     GetAdverseEventByTargetView,
-    GetPheno,
+    # GetPheno,
     SuggestHintView,
+    GetSimilarity
 
 )
 from django.urls import path
@@ -28,14 +30,14 @@ app_name = "search"
 
 urlpatterns = [
 
-    path('api/pheno/<str:target>/', GetPheno.as_view(), name='pheno'),
-    path('api/gwas/<str:target>/', GetGwas.as_view(), name='gwas'),
-    path('api/hgene/<str:target>/', GetHGene.as_view(), name='hgene'),
-    path('api/hprotein/<str:target>/', GetHProtein.as_view(), name='hprotein'),
-    path('api/intact/<str:target>/', GetIntact.as_view(), name='intact'),
-    path('api/pathway/<str:target>/', GetPathway.as_view(), name='pathway'),
-    path('api/reactome/<str:target>/', GetReactome.as_view(), name='reactome'),
-    path('api/signor/<str:target>/', GetSignor.as_view(), name='signor'),
+    # path('api/pheno/<str:target>/', GetPheno.as_view(), name='pheno'),
+    # path('api/gwas/<str:target>/', GetGwas.as_view(), name='gwas'),
+    # path('api/hgene/<str:target>/', GetHGene.as_view(), name='hgene'),
+    # path('api/hprotein/<str:target>/', GetHProtein.as_view(), name='hprotein'),
+    # path('api/intact/<str:target>/', GetIntact.as_view(), name='intact'),
+    # path('api/pathway/<str:target>/', GetPathway.as_view(), name='pathway'),
+    # path('api/reactome/<str:target>/', GetReactome.as_view(), name='reactome'),
+    # path('api/signor/<str:target>/', GetSignor.as_view(), name='signor'),
 
     # Return the list of routes in the Django site
     path('api/routes/', RoutesListAPIView.as_view(), name='api-routes-list'),
@@ -44,10 +46,10 @@ urlpatterns = [
     path("api/actions/", GetActions.as_view(), name='get_actions'),
     path('api/actions/<str:target>/', GetActions.as_view(), name='get_actions_target'),
 
-
     path("api/descriptors", views.DescriptorListView.as_view(), name="descriptors"),
 
-    # Trying to copy paths from gradvek 1.0
+    # Return list of all node similarity scores associated to a target
+    path('api/similarity/<str:descriptor>/<str:target>/', GetSimilarity.as_view(), name='similarity'),
 
     # Upload one or more entities in a comma-separated file
     path('api/csv/', views.upload_csv, name='upload_csv'),
@@ -71,11 +73,19 @@ urlpatterns = [
 
     # This route returns an array of adverse events associated with a specific target, optionally filtered by action types. It requires the drug target symbol as a path parameter
     # target: Drug Symbol
-    path('api/weight/<str:target>/', GetAdverseEventByTargetView.as_view(), name='get_adverse_event'),
+    path('api/weight/<str:target>/', GetAdverseEventByTargetView.as_view(), name='get_adverse_event_weights_from_ae'),
 
-    # This route returns an array of weights (log likelihood ratios) of adverse events associated with a specific target, optionally filtered by action types. It requires the drug target symbol and adverse event ID (meddraId) as path parameters.
+    # This route returns an array of weights (log likelihood ratios) of adverse events associated with a specific target. It requires the drug target symbol and adverse event ID (meddraId) as path parameters.
     # target: Drug Symbol, ae: meddraId
     path('api/weight/<str:target>/<str:ae>/', GetAdverseEventByTargetView.as_view(), name='get_weights_target_ae'),
+
+    # This route returns an array of targets associated with a specific adverse event, optionally filtered by action types. It requires the meddraId as a path parameter
+    # target: ae: meddraId
+    path('api/ae-weight/<str:ae>/', GetTargetByAdverseEventView.as_view(), name='get_target_weights_from_ae'),
+
+    # This route returns an array of weights (log likelihood ratios) of and adverse events association for several targets. It requires the adverse event ID (meddraId) and drug target symbol as path parameters.
+    # target: Drug Symbol, ae: meddraId
+    path('api/ae-weight/<str:ae>/<str:target>/', GetTargetByAdverseEventView.as_view(), name='get_weights_ae_target'),
 
     # These paths define API routes for querying paths from a target to one or all adverse events
     # associated with it, optionally filtered by drug and action.
@@ -106,15 +116,6 @@ urlpatterns = [
     # Return an array of actions for the specified target
     path('api/actions/<str:target>/', views.actions, name='actions_target'),
 
-    # TODO Add some paths for retrieving similarity information?
-
-    # # Trying to copy paths from gradvek 1.0
-
-    # # Upload one or more entities in a comma-separated file
-    # path('api/csv/', views.upload_csv, name='upload_csv'),
-
-    # # Return the content of a previously uploaded comma-separated file
-    # path('api/csv/<str:file_id>/', views.get_csv, name='get_csv'),
 
     # # Clear out the database
     path('api/clear/', views.clear, name='clear'),
