@@ -205,6 +205,52 @@ class GetAverageSimilarity(APIView):
         return Response(serializer.data)
 
 
+class GetGlobalAverageSimilarity(APIView):
+    """
+    List the average node similarity scores for all target-target pairs across all descriptors,
+    filtered by the minimum number of descriptors in the average.
+    """
+    def get(self, request, *args, **kwargs):
+
+        # Check if min_descriptors is in the requested path
+        try:
+            min_descriptors = self.kwargs['min_descriptors']
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+        # Initialize empty defaultdict for storing results
+        descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": set()})
+
+        # Iterate over all descriptor types
+        for descriptor_type, (descriptor_model, descriptor_serializer) in descriptor_classes.items():
+            # Get all objects from the Django db
+            scores = descriptor_model.objects.all()
+
+            # Calculate the sum, count and descriptors for each target pair
+            for score in scores:
+                target_pair = tuple(sorted([score.target1, score.target2]))
+                descriptor_results[target_pair]["total"] += score.similarity
+                descriptor_results[target_pair]["count"] += 1
+                descriptor_results[target_pair]["descriptors"].add(score.__class__.__name__)
+
+        # Calculate the averages and sort results by average in descending order
+        average_scores = [
+            {
+                "target1": target_pair[0],
+                "target2": target_pair[1],
+                "average": total / count,
+                "descriptors": list(descriptors)
+            }
+            for target_pair, result in descriptor_results.items()
+            if (total := result["total"]) and (count := result["count"]) and (descriptors := result["descriptors"]) and len(descriptors) >= min_descriptors
+        ]
+        average_scores.sort(key=lambda x: x["average"], reverse=True)
+
+        # Translate the results into the desired output format
+        serializer = AverageNodeSimilaritySerializer(average_scores, many=True)
+        return Response(serializer.data)
+
+
 
 # Upload one or more entities in a comma-separated file
 @require_http_methods(["POST"])

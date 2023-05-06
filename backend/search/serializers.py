@@ -64,6 +64,10 @@ class GwasSerializer(NodeSimilaritySerializer):
         model = Gwas
         fields = ["target1", "target2", "similarity"]
 
+class AverageSimilaritySerializer(serializers.Serializer):
+    target2 = serializers.CharField()
+    average_similarity = serializers.FloatField()
+
 class AverageNodeSimilaritySerializer(serializers.Serializer):
     target1 = serializers.CharField()
     target2 = serializers.CharField()
