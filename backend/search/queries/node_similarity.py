@@ -1,5 +1,6 @@
 from neomodel import db
 from django.db import transaction
+from datetime import datetime
 from search.models import (
     MousePheno,
     Hgene,
@@ -71,12 +72,13 @@ def get_node_similarity_results(descriptor):
             '''
         )
 
+    print(f"{descriptor} Running node similarity query...")
     # Run similarity calculations using the gds.nodeSimilarity.stream algorithm
     results = db.cypher_query(
         f'''
         CALL gds.nodeSimilarity.stream(
             "{descriptor}",
-            {{topK: 100}}
+            {{topK: 200}}
         ) YIELD
             node1,
             node2,
@@ -85,6 +87,8 @@ def get_node_similarity_results(descriptor):
         RETURN n1.symbol, n2.symbol, similarity
         '''
     )[0]
+
+    print(f"{descriptor} Node similarity query completed. Processing results...")
 
     create_objects_to_db(descriptor, results, model_class)
 
@@ -96,8 +100,11 @@ def create_objects_to_db(descriptor, results, model_class):
     print(f"Creating {descriptor} objects...")
 
     try:
-
+        start_time = datetime.now()
+        print(f"Start time: {start_time}")
+        
         with transaction.atomic():
+
             for row in results:
                 # Fields need to match Django model
                 model_class.objects.create(
@@ -105,11 +112,17 @@ def create_objects_to_db(descriptor, results, model_class):
                     target2=row[1],
                     similarity=row[2]
                 )
-                
+
+        end_time = datetime.now()
+        elapsed_time = end_time - start_time
+        print(f"End time: {end_time}")
+        print(f"Elapsed time: {elapsed_time}")
+
         print(f"{descriptor} objects done!")
 
     except Exception as e:
         print(f"Error creating {descriptor} objects: {e}")
+
 
 if __name__ == "__main__":
     save_to_db()

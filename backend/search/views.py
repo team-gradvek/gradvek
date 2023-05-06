@@ -170,8 +170,12 @@ class GetSimilarity(APIView):
                     'target2': result['target1'],
                     'similarity': result['similarity']
                 })
-        
-        return Response(response_data)
+
+        # Sort the response_data list by similarity in descending order
+        response_data_sorted = sorted(response_data, key=lambda x: x['similarity'], reverse=True)
+
+        return Response(response_data_sorted)
+
 
 
 class GetAverageSimilarity(APIView):
