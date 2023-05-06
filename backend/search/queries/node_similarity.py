@@ -1,4 +1,5 @@
 from neomodel import db
+from django.db import transaction
 from search.models import (
     MousePheno,
     Hgene,
@@ -74,7 +75,8 @@ def get_node_similarity_results(descriptor):
     results = db.cypher_query(
         f'''
         CALL gds.nodeSimilarity.stream(
-            "{descriptor}"
+            "{descriptor}",
+            {{topK: 100}}
         ) YIELD
             node1,
             node2,
@@ -85,22 +87,29 @@ def get_node_similarity_results(descriptor):
     )[0]
 
     create_objects_to_db(descriptor, results, model_class)
-    print(f"{descriptor} objects done!")
 
 
 def create_objects_to_db(descriptor, results, model_class):
-    """"
+    """
     Save the results to the Django db based on the Descriptor Model
     """
     print(f"Creating {descriptor} objects...")
 
-    for row in results:
-        # Fields need to match Django model
-        model_class.objects.create(
-            target1=row[0],
-            target2=row[1],
-            similarity=row[2]
-        )
+    try:
+
+        with transaction.atomic():
+            for row in results:
+                # Fields need to match Django model
+                model_class.objects.create(
+                    target1=row[0],
+                    target2=row[1],
+                    similarity=row[2]
+                )
+                
+        print(f"{descriptor} objects done!")
+
+    except Exception as e:
+        print(f"Error creating {descriptor} objects: {e}")
 
 if __name__ == "__main__":
     save_to_db()
