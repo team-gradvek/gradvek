@@ -13,6 +13,7 @@ from rest_framework import serializers
 from rest_framework.renderers import JSONRenderer
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
+from django.db.models import Q
 
 
 from .models import (
@@ -124,7 +125,7 @@ descriptor_classes = {
 
 class GetSimilarity(APIView):
     """
-    List all node similarity scores associated to a target
+    List all node similarity scores associated with a target
     """
     def get(self, request,  *args, **kwargs):
 
@@ -140,10 +141,24 @@ class GetSimilarity(APIView):
         descriptor_serializer = descriptor_classes.get(descriptor_type)[1]
 
         # Get all objects from the Django db that match the given parameters
-        scores = descriptor_model.objects.filter(target1=target)
+        scores = descriptor_model.objects.filter(Q(target1=target) | Q(target2=target))
+
         # Translate Django models into other text-based format
         serializer = descriptor_serializer(scores, many=True)
-        return Response(serializer.data)
+        response_data = []
+
+        # Ensure that target1 is always the searched target
+        for result in serializer.data:
+            if result['target1'] == target:
+                response_data.append(result)
+            else:
+                response_data.append({
+                    'target1': result['target2'],
+                    'target2': result['target1'],
+                    'similarity': result['similarity']
+                })
+        
+        return Response(response_data)
 
 class GetAverageSimilarity(APIView):
     """
@@ -163,17 +178,19 @@ class GetAverageSimilarity(APIView):
         # Iterate over all descriptor types
         for descriptor_type, (descriptor_model, descriptor_serializer) in descriptor_classes.items():
             # Get all objects from the Django db that match the given parameters
-            scores = descriptor_model.objects.filter(target1=target)
+            scores = descriptor_model.objects.filter(Q(target1=target) | Q(target2=target))
             
             # Calculate the sum, count and descriptors for each target2
             for score in scores:
-                descriptor_results[score.target2]["total"] += score.similarity
-                descriptor_results[score.target2]["count"] += 1
-                descriptor_results[score.target2]["descriptors"].add(score.__class__.__name__)
+                target2 = score.target1 if score.target1 != target else score.target2
+                descriptor_results[target2]["total"] += score.similarity
+                descriptor_results[target2]["count"] += 1
+                descriptor_results[target2]["descriptors"].add(score.__class__.__name__)
                 
         # Calculate the averages and sort results by average in descending order
         average_scores = [
             {
+                "target1": target,
                 "target2": target2,
                 "average": total / count,
                 "descriptors": list(descriptors)
