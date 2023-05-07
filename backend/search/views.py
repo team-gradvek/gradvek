@@ -1,4 +1,5 @@
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 from django.shortcuts import render
 from django.urls import get_resolver
@@ -237,6 +238,31 @@ class GetGlobalAverageSimilarity(APIView):
     filtered by the minimum number of descriptors in the average.
     """
     def get(self, request, *args, **kwargs):
+        
+        def process_descriptor(descriptor_type, relationship_type):
+            # Get similarity results from Neo4j using Cypher query
+            results = db.cypher_query(
+                f'''
+                MATCH (n1:Target)-[r:{relationship_type}]-(n2:Target)
+                WHERE n1 <> n2
+                RETURN n1.symbol, n2.symbol, r.score
+                '''
+            )[0]
+            print(f"{relationship_type} results pulled from Neo4j")
+
+            descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": set()})
+
+            # Calculate the sum, count, and descriptors for each target pair
+            for row in results:
+                target1, target2, similarity = row
+                target_pair = tuple(sorted([target1, target2]))
+                descriptor_results[target_pair]["total"] += similarity
+                descriptor_results[target_pair]["count"] += 1
+                descriptor_results[target_pair]["descriptors"].add(descriptor_type)
+
+            print(f"{relationship_type} results processed")
+            return descriptor_results
+        
         descriptors = {
             "mousepheno": "SIMILAR_MOUSEPHENO",
             "hgene": "SIMILAR_HGENE",
@@ -255,28 +281,25 @@ class GetGlobalAverageSimilarity(APIView):
             return JsonResponse({'error': str(e)}, status=400)
 
         # Initialize empty defaultdict for storing results
-        descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": set()})
+        final_descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": set()})
 
-        for descriptor_type, relationship_type in descriptors.items():
-            # Get similarity results from Neo4j using Cypher query
-            results = db.cypher_query(
-                f'''
-                MATCH (n1:Target)-[r:{relationship_type}]-(n2:Target)
-                WHERE n1 <> n2
-                RETURN n1.symbol, n2.symbol, r.score
-                '''
-            )[0]
-            print(f"{relationship_type} results pulled from Neo4j")
+        # Parallelize the processing of descriptors using ThreadPoolExecutor
+        with ThreadPoolExecutor() as executor:
+            futures = {
+                executor.submit(process_descriptor, descriptor_type, relationship_type): (descriptor_type, relationship_type)
+                for descriptor_type, relationship_type in descriptors.items()
+            }
 
-            # Calculate the sum, count, and descriptors for each target pair
-            for row in results:
-                target1, target2, similarity = row
-                target_pair = tuple(sorted([target1, target2]))
-                descriptor_results[target_pair]["total"] += similarity
-                descriptor_results[target_pair]["count"] += 1
-                descriptor_results[target_pair]["descriptors"].add(descriptor_type)
-            
-            print(f"{relationship_type} results processed")
+            for future in as_completed(futures):
+                descriptor_type, relationship_type = futures[future]
+                descriptor_results = future.result()
+
+                # Merge the descriptor results into the final results
+                for target_pair, result in descriptor_results.items():
+                    final_descriptor_results[target_pair]["total"] += result["total"]
+                    final_descriptor_results[target_pair]["count"] += result["count"]
+                    final_descriptor_results[target_pair]["descriptors"].update(result["descriptors"])
+
 
         # Calculate the averages and sort results by average in descending order
         average_scores = [
@@ -286,7 +309,7 @@ class GetGlobalAverageSimilarity(APIView):
                 "average": total / count,
                 "descriptors": list(descriptors)
             }
-            for target_pair, result in descriptor_results.items()
+            for target_pair, result in final_descriptor_results.items()
             if (total := result["total"]) and (count := result["count"]) and (descriptors := result["descriptors"]) and len(descriptors) >= min_descriptors
         ]
         average_scores.sort(key=lambda x: x["average"], reverse=True)
