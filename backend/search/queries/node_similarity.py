@@ -69,29 +69,43 @@ def get_node_similarity_results(descriptor):
                 '''
             )
 
-        print(f"{descriptor} Running node similarity query...")
-        # Run similarity calculations using the gds.nodeSimilarity.write algorithm
-        result, _ = db.cypher_query(
+        # Check if the relationship already exists
+        relationship_exists, _ = db.cypher_query(
             f'''
-            CALL gds.nodeSimilarity.write(
-                "{descriptor}",
-                {{
-                    writeRelationshipType: "{relationship_type}",
-                    writeProperty: "score",
-                    topK: 500
-                }}
-            )
-            YIELD nodesCompared, relationshipsWritten
+            MATCH ()-[r:{relationship_type}]-() 
+            RETURN count(r) > 0 as exists
             '''
         )
 
-        nodes_compared = result[0][0]
-        relationships_written = result[0][1]
+        # If the relationship does not exist, run similarity calculations
+        if not relationship_exists[0][0]:
+            print(f"{descriptor} Running node similarity query...")
+            # Run similarity calculations using the gds.nodeSimilarity.write algorithm
+            result, _ = db.cypher_query(
+                f'''
+                CALL gds.nodeSimilarity.write(
+                    "{descriptor}",
+                    {{
+                        writeRelationshipType: "{relationship_type}",
+                        writeProperty: "score",
+                        topK: 500
+                    }}
+                )
+                YIELD nodesCompared, relationshipsWritten
+                '''
+            )
 
-        print(f"{descriptor} Node similarity query completed. Nodes compared: {nodes_compared}, relationships written: {relationships_written}")
+            nodes_compared = result[0][0]
+            relationships_written = result[0][1]
+
+            print(f"{descriptor} Node similarity query completed. Nodes compared: {nodes_compared}, relationships written: {relationships_written}")
+
+        else:
+            print(f"{descriptor} Relationship {relationship_type} already exists. Skipping node similarity query.")
 
     except Exception as e:
         print(f"Error in {descriptor} node similarity query: {e}")
+
 
 
 if __name__ == "__main__":
