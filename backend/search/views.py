@@ -221,7 +221,7 @@ class GetWeightedAverageSimilarity(GetAverageSimilarity):
     """
     List the weighted average node similarity scores for a target across all descriptors.
     Takes weights as json in url, for example
-    http://localhost:8000/api/weighted_average_similarity/FGG/{"hprotein":0.1,"mousepheno":1.8}/
+    http://localhost:8000/api/weighted_average_similarity/FGG/?weight_hprotein=0.2&weight_mousepheno=2.8
     """
 
     def get(self, request, *args, **kwargs):
