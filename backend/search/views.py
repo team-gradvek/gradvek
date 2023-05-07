@@ -14,6 +14,7 @@ from rest_framework.renderers import JSONRenderer
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Q
+from neomodel import db
 
 
 from .models import (
@@ -124,18 +125,21 @@ descriptor_classes = {
 }
 
 class GetSimilarity(APIView):
+
     """
     List all node similarity scores associated with a target
     """
     def get(self, request,  *args, **kwargs):
-
-        # Helper function to check if a target pair has already been processed
-        def is_processed(target_pair):
-            if target_pair in processed_pairs:
-                return True
-            processed_pairs.add(target_pair)
-            return False
-
+        descriptors = {
+            "mousepheno": ["MousePhenotype", "MOUSE_PHENOTYPE", MousePheno, "SIMILAR_MOUSEPHENO"],
+            "hgene": ["Baseline_Expression", "HGENE", Hgene, "SIMILAR_HGENE"],
+            "hprotein": ["Baseline_Expression", "HPROTEIN", Hprotein, "SIMILAR_HPROTEIN"],
+            "intact": ["Target", "INTACT", Intact, "SIMILAR_INTACT"],
+            "pathway": ["TargetPathway", "PATHWAY", Pathway, "SIMILAR_PATHWAY"],
+            "reactome": ["Target", "REACTOME", Reactome, "SIMILAR_REACTOME"],
+            "signor": ["Target", "SIGNOR", Signor, "SIMILAR_SIGNOR"],
+            # "gwas": ["Gwas","GWAS_RELATION", Gwas, "SIMILAR_GWAS"],
+        }
         # Check if a target and descriptor is in the requested path
         try: 
             target = self.kwargs['target']
@@ -143,146 +147,135 @@ class GetSimilarity(APIView):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
-        # Get model and serializer class names
-        descriptor_model = descriptor_classes.get(descriptor_type)[0]
-        descriptor_serializer = descriptor_classes.get(descriptor_type)[1]
+        type_name = descriptors.get(descriptor_type)[0]
+        edge_name = descriptors.get(descriptor_type)[1]
+        relationship_type = descriptors.get(descriptor_type)[3]
 
-        # Get all objects from the Django db that match the given parameters
-        scores = descriptor_model.objects.filter(Q(target1=target) | Q(target2=target))
+        # Get similarity results from Neo4j using Cypher query
+        results = db.cypher_query(
+            f'''
+            MATCH (n1:Target {{symbol: "{target}"}})-[r:{relationship_type}]-(n2:Target)
+            WHERE id(n1) < id(n2)
+            RETURN n1.symbol, n2.symbol, r.score
+            ORDER BY r.score DESC
+            '''
+        )[0]
 
-        # Initialize processed pairs set
-        processed_pairs = set()
-
-        # Translate Django models into other text-based format
-        serializer = descriptor_serializer(scores, many=True)
         response_data = []
+        for row in results:
+            entry = {'target1': row[0], 'target2': row[1], 'similarity': row[2]}
+            if entry not in response_data:
+                response_data.append(entry)
 
-        # Ensure that target1 is always the searched target
-        for result in serializer.data:
-            target_pair = tuple(sorted([result['target1'], result['target2']]))
-            if is_processed(target_pair):
-                continue
-            if result['target1'] == target:
-                response_data.append(result)
-            else:
-                response_data.append({
-                    'target1': result['target2'],
-                    'target2': result['target1'],
-                    'similarity': result['similarity']
-                })
-
-        # Sort the response_data list by similarity in descending order
-        response_data_sorted = sorted(response_data, key=lambda x: x['similarity'], reverse=True)
-
-        return Response(response_data_sorted)
+        return Response(response_data)
 
 
 
-class GetAverageSimilarity(APIView):
-    """
-    List the average node similarity scores for a target across all descriptors
-    """
+# class GetAverageSimilarity(APIView):
+#     """
+#     List the average node similarity scores for a target across all descriptors
+#     """
 
-    # Helper function to check if a target pair has already been processed
-    def is_processed(self, target_pair):
-        if target_pair in self.processed_pairs:
-            return True
-        self.processed_pairs.add(target_pair)
-        return False
+#     # Helper function to check if a target pair has already been processed
+#     def is_processed(self, target_pair):
+#         if target_pair in self.processed_pairs:
+#             return True
+#         self.processed_pairs.add(target_pair)
+#         return False
 
-    def get(self, request,  *args, **kwargs):
+#     def get(self, request,  *args, **kwargs):
 
-        # Check if a target is in the requested path
-        try: 
-            target = self.kwargs['target']
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
+#         # Check if a target is in the requested path
+#         try: 
+#             target = self.kwargs['target']
+#         except Exception as e:
+#             return JsonResponse({'error': str(e)}, status=400)
 
-        # Initialize empty defaultdict for storing results
-        descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": set()})
+#         # Initialize empty defaultdict for storing results
+#         descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": set()})
         
-        # Initialize processed pairs set
-        self.processed_pairs = set()
+#         # Initialize processed pairs set
+#         self.processed_pairs = set()
 
-        # Iterate over all descriptor types
-        for descriptor_type, (descriptor_model, descriptor_serializer) in descriptor_classes.items():
-            # Get all objects from the Django db that match the given parameters
-            scores = descriptor_model.objects.filter(Q(target1=target) | Q(target2=target))
+#         # Iterate over all descriptor types
+#         for descriptor_type, (descriptor_model, descriptor_serializer) in descriptor_classes.items():
+#             # Get all objects from the Django db that match the given parameters
+#             scores = descriptor_model.objects.filter(Q(target1=target) | Q(target2=target))
             
-            # Calculate the sum, count, and descriptors for each target2
-            for score in scores:
-                target_pair = tuple(sorted([score.target1, score.target2]))
-                if self.is_processed(target_pair):
-                    continue
+#             # Calculate the sum, count, and descriptors for each target2
+#             for score in scores:
+#                 target_pair = tuple(sorted([score.target1, score.target2]))
+#                 if self.is_processed(target_pair):
+#                     continue
 
-                target2 = score.target1 if score.target1 != target else score.target2
-                descriptor_results[target2]["total"] += score.similarity
-                descriptor_results[target2]["count"] += 1
-                descriptor_results[target2]["descriptors"].add(score.__class__.__name__)
+#                 target2 = score.target1 if score.target1 != target else score.target2
+#                 descriptor_results[target2]["total"] += score.similarity
+#                 descriptor_results[target2]["count"] += 1
+#                 descriptor_results[target2]["descriptors"].add(score.__class__.__name__)
                 
-        # Calculate the averages and sort results by average in descending order
-        average_scores = [
-            {
-                "target1": target,
-                "target2": target2,
-                "average": total / count,
-                "descriptors": list(descriptors)
-            }
-            for target2, result in descriptor_results.items()
-            if (total := result["total"]) and (count := result["count"]) and (descriptors := result["descriptors"])
-        ]
-        average_scores.sort(key=lambda x: x["average"], reverse=True)
+#         # Calculate the averages and sort results by average in descending order
+#         average_scores = [
+#             {
+#                 "target1": target,
+#                 "target2": target2,
+#                 "average": total / count,
+#                 "descriptors": list(descriptors)
+#             }
+#             for target2, result in descriptor_results.items()
+#             if (total := result["total"]) and (count := result["count"]) and (descriptors := result["descriptors"])
+#         ]
+#         average_scores.sort(key=lambda x: x["average"], reverse=True)
 
-        # Translate the results into the desired output format
-        serializer = AverageNodeSimilaritySerializer(average_scores, many=True)
-        return Response(serializer.data)
+#         # Translate the results into the desired output format
+#         serializer = AverageNodeSimilaritySerializer(average_scores, many=True)
+#         return Response(serializer.data)
 
 
 
-class GetGlobalAverageSimilarity(APIView):
-    """
-    List the average node similarity scores for all target-target pairs across all descriptors,
-    filtered by the minimum number of descriptors in the average.
-    """
-    def get(self, request, *args, **kwargs):
+# class GetGlobalAverageSimilarity(APIView):
+#     """
+#     List the average node similarity scores for all target-target pairs across all descriptors,
+#     filtered by the minimum number of descriptors in the average.
+#     """
+#     def get(self, request, *args, **kwargs):
 
-        # Check if min_descriptors is in the requested path
-        try:
-            min_descriptors = self.kwargs['min_descriptors']
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
+#         # Check if min_descriptors is in the requested path
+#         try:
+#             min_descriptors = self.kwargs['min_descriptors']
+#         except Exception as e:
+#             return JsonResponse({'error': str(e)}, status=400)
 
-        # Initialize empty defaultdict for storing results
-        descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": set()})
+#         # Initialize empty defaultdict for storing results
+#         descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": set()})
 
-        # Iterate over all descriptor types
-        for descriptor_type, (descriptor_model, descriptor_serializer) in descriptor_classes.items():
-            # Get all objects from the Django db
-            scores = descriptor_model.objects.all()
+#         # Iterate over all descriptor types
+#         for descriptor_type, (descriptor_model, descriptor_serializer) in descriptor_classes.items():
+#             # Get all objects from the Django db
+#             scores = descriptor_model.objects.all()
 
-            # Calculate the sum, count and descriptors for each target pair
-            for score in scores:
-                target_pair = tuple(sorted([score.target1, score.target2]))
-                descriptor_results[target_pair]["total"] += score.similarity
-                descriptor_results[target_pair]["count"] += 1
-                descriptor_results[target_pair]["descriptors"].add(score.__class__.__name__)
+#             # Calculate the sum, count and descriptors for each target pair
+#             for score in scores:
+#                 target_pair = tuple(sorted([score.target1, score.target2]))
+#                 descriptor_results[target_pair]["total"] += score.similarity
+#                 descriptor_results[target_pair]["count"] += 1
+#                 descriptor_results[target_pair]["descriptors"].add(score.__class__.__name__)
 
-        # Calculate the averages and sort results by average in descending order
-        average_scores = [
-            {
-                "target1": target_pair[0],
-                "target2": target_pair[1],
-                "average": total / count,
-                "descriptors": list(descriptors)
-            }
-            for target_pair, result in descriptor_results.items()
-            if (total := result["total"]) and (count := result["count"]) and (descriptors := result["descriptors"]) and len(descriptors) >= min_descriptors
-        ]
-        average_scores.sort(key=lambda x: x["average"], reverse=True)
+#         # Calculate the averages and sort results by average in descending order
+#         average_scores = [
+#             {
+#                 "target1": target_pair[0],
+#                 "target2": target_pair[1],
+#                 "average": total / count,
+#                 "descriptors": list(descriptors)
+#             }
+#             for target_pair, result in descriptor_results.items()
+#             if (total := result["total"]) and (count := result["count"]) and (descriptors := result["descriptors"]) and len(descriptors) >= min_descriptors
+#         ]
+#         average_scores.sort(key=lambda x: x["average"], reverse=True)
 
-        # Translate the results into the desired output format
-        serializer = AverageNodeSimilaritySerializer(average_scores, many=True)
-        return Response(serializer.data)
+#         # Translate the results into the desired output format
+#         serializer = AverageNodeSimilaritySerializer(average_scores, many=True)
+#         return Response(serializer.data)
 
 
 
