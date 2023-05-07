@@ -297,6 +297,7 @@ class GetGlobalAverageSimilarity(APIView):
     """
 
     # Define a function for processing a single descriptor type and relationship type
+    @staticmethod
     def process_descriptor(descriptor_type, relationship_type):
         print(f"Starting {relationship_type} processing")
         
