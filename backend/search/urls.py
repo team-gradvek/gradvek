@@ -54,7 +54,7 @@ urlpatterns = [
     # Return list of all node similarity scores associated to a target
     path('api/similarity/<str:descriptor>/<str:target>/', GetSimilarity.as_view(), name='similarity'),
     path('api/average_similarity/<str:target>/', GetAverageSimilarity.as_view(), name='average_similarity'),
-    path('api/weighted_average_similarity/<str:target>/<str:weights>/', GetWeightedAverageSimilarity.as_view(), name='weighted_average_similarity'),
+    path('api/weighted_average_similarity/<str:target>/', GetWeightedAverageSimilarity.as_view(), name='weighted_average_similarity'),
     path('api/global_average_similarity/<int:min_descriptors>/', GetGlobalAverageSimilarity.as_view(), name='global_average_similarity'),
 
 

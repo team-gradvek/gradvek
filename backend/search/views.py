@@ -225,16 +225,26 @@ class GetWeightedAverageSimilarity(GetAverageSimilarity):
     """
 
     def get(self, request, *args, **kwargs):
-        # Retrieve the target and weights from the request path
+        # Retrieve the target from the request path
         try:
             target = self.kwargs['target']
-            weights = json.loads(self.kwargs['weights'])
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
-        # Check if the provided weights have the correct format
-        if not isinstance(weights, dict) or not all(isinstance(k, str) and isinstance(v, (int, float)) for k, v in weights.items()):
-            return JsonResponse({'error': 'Weights must be a dictionary with descriptor types as keys and numeric values as weights'}, status=400)
+        # Retrieve the weights from the query parameters
+        weights = {}
+        for key, value in self.request.GET.items():
+            if key.startswith("weight_"):
+                descriptor = key[7:]
+                try:
+                    weight = float(value)
+                except ValueError:
+                    return JsonResponse({'error': f"Invalid weight value for {descriptor}: {value}"}, status=400)
+                weights[descriptor] = weight
+
+        # Check if there are any weights provided
+        if not weights:
+            return JsonResponse({'error': "No weights provided"}, status=400)
 
         # Initialize defaultdict for storing results
         descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": {}})
