@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router'
+import PathTable from '@/components/results/PathTable'
 import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
-import { Box, Text, Heading } from '@chakra-ui/react';
-import getPathwayData from '@/hooks/pathwaysHook'
-import PathsKG from '@/components/graph/PathsKG';
+import { Box, Card, CardBody, Text, Heading } from '@chakra-ui/react';
+import getTargetPathwayData from '@/hooks/targetPathwayHook';
 
 
 const TargetToAdverseEvents = () => {
@@ -16,11 +16,8 @@ const TargetToAdverseEvents = () => {
   console.log(dataFromURL)
   const target = dataFromURL.target
   const ae = dataFromURL.ae
-  const drug = dataFromURL.drug
 
-  const pageTitle = `Knowledge Graph for ${target} with Adverse Event ID: ${ae} and Drug ID: ${drug}`
-
-  const { data, isLoading, isError } = getPathwayData(`${target}/${ae}/${drug}`)
+  const { data, isLoading, isError } = getTargetPathwayData(`${encodeURIComponent(ae)}/${encodeURIComponent(target)}`)
 
   if (isError) {
     return (
@@ -51,14 +48,15 @@ const TargetToAdverseEvents = () => {
     <>
     <ResultsLayout>
         <Head>
-          <title>{pageTitle}</title>
+          <title>{`Targets Paths for ${ae} and Adverse Event ID: ${target}`}</title>
         </Head>
       <Box p={5} w="100%">
-      <PathsKG
-          title={pageTitle}
-          target={target}
+        <PathTable
+          title={`Targets Paths for ${ae} and Adverse Event ID: ${target}`}
           data={data}
-           />
+          isLoading={isLoading}
+          isError={isError}
+          />
       </Box>
     </ResultsLayout>
     </>

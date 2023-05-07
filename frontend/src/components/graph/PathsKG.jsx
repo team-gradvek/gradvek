@@ -21,14 +21,14 @@ const PathsKG = ({title, data}) => {
   console.log(data)
 
   // Needs to be removed
-  const dataSlice = data.slice(0,200)
+  // const dataSlice = data.slice(0,200)
 
   const nodes = data.filter(item => item.group === "nodes").map(item => ({
     id: item.data.id, 
     label: item.data.name 
   }));
 
-  const edges = dataSlice.filter(item => item.group === "edges").map(item => ({
+  const edges = data.filter(item => item.group === "edges").map(item => ({
     from: item.data.source, 
     to: item.data.target,
     weight: item.data.llr,
@@ -67,8 +67,10 @@ const PathsKG = ({title, data}) => {
 
   return (
     <>
-    <Heading size='md' mb={4}>{title}</Heading>
-    <div ref={graphRef} style={{ height: '100vh', width:'100%', maxWidth: '1400px', margin: '0 auto' }}></div>
+    <Heading size='md' style={{ textTransform: 'uppercase'}}>{title}</Heading>
+    <Box mb={5}>
+    <div ref={graphRef} style={{ height: '900px', width:'900px', maxWidth: '1400px', marginTop: '-20px' }}></div>
+    </Box>
     </>
   );
 };
