@@ -114,45 +114,36 @@ class GetActions(APIView):
         return Response(actions, status=status.HTTP_200_OK)
 
 
-descriptor_classes = {
-    "mousepheno" : [MousePheno, MousePhenoSerializer],
-    "hgene": [Hgene, HgeneSerializer],
-    "hprotein": [Hprotein, HproteinSerializer],
-    "intact": [Intact, IntactSerializer],
-    "pathway": [Pathway, PathwaySerializer],
-    "reactome": [Reactome, ReactomeSerializer],
-    "signor": [Signor, SignorSerializer],
-    "gwas": [Gwas, GwasSerializer],
+# Define a dictionary to map descriptor types to their relationship types in the database
+relationship_types = {
+    "mousepheno": "SIMILAR_MOUSEPHENO",
+    "hgene": "SIMILAR_HGENE",
+    "hprotein": "SIMILAR_HPROTEIN",
+    "intact": "SIMILAR_INTACT",
+    "pathway": "SIMILAR_PATHWAY",
+    "reactome": "SIMILAR_REACTOME",
+    "signor": "SIMILAR_SIGNOR",
+    # "gwas": "SIMILAR_GWAS",
 }
 
 class GetSimilarity(APIView):
+    """
+    List all node similarity scores associated with a target.
+    """
 
-    """
-    List all node similarity scores associated with a target
-    """
-    def get(self, request,  *args, **kwargs):
-        descriptors = {
-            "mousepheno": ["MousePhenotype", "MOUSE_PHENOTYPE", MousePheno, "SIMILAR_MOUSEPHENO"],
-            "hgene": ["Baseline_Expression", "HGENE", Hgene, "SIMILAR_HGENE"],
-            "hprotein": ["Baseline_Expression", "HPROTEIN", Hprotein, "SIMILAR_HPROTEIN"],
-            "intact": ["Target", "INTACT", Intact, "SIMILAR_INTACT"],
-            "pathway": ["TargetPathway", "PATHWAY", Pathway, "SIMILAR_PATHWAY"],
-            "reactome": ["Target", "REACTOME", Reactome, "SIMILAR_REACTOME"],
-            "signor": ["Target", "SIGNOR", Signor, "SIMILAR_SIGNOR"],
-            # "gwas": ["Gwas","GWAS_RELATION", Gwas, "SIMILAR_GWAS"],
-        }
-        # Check if a target and descriptor is in the requested path
-        try: 
+    def get(self, request, *args, **kwargs):
+        # Retrieve the target and descriptor from the request path
+        try:
             target = self.kwargs['target']
             descriptor_type = self.kwargs['descriptor']
         except Exception as e:
+            # Return an error message if the target or descriptor type is not provided in the request path
             return JsonResponse({'error': str(e)}, status=400)
 
-        type_name = descriptors.get(descriptor_type)[0]
-        edge_name = descriptors.get(descriptor_type)[1]
-        relationship_type = descriptors.get(descriptor_type)[3]
+        # Get the relationship type corresponding to the provided descriptor type
+        relationship_type = relationship_types.get(descriptor_type)
 
-        # Get similarity results from Neo4j using Cypher query
+        # Execute a Cypher query to retrieve similarity results from the Neo4j database
         results = db.cypher_query(
             f'''
             MATCH (n1:Target {{symbol: "{target}"}})-[r:{relationship_type}]-(n2:Target)
@@ -162,43 +153,38 @@ class GetSimilarity(APIView):
             '''
         )[0]
 
+        # Initialize an empty list to store response data
         response_data = []
+        
+        # Iterate through the results of the Cypher query
         for row in results:
+            # Create a dictionary for each result containing target1, target2, and their similarity score
             entry = {'target1': row[0], 'target2': row[1], 'similarity': row[2]}
+            
+            # Add the entry to the response_data list if it doesn't already exist
             if entry not in response_data:
                 response_data.append(entry)
 
+        # Return the response_data as an API response
         return Response(response_data)
-
 
 
 class GetAverageSimilarity(APIView):
     """
-    List the average node similarity scores for a target across all descriptors
+    List the average node similarity scores for a target across all descriptors.
     """
 
     def get(self, request, *args, **kwargs):
-        descriptors = {
-            "mousepheno": "SIMILAR_MOUSEPHENO",
-            "hgene": "SIMILAR_HGENE",
-            "hprotein": "SIMILAR_HPROTEIN",
-            "intact": "SIMILAR_INTACT",
-            "pathway": "SIMILAR_PATHWAY",
-            "reactome": "SIMILAR_REACTOME",
-            "signor": "SIMILAR_SIGNOR",
-            # "gwas": "SIMILAR_GWAS",
-        }
-
-        # Check if a target is in the requested path
+        # Retrieve the target from the request path
         try:
             target = self.kwargs['target']
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
         # Initialize defaultdict for storing results
-        descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": set()})
+        descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": {}})
 
-        for descriptor_type, relationship_type in descriptors.items():
+        for descriptor_type, relationship_type in relationship_types.items():
             # Get similarity results from Neo4j using Cypher query
             results = db.cypher_query(
                 f'''
@@ -208,12 +194,12 @@ class GetAverageSimilarity(APIView):
                 '''
             )[0]
 
-            # Calculate the sum, count, and descriptors for each target2
+            # Calculate the sum, count, and descriptors with similarity scores for each target2
             for row in results:
                 target1, target2, similarity = row
                 descriptor_results[target2]["total"] += similarity
                 descriptor_results[target2]["count"] += 1
-                descriptor_results[target2]["descriptors"].add(descriptor_type)
+                descriptor_results[target2]["descriptors"][descriptor_type] = similarity
 
         # Calculate the averages and sort results by average in descending order
         average_scores = [
@@ -221,7 +207,7 @@ class GetAverageSimilarity(APIView):
                 "target1": target,
                 "target2": target2,
                 "average": total / count,
-                "descriptors": list(descriptors)
+                "descriptors": descriptors
             }
             for target2, result in descriptor_results.items()
             if (total := result["total"]) and (count := result["count"]) and (descriptors := result["descriptors"])
@@ -232,64 +218,60 @@ class GetAverageSimilarity(APIView):
 
 
 
+
 class GetGlobalAverageSimilarity(APIView):
     """
     List the average node similarity scores for all target-target pairs across all descriptors,
     filtered by the minimum number of descriptors in the average.
     """
+
+    # Define a function for processing a single descriptor type and relationship type
+    def process_descriptor(descriptor_type, relationship_type):
+        print(f"Starting {relationship_type} processing")
+        
+        # Get similarity results from Neo4j using Cypher query
+        results = db.cypher_query(
+            f'''
+            MATCH (n1:Target)-[r:{relationship_type}]-(n2:Target)
+            WHERE n1 <> n2
+            RETURN n1.symbol, n2.symbol, r.score
+            '''
+        )[0]
+        print(f"{relationship_type} results pulled from Neo4j")
+
+        # Initialize defaultdict for storing results for the current descriptor
+        descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": {}})
+
+        # Calculate the sum, count, and descriptors with similarity scores for each target pair
+        for row in results:
+            target1, target2, similarity = row
+            target_pair = tuple(sorted([target1, target2]))
+            descriptor_results[target_pair]["total"] += similarity
+            descriptor_results[target_pair]["count"] += 1
+            descriptor_results[target_pair]["descriptors"][descriptor_type] = similarity
+
+        print(f"{relationship_type} results processed")
+        return descriptor_results
+
     def get(self, request, *args, **kwargs):
-        
-        def process_descriptor(descriptor_type, relationship_type):
-            # Get similarity results from Neo4j using Cypher query
-            results = db.cypher_query(
-                f'''
-                MATCH (n1:Target)-[r:{relationship_type}]-(n2:Target)
-                WHERE n1 <> n2
-                RETURN n1.symbol, n2.symbol, r.score
-                '''
-            )[0]
-            print(f"{relationship_type} results pulled from Neo4j")
-
-            descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": set()})
-
-            # Calculate the sum, count, and descriptors for each target pair
-            for row in results:
-                target1, target2, similarity = row
-                target_pair = tuple(sorted([target1, target2]))
-                descriptor_results[target_pair]["total"] += similarity
-                descriptor_results[target_pair]["count"] += 1
-                descriptor_results[target_pair]["descriptors"].add(descriptor_type)
-
-            print(f"{relationship_type} results processed")
-            return descriptor_results
-        
-        descriptors = {
-            "mousepheno": "SIMILAR_MOUSEPHENO",
-            "hgene": "SIMILAR_HGENE",
-            "hprotein": "SIMILAR_HPROTEIN",
-            "intact": "SIMILAR_INTACT",
-            "pathway": "SIMILAR_PATHWAY",
-            "reactome": "SIMILAR_REACTOME",
-            "signor": "SIMILAR_SIGNOR",
-            # "gwas": "SIMILAR_GWAS",
-        }
-
-        # Check if min_descriptors is in the requested path
+        # Retrieve the min_descriptors from the request path
         try:
             min_descriptors = self.kwargs['min_descriptors']
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
-
-        # Initialize empty defaultdict for storing results
-        final_descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": set()})
+        
+        # Initialize empty defaultdict for storing final results
+        final_descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": {}})
 
         # Parallelize the processing of descriptors using ThreadPoolExecutor
         with ThreadPoolExecutor() as executor:
+            # Submit tasks to executor for processing each descriptor and relationship type
             futures = {
-                executor.submit(process_descriptor, descriptor_type, relationship_type): (descriptor_type, relationship_type)
-                for descriptor_type, relationship_type in descriptors.items()
+                executor.submit(self.process_descriptor, descriptor_type, relationship_type): (descriptor_type, relationship_type)
+                for descriptor_type, relationship_type in relationship_types.items()
             }
 
+            # Process the results as they become available
             for future in as_completed(futures):
                 descriptor_type, relationship_type = futures[future]
                 descriptor_results = future.result()
@@ -300,14 +282,14 @@ class GetGlobalAverageSimilarity(APIView):
                     final_descriptor_results[target_pair]["count"] += result["count"]
                     final_descriptor_results[target_pair]["descriptors"].update(result["descriptors"])
 
-
         # Calculate the averages and sort results by average in descending order
+        print("Calculating averages and sorting results")
         average_scores = [
             {
                 "target1": target_pair[0],
                 "target2": target_pair[1],
                 "average": total / count,
-                "descriptors": list(descriptors)
+                "descriptors": descriptors
             }
             for target_pair, result in final_descriptor_results.items()
             if (total := result["total"]) and (count := result["count"]) and (descriptors := result["descriptors"]) and len(descriptors) >= min_descriptors
