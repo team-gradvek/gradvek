@@ -217,6 +217,67 @@ class GetAverageSimilarity(APIView):
         return Response(average_scores)
 
 
+class GetWeightedAverageSimilarity(GetAverageSimilarity):
+    """
+    List the weighted average node similarity scores for a target across all descriptors.
+    Takes weights as json in url, for example
+    http://localhost:8000/api/weighted_average_similarity/FGG/{"hprotein":0.1,"mousepheno":1.8}/
+    """
+
+    def get(self, request, *args, **kwargs):
+        # Retrieve the target and weights from the request path
+        try:
+            target = self.kwargs['target']
+            weights = json.loads(self.kwargs['weights'])
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+        # Check if the provided weights have the correct format
+        if not isinstance(weights, dict) or not all(isinstance(k, str) and isinstance(v, (int, float)) for k, v in weights.items()):
+            return JsonResponse({'error': 'Weights must be a dictionary with descriptor types as keys and numeric values as weights'}, status=400)
+
+        # Initialize defaultdict for storing results
+        descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": {}})
+
+        for descriptor_type, relationship_type in relationship_types.items():
+            # Get similarity results from Neo4j using Cypher query
+            results = db.cypher_query(
+                f'''
+                MATCH (n1:Target {{symbol: "{target}"}})-[r:{relationship_type}]-(n2:Target)
+                WHERE n1 <> n2
+                RETURN n1.symbol, n2.symbol, r.score
+                '''
+            )[0]
+
+            # Calculate the sum, count, and descriptors with similarity scores and weights for each target2
+            for row in results:
+                target1, target2, similarity = row
+                weight = weights.get(descriptor_type, 1)
+                weighted_similarity = similarity * weight
+                descriptor_results[target2]["total"] += weighted_similarity
+                descriptor_results[target2]["count"] += 1
+                descriptor_results[target2]["descriptors"][descriptor_type] = {
+                    "original_similarity": similarity,
+                    "weight": weight,
+                    "weighted_similarity": weighted_similarity
+                }
+
+        # Calculate the averages and sort results by average in descending order
+        average_scores = [
+            {
+                "target1": target,
+                "target2": target2,
+                "average": total / count,
+                "descriptors": descriptors
+            }
+            for target2, result in descriptor_results.items()
+            if (total := result["total"]) and (count := result["count"]) and (descriptors := result["descriptors"])
+        ]
+        average_scores.sort(key=lambda x: x["average"], reverse=True)
+
+        return Response(average_scores)
+
+
 
 
 class GetGlobalAverageSimilarity(APIView):
