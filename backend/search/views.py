@@ -155,7 +155,7 @@ class GetSimilarity(APIView):
         results = db.cypher_query(
             f'''
             MATCH (n1:Target {{symbol: "{target}"}})-[r:{relationship_type}]-(n2:Target)
-            WHERE id(n1) < id(n2)
+            WHERE n1 <> n2
             RETURN n1.symbol, n2.symbol, r.score
             ORDER BY r.score DESC
             '''
@@ -231,48 +231,67 @@ class GetAverageSimilarity(APIView):
 
 
 
-
 class GetGlobalAverageSimilarity(APIView):
     """
     List the average node similarity scores for all target-target pairs across all descriptors,
     filtered by the minimum number of descriptors in the average.
     """
     def get(self, request, *args, **kwargs):
+        descriptors = {
+            "mousepheno": "SIMILAR_MOUSEPHENO",
+            "hgene": "SIMILAR_HGENE",
+            "hprotein": "SIMILAR_HPROTEIN",
+            "intact": "SIMILAR_INTACT",
+            "pathway": "SIMILAR_PATHWAY",
+            "reactome": "SIMILAR_REACTOME",
+            "signor": "SIMILAR_SIGNOR",
+            # "gwas": "SIMILAR_GWAS",
+        }
+
         # Check if min_descriptors is in the requested path
         try:
             min_descriptors = self.kwargs['min_descriptors']
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
-        # Get similarity results from Neo4j using Cypher query
-        results = db.cypher_query(
-            f'''
-            MATCH (n1:Target)-[r]-(n2:Target)
-            WHERE n1 <> n2 AND
-                (type(r) IN [
-                    "SIMILAR_MOUSEPHENO", "SIMILAR_HGENE", "SIMILAR_HPROTEIN", "SIMILAR_INTACT",
-                    "SIMILAR_PATHWAY", "SIMILAR_REACTOME", "SIMILAR_SIGNOR"
-                ])
-            WITH n1.symbol AS target1, n2.symbol AS target2, r.score AS similarity, type(r) AS descriptor_type
-            WITH target1, target2, avg(similarity) AS average, collect(descriptor_type) AS descriptors
-            WHERE size(descriptors) >= {min_descriptors}
-            RETURN target1, target2, average, descriptors
-            ORDER BY average DESC
-            '''
-        )[0]
+        # Initialize empty defaultdict for storing results
+        descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": set()})
 
+        for descriptor_type, relationship_type in descriptors.items():
+            # Get similarity results from Neo4j using Cypher query
+            results = db.cypher_query(
+                f'''
+                MATCH (n1:Target)-[r:{relationship_type}]-(n2:Target)
+                WHERE n1 <> n2
+                RETURN n1.symbol, n2.symbol, r.score
+                '''
+            )[0]
+            print(f"{relationship_type} results pulled from Neo4j")
+
+            # Calculate the sum, count, and descriptors for each target pair
+            for row in results:
+                target1, target2, similarity = row
+                target_pair = tuple(sorted([target1, target2]))
+                descriptor_results[target_pair]["total"] += similarity
+                descriptor_results[target_pair]["count"] += 1
+                descriptor_results[target_pair]["descriptors"].add(descriptor_type)
+            
+            print(f"{relationship_type} results processed")
+
+        # Calculate the averages and sort results by average in descending order
         average_scores = [
             {
-                "target1": row[0],
-                "target2": row[1],
-                "average": row[2],
-                "descriptors": row[3]
+                "target1": target_pair[0],
+                "target2": target_pair[1],
+                "average": total / count,
+                "descriptors": list(descriptors)
             }
-            for row in results
+            for target_pair, result in descriptor_results.items()
+            if (total := result["total"]) and (count := result["count"]) and (descriptors := result["descriptors"]) and len(descriptors) >= min_descriptors
         ]
+        average_scores.sort(key=lambda x: x["average"], reverse=True)
 
         return Response(average_scores)
-
 
 
 
