@@ -151,11 +151,16 @@ class GetSimilarity(APIView):
 # Upload one or more entities in a comma-separated file
 @csrf_exempt
 @require_http_methods(["POST"])
-def upload_csv(request, csv_file):
-    # Implement the functionality for uploading a CSV
-    # Open the CSV file and pass it to csv_service for processing
-    reader = csv.reader(csv_file)
-    return parse_and_load_csv_file(reader)
+def upload_csv(request):
+    # Open the CSV file and pass it to another function for processing
+    csv_file = request.FILES['csv_file']
+
+    if not csv_file.name.endswith('.csv'):
+        return Response({'error': 'File is not a CSV'}, status=status.HTTP_400_BAD_REQUEST)
+    decoded_file = csv_file.read().decode('utf-8')
+    csv_data = csv.reader(decoded_file.splitlines(), delimiter=',')
+
+    return parse_and_load_csv_file(csv_data)
 
 
 # Return the content of a previously uploaded comma-separated file

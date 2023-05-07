@@ -1,29 +1,8 @@
 from django.http import HttpResponse
 from neomodel import db
 
-# Dataset name
-data_version = None
-
-def set_dataset_name():
-    global data_version
-    with open("../datasets/platform.conf", "r") as file:
-        for line in file:
-            # Remove whitespace from the beginning and end of the line
-            stripped_line = line.strip()
-
-            # Check if the line starts with "data_version ="
-            if stripped_line.startswith("data_version ="):
-                # Split the line at the equals sign and take the second part (the value)
-                data_version = stripped_line.split("=")[1].strip().replace('"', '')
-
-    # Check if the dataset variable was set
-    if data_version is None:
-        raise ValueError("data_version not found in platform.conf.")
-    else:
-        print("Dataset version in platform.conf file:", data_version)
 
 def parse_and_load_csv_file(csv_data):
-    set_dataset_name()
     #Get header from csv file
     header = next(csv_data)
 
@@ -49,7 +28,7 @@ def parse_and_load_csv_file(csv_data):
 
 def load_drug_to_ae_data_from_csv(csv_data):
     node_label = 'AssociatedWith'
-    dataset = f"{data_version} {node_label}"
+    dataset = f"{'csv_upload'} {node_label}"
 
     # Iterate over every line in csv file
     for row in csv_data:
@@ -97,7 +76,7 @@ def load_drug_to_ae_data_from_csv(csv_data):
 
 def load_target_to_disease_from_csv(csv_data):
     node_label = 'AssociatedWith'
-    dataset = f"{data_version} {node_label}"
+    dataset = f"{'csv_upload'} {node_label}"
 
     # Iterate over every line in csv file
     for row in csv_data:
