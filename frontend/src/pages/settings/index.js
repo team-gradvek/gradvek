@@ -122,14 +122,6 @@ const Settings = () => {
             columns={actionsCols}
             />
       </Box>
-      {/* <Box m={3}>
-        <DescriptorsTable
-            title="Descriptors Available"
-            data={descriptorsData}
-            columns={descriptorCols}
-            />
-        </Box>
-        */}
       </Box>
     </Box>
     </ResultsLayout>
