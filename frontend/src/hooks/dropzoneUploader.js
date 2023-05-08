@@ -37,6 +37,7 @@ function Uploader(props) {
     </div>
   ))
 
+
   const dropText = isDragActive ? 'Drop the files here ...' : 'Drag \'n\' drop .csv file here, or click to select files';
 
   const activeBg = useColorModeValue('gray.100', 'gray.600');
@@ -71,14 +72,6 @@ function Uploader(props) {
     }
   }
 
-  // const onUploadProgress = (ProgressEvent) => {
-  //   const {loaded, total } = ProgressEvent
-  //   let percent = Math.floor((loaded * 100) / total)
-  //   if (percent < 100) {
-  //     console.log(`${loaded} bytes of ${total} bytes ${percent}%`)
-  //   }
-  // }
-
   const handleFile = (e) => {
     setFileSent(e.target.files[0])
     console.log(fileSent)
@@ -106,7 +99,7 @@ function Uploader(props) {
     </Center>
     <Center mt={4}>{thumbs}</Center>
     {loading && <Progress size="xs" isIndeterminate />}
-    {loading && <Center> Processing File</Center>}
+    {loading && <Center my={2}> Processing File</Center>}
     <Center mt={4}><Button colorScheme='blue' onClick={() => uploadFile()}>Upload File</Button></Center>
      </>
   );
