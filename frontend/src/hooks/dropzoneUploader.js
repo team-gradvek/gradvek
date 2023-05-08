@@ -1,6 +1,6 @@
 import { useCallback, useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Center, useColorModeValue, Icon, Box, Text, Button } from '@chakra-ui/react';
+import { Center, useColorModeValue, Icon, Box, Text, Button, Progress } from '@chakra-ui/react';
 import { AiFillFileAdd} from 'react-icons/ai';
 import { BsFiletypeCsv } from "react-icons/bs";
 import axios from 'axios';
@@ -27,7 +27,6 @@ function Uploader(props) {
     multiple: false,
     onDrop: acceptedFiles => {
       setFiles(acceptedFiles)
-      console.log(files)
     }
   });
 
@@ -46,29 +45,43 @@ function Uploader(props) {
     isDragActive ? 'teal.500' : 'gray.500',
   );
 
+  const [loading, setLoading] = useState(false)
+
   const uploadFile = () => {
     if(acceptedFiles[0] != null) {
+      setLoading(true)
       const formData = new FormData()
-      console.log(acceptedFiles)
-      console.log(acceptedFiles[0].path)
+      console.log(files)
       formData.append('csv_file', acceptedFiles[0])
       // console.log(formData)
       axios.post('http://localhost:8000/api/csv/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
-      }
+      }, 
+      // onUploadProgress,
     }).then(function(response){
-      console.log(response.status)
+      setLoading(false)
+      setFiles([])
     })
       .catch(() => {
         //if error, display a message
         console.log("error uploading file")
+        setLoading(false)
       })
     }
   }
 
+  // const onUploadProgress = (ProgressEvent) => {
+  //   const {loaded, total } = ProgressEvent
+  //   let percent = Math.floor((loaded * 100) / total)
+  //   if (percent < 100) {
+  //     console.log(`${loaded} bytes of ${total} bytes ${percent}%`)
+  //   }
+  // }
+
   const handleFile = (e) => {
     setFileSent(e.target.files[0])
+    console.log(fileSent)
   }
 
   return (
@@ -92,6 +105,8 @@ function Uploader(props) {
         <Text>{dropText}</Text>
     </Center>
     <Center mt={4}>{thumbs}</Center>
+    {loading && <Progress size="xs" isIndeterminate />}
+    {loading && <Center> Processing File</Center>}
     <Center mt={4}><Button colorScheme='blue' onClick={() => uploadFile()}>Upload File</Button></Center>
      </>
   );
