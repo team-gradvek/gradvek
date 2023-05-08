@@ -66,6 +66,7 @@ def wait_for_neo4j_connection():
         neo4j_url = NEO4J_BOLT_URL
     
     config.DATABASE_URL = neo4j_url
+    config.MAX_CONNECTION_LIFETIME = 3600 * 3 # 3 hours
     
     while retry < max_retries:
         try:
