@@ -37,7 +37,7 @@ const TargetToAdverseEventsWithAEKG = () => {
   const target = dataFromURL.target
   const ae = dataFromURL.ae
 
-  const pageTitle = `Adverse Event Paths for ${target} with Adverse Event ID: ${ae}`
+  const pageTitle = `Knowledge Graph for ${target} with Adverse Event ID: ${ae}`
 
   const { data, isLoading, isError } = getPathwayData(`${target}/${ae}`)
 

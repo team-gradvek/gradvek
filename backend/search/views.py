@@ -1,6 +1,8 @@
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import csv
 import json
+import os
 from django.shortcuts import render
 from django.urls import get_resolver
 from django.views import View
@@ -71,7 +73,11 @@ from .utils import (
 
 )
 
+from .csv_service import(
+    parse_and_load_csv_file
+)
 
+# API view to list all routes in the Django site
 class RoutesListAPIView(generics.GenericAPIView):
     """
     API view to list all routes in the Django site
@@ -372,11 +378,16 @@ class GetGlobalAverageSimilarity(APIView):
 
 
 
+# CSV File upload
 # Upload one or more entities in a comma-separated file
+@csrf_exempt
 @require_http_methods(["POST"])
-def upload_csv(request):
+def upload_csv(request, csv_file):
     # Implement the functionality for uploading a CSV
-    pass
+    # Open the CSV file and pass it to csv_service for processing
+    reader = csv.reader(csv_file)
+    return parse_and_load_csv_file(reader)
+
 
 # Return the content of a previously uploaded comma-separated file
 @require_http_methods(["GET"])

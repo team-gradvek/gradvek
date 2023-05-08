@@ -36,7 +36,7 @@ function AdverseEventToTargetSearch() {
 
        // @TODO Refactor this to be one reusable method
        const handleButtonClick = () => {
-        router.push(`adverseEventToTarget/${selectedTypeAhead[0].meddraId}`)
+        router.push(`target-pathways/${selectedTypeAhead[0].meddraId}`)
       }
 
       const filterByFields = ['adverseEventId'];
