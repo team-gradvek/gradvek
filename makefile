@@ -112,3 +112,15 @@ run-deployed: # Run the deployed version of the application from Docker Hub
 stop-deployed: # Stop the (local) deployed version of the application pulled rom Docker Hub
 	$(info Make: Stopping all parts using Docker Compose.)
 	@docker-compose -f docker-compose-published.yml stop
+
+# Flush the Django database
+.PHONY: flush-django-db
+flush-django-db: # Flush the Django database
+	$(info Make: Flushing Django database.)
+	@cd backend && python3 manage.py flush --no-input
+
+# Perform Django migrations
+.PHONY: migrate-django-db
+migrate-django-db: # Perform Django migrations
+	$(info Make: Performing Django migrations.)
+	@cd backend && python3 manage.py makemigrations && python3 manage.py migrate
