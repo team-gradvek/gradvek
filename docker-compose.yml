@@ -8,6 +8,7 @@ services:
   neo4j:
     build: ./neo4j
     image: gradvek_neo4j
+    mem_limit: 8g
     user: "${CURRENT_UID}:${CURRENT_GID}"
     ports:
       - "8081:7474"
@@ -23,6 +24,7 @@ services:
   backend:
     build: ./backend
     image: gradvek_backend
+    mem_limit: 3g
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8083:8000"
@@ -35,6 +37,7 @@ services:
   frontend:
     build: ./frontend
     image: gradvek_frontend
+    mem_limit: 1g
     ports:
       - "80:3000"
     networks:

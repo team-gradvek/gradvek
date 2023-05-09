@@ -1,13 +1,17 @@
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Center, useColorModeValue, Icon, Box, Text } from '@chakra-ui/react';
-import { AiFillFileAdd } from 'react-icons/ai';
+import { Center, useColorModeValue, Icon, Box, Text, Button, Progress } from '@chakra-ui/react';
+import { AiFillFileAdd} from 'react-icons/ai';
+import { BsFiletypeCsv } from "react-icons/bs";
+import axios from 'axios';
 
 function Uploader(props) {
 
-  // const onDrop = useCallback((acceptedFiles) => {
-  //   onFileAccepted(acceptedFiles[0]);
-  // }, [onFileAccepted]);
+  // Set state for files
+  const [files, setFiles] = useState([])
+
+  // Set state of the upload
+  const [fileSent, setFileSent] = useState([])
 
   const { 
     getRootProps, 
@@ -16,30 +20,23 @@ function Uploader(props) {
     // fileRejections, 
     isDragActive 
   } = useDropzone({
-    // onDrop,
-    // acceptedFiles,
-    // fileRejections,
     accept: {
       'text/csv' : ['csv']
     }, 
     maxFiles: 1, 
     multiple: false,
+    onDrop: acceptedFiles => {
+      setFiles(acceptedFiles)
+    }
   });
 
-  const acceptedFileItems = acceptedFiles.map(file => (
-     <Text>{file.path} - {file.size} bytes</Text> 
-  ));
+  // GOutput the file name and csv icon
+  const thumbs = files.map(file => (
+    <div key={file.name}>
+      <Text><Icon as={BsFiletypeCsv}/> {file.name} - {file.size} KB</Text>
+    </div>
+  ))
 
-  // const fileRejectionItems = fileRejections.map(({ file, errors }) => (
-  //   <li key={file.path}>
-  //     {file.path} - {file.size} bytes
-  //     <ul>
-  //       {errors.map(e => (
-  //         <li key={e.code}>{e.message}</li>
-  //       ))}
-  //     </ul>
-  //   </li>
-  // ));
 
   const dropText = isDragActive ? 'Drop the files here ...' : 'Drag \'n\' drop .csv file here, or click to select files';
 
@@ -48,6 +45,37 @@ function Uploader(props) {
     isDragActive ? 'teal.300' : 'gray.300',
     isDragActive ? 'teal.500' : 'gray.500',
   );
+
+  const [loading, setLoading] = useState(false)
+
+  const uploadFile = () => {
+    if(acceptedFiles[0] != null) {
+      setLoading(true)
+      const formData = new FormData()
+      console.log(files)
+      formData.append('csv_file', acceptedFiles[0])
+      // console.log(formData)
+      axios.post('http://localhost:8000/api/csv/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }, 
+      // onUploadProgress,
+    }).then(function(response){
+      setLoading(false)
+      setFiles([])
+    })
+      .catch(() => {
+        //if error, display a message
+        console.log("error uploading file")
+        setLoading(false)
+      })
+    }
+  }
+
+  const handleFile = (e) => {
+    setFileSent(e.target.files[0])
+    console.log(fileSent)
+  }
 
   return (
     <>
@@ -63,16 +91,16 @@ function Uploader(props) {
       {...getRootProps({className: 'dropzone'})}
     >
      
-        <input {...getInputProps()} />
+        <input {...getInputProps({
+          onChange: handleFile,
+        })} name='csv_file' type='file' id='csv_file'/>
         <Icon as={AiFillFileAdd} mr={2}  />
         <Text>{dropText}</Text>
-        {/* <h4>Rejected files</h4>
-        <ul>{fileRejectionItems}</ul> */}
     </Center>
-    <Center
-      my={4}>
-     {acceptedFileItems}
-    </Center>
+    <Center mt={4}>{thumbs}</Center>
+    {loading && <Progress size="xs" isIndeterminate />}
+    {loading && <Center my={2}> Processing File</Center>}
+    <Center mt={4}><Button colorScheme='blue' onClick={() => uploadFile()}>Upload File</Button></Center>
      </>
   );
 }

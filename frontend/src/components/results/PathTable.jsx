@@ -171,7 +171,11 @@ const PathTable = ({title, data, isError, isLoading}) => {
            <Text color="muted">{item.group}</Text>
           </Td>
           <Td>
-            <Text color="muted">{item.weight}</Text>
+          {typeof item.weight === "number" ? (
+              <Text color="muted">{item.weight.toFixed(2)}</Text>
+            ) : (
+              <Text color="error">No value</Text>
+            )}
           </Td>
           <Td>
             <Text color="muted">{item.from}</Text>

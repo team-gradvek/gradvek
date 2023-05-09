@@ -66,6 +66,7 @@ def wait_for_neo4j_connection():
         neo4j_url = NEO4J_BOLT_URL
     
     config.DATABASE_URL = neo4j_url
+    config.MAX_CONNECTION_LIFETIME = 3600 * 3 # 3 hours
     
     while retry < max_retries:
         try:
@@ -92,6 +93,6 @@ def run_startup_tasks():
     parse_datasets_module = importlib.import_module('datasets.parse_datasets', package='datasets')
     parse_datasets_module.parse_datasets()
 
-    print("Saving similarity results to Django db...")
+    print("Saving similarity results to Neo4j...")
     search_datasets_module = importlib.import_module('search.queries.node_similarity', package='search')
     search_datasets_module.save_to_db()

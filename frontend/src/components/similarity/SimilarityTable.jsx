@@ -16,6 +16,8 @@ import theme from '@/styles/theme'
 
 const SimilarityTable = ({data, title, columns, descriptor}) => {
 
+  
+
   if (data.length == 0) {
     return (
       <>
@@ -44,15 +46,17 @@ const SimilarityTable = ({data, title, columns, descriptor}) => {
       {data.map((item) => (
         <Tr key={item.id}>
           <Td>
-            <Text className="capitalize" fontWeight="medium" color={theme.brand.color}><Link href={{ pathname: `/targetToAdverseEvents/` + item.target1 }}>{item.target1}</Link></Text>
-          </Td>
-          <Td>
-            <Text className="capitalize" fontWeight="medium" color={theme.brand.color}>
-              <Link href={{ pathname: `/targetToAdverseEvents/` + item.target2 }}>{item.target2}</Link>
+            <Text className="capitalize" fontWeight="medium">
+              {item.target2}
               </Text>
           </Td>
           <Td>
-           <Text color="muted">{item.similarity}</Text>
+            <Text color={theme.brand.color}>
+              <Link href={{ pathname: `/targetToAdverseEvents/` + item.target2 }}>View Adverse Events</Link>
+              </Text>
+          </Td>
+          <Td>
+           <Text color="muted">{item.similarity.toFixed(2)}</Text>
           </Td>
           <Td>
            <Text color="muted">{descriptor}</Text>

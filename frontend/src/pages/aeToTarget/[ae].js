@@ -1,44 +1,46 @@
 import { useRouter } from 'next/router'
-import targetSimilarityHook from '@/hooks/targetSimilarity';
+import TargetTable from '@/components/results/TargetTable';
+import getTargetData from '@/hooks/aeToTargetHook';
 import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
-import { Box, Heading, Text } from '@chakra-ui/react';
-import SimilarityTable from '@/components/similarity/SimilarityTable';
+import { Box, Text, Heading } from '@chakra-ui/react';
 
 const columns = [
   {
     id: 1,
-    name: 'Target'
-
-  },
+    name: 'Symbol'
+  }, 
   {
     id: 2,
-    name: 'Adverse Events'
+    name: 'Name'
 
   },
   {
     id: 3,
-    name: 'Similarity Score'
+    name: 'Type'
   },
   {
     id: 4,
-    name: 'Descriptor'
-  },
+    name: 'Weight'
+  }, 
+  {
+    id: 5,
+    name: 'Dataset'
+  }
 ]
 
 
-const TargetSimilarityPathway = () => {
+const AdverseEventToTarget = () => {
 
   // Get data from URL
   const router = useRouter()
   const dataFromURL  = router.query
-  const target = dataFromURL.target
-  const descriptor = "IntAct"
+  const ae = dataFromURL.ae
 
-  const pageTitle = `Top 10 Targets Based on Similarity ${descriptor} for ${target}`
+  const title = `Targets for Adverse Event: ${ae}`
 
-  const { data, isLoading, isError } = targetSimilarityHook("intact", target)
+  const { data, isLoading, isError } = getTargetData(ae)
 
   if (isError) {
     return (
@@ -69,20 +71,19 @@ const TargetSimilarityPathway = () => {
     <>
     <ResultsLayout>
         <Head>
-          <title>{pageTitle}</title>
+          <title>{title}</title>
         </Head>
       <Box p={5} w="100%">
-      <SimilarityTable
-          title={pageTitle}
-          data={data}
-          id={target} 
+        <TargetTable
+          title={title}
+          id={ae}
           columns={columns}
-          descriptor={descriptor}
+          data={data}
           />
-          </Box>
+      </Box>
     </ResultsLayout>
     </>
   )
 }
 
-export default TargetSimilarityPathway
+export default AdverseEventToTarget
