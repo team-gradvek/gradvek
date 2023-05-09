@@ -1,12 +1,10 @@
 // Search by Adverse Event to Target
-// Data of Interest: https://platform.opentargets.org/disease/MONDO_0005180 
 import { TabPanel, Flex, Text, Center, Button } from '@chakra-ui/react'
 import React, { useState } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import styles from "../../styles/Search.module.css"
 import theme from '@/styles/theme';
 import { useRouter } from 'next/router';
-import { filter } from 'core-js/core/array';
 
 // Typeahead URI - DJANGO BACKEND
 const SEARCH_URI =  process.env.NEXT_PUBLIC_HOST + '/api/suggest/adverse_event'
@@ -36,7 +34,7 @@ function AdverseEventToTargetSearch() {
 
        // @TODO Refactor this to be one reusable method
        const handleButtonClick = () => {
-        router.push(`target-pathways/${selectedTypeAhead[0].meddraId}`)
+        router.push(`aeToTarget/${selectedTypeAhead[0].meddraId}`)
       }
 
       const filterByFields = ['adverseEventId'];
