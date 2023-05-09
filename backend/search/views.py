@@ -337,7 +337,8 @@ class GetGlobalAverageSimilarity(APIView):
             min_descriptors = self.kwargs['min_descriptors']
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
-        
+        print("!!! CAUTION: THIS PATH IS VERY SLOW AND REQUIRES A LOT OF MEMORY (>8 GB)!!!")
+        print("IF RUNNING IN DOCKER, IT WILL LIKELY CRASH THE CONTAINER UNLESS YOU INCREASE THE MEMORY LIMIT")
         # Initialize empty defaultdict for storing final results
         final_descriptor_results = defaultdict(lambda: {"total": 0, "count": 0, "descriptors": {}})
 
