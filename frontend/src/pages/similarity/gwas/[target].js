@@ -9,11 +9,12 @@ import SimilarityTable from '@/components/similarity/SimilarityTable';
 const columns = [
   {
     id: 1,
-    name: 'Input'
-  }, 
+    name: 'Target'
+
+  },
   {
     id: 2,
-    name: 'Target'
+    name: 'Adverse Events'
 
   },
   {
