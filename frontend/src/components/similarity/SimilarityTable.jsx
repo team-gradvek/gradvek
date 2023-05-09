@@ -16,6 +16,8 @@ import theme from '@/styles/theme'
 
 const SimilarityTable = ({data, title, columns, descriptor}) => {
 
+  
+
   if (data.length == 0) {
     return (
       <>
@@ -54,7 +56,7 @@ const SimilarityTable = ({data, title, columns, descriptor}) => {
               </Text>
           </Td>
           <Td>
-           <Text color="muted">{item.similarity}</Text>
+           <Text color="muted">{item.similarity.toFixed(2)}</Text>
           </Td>
           <Td>
            <Text color="muted">{descriptor}</Text>

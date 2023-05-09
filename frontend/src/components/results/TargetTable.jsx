@@ -84,7 +84,7 @@ const TargetTable = ({title, columns, data, isError, isLoading}) => {
            <Text color="muted">{item.type}</Text>
           </Td>
           <Td>
-            <Text color="muted">{item.llr}</Text>
+            <Text color="muted">{item.llr.toFixed(2)}</Text>
           </Td>
           <Td>
             <Text color="muted">{item.dataset}</Text>

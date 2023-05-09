@@ -50,7 +50,7 @@ const DrugsTable = ({data, title, columns}) => {
             <Text className="capitalize" fontWeight="medium">{item.drugName}</Text>
           </Td>
           <Td>
-           <Text color="muted">{item.weight}</Text>
+           <Text color="muted">{item.weight.toFixed(2)}</Text>
           </Td>
         </Tr>
       ))}
