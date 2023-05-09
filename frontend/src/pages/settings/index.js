@@ -5,17 +5,8 @@ import Head from "next/head";
 import { Box, Divider, Flex, Grid, Heading } from '@chakra-ui/react';
 import DatasetsTable from '@/components/settings/DatasetsTable';
 import SystemDataTable from '@/components/settings/SystemDataTable';
-import DescriptorsTable from '@/components/settings/DescriptorsTable';
+// import DescriptorsTable from '@/components/settings/DescriptorsTable';
 import ActionsTable from '@/components/settings/ActionsTable';
-
-
-
-const descriptorCols = [
-  {
-  id: 1,
-  name: 'Descriptor'
-  }
-]
 
 const actionsCols = [
   {
@@ -60,9 +51,6 @@ const Settings = () => {
 
   // Unpack all objects and assign a new variable name to use multiple SWRs
   // Get settings via Hook
-  const { data: descriptorsData, isLoading: isLoadingDescriptors, isError: isErrorDescriptors } = getSettings(descriptors)
-
-  // Get settings via Hook
   const { data: actionsData, isLoading: isLoadingActions, isError: isErrorActions } = getSettings(actionsWithCount)
 
   // Get settings via Hook
@@ -71,9 +59,9 @@ const Settings = () => {
   // Get settings via Hook
   const { data: systemData, isLoading: isLoadingSystem, isError: isErrorSystem } = getSettings(systemDataWithCounts)
 
-  if (isErrorDescriptors || isErrorActions || isErrorDatasets || isErrorSystem ) return <p>Failed to Load</p>
+  if ( isErrorActions || isErrorDatasets || isErrorSystem ) return <p>Failed to Load</p>
 
-  if (isLoadingDescriptors || isLoadingActions || isLoadingDatasets || isLoadingSystem) {
+  if ( isLoadingActions || isLoadingDatasets || isLoadingSystem) {
     return (
       <>
       <ResultsLayout>
@@ -134,14 +122,6 @@ const Settings = () => {
             columns={actionsCols}
             />
       </Box>
-      {/* <Box m={3}>
-        <DescriptorsTable
-            title="Descriptors Available"
-            data={descriptorsData}
-            columns={descriptorCols}
-            />
-        </Box>
-        */}
       </Box>
     </Box>
     </ResultsLayout>
