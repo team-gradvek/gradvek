@@ -44,11 +44,13 @@ const SimilarityTable = ({data, title, columns, descriptor}) => {
       {data.map((item) => (
         <Tr key={item.id}>
           <Td>
-            <Text className="capitalize" fontWeight="medium" color={theme.brand.color}><Link href={{ pathname: `/targetToAdverseEvents/` + item.target1 }}>{item.target1}</Link></Text>
+            <Text className="capitalize" fontWeight="medium">
+              {item.target2}
+              </Text>
           </Td>
           <Td>
-            <Text className="capitalize" fontWeight="medium" color={theme.brand.color}>
-              <Link href={{ pathname: `/targetToAdverseEvents/` + item.target2 }}>{item.target2}</Link>
+            <Text color={theme.brand.color}>
+              <Link href={{ pathname: `/targetToAdverseEvents/` + item.target2 }}>View Adverse Events</Link>
               </Text>
           </Td>
           <Td>
