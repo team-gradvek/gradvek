@@ -3,7 +3,7 @@ import neo4j from 'neo4j-driver';
 
 const config = {
   container_id: 'viz',
-  server_url: 'bolt://localhost:7687',
+  server_url: 'bolt://neo4j:7687',
   server_user: 'neo4j',
   server_password: 'password',
   labels: {

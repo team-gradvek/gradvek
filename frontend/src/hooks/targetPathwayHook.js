@@ -5,7 +5,7 @@ function getTargetPathwayData(path) {
   
   const fetcher = url => axios.get(url).then(res => res.data)
 
-  const { data, isError, isLoading } = useSWR(`http://localhost:8000/api/target/path/${encodeURIComponent(path)}`, fetcher)
+  const { data, isError, isLoading } = useSWR(`http://www.gradvek.org:8083/api/target/path/${encodeURIComponent(path)}`, fetcher)
 
  
   return {

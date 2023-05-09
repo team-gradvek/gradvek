@@ -7,7 +7,7 @@ const Neo4jVisualization = () => {
   useEffect(() => {
     const config = {
       container_id: 'viz',
-      server_url: 'bolt://localhost:7687',
+      server_url: 'bolt://neo4j:7687',
       server_user: 'neo4j',
       server_password: 'gradvek1',
       labels: {

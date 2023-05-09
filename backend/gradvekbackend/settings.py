@@ -41,10 +41,12 @@ SECRET_KEY=secretkey
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['54.226.2.23','gradvek.org','www.gradvek.org']
 
 CORS_ORIGIN_WHITELIST = (
-  'http://localhost:3000',
+  'http://localhost',
+  'http://gradvek.org',
+  'http://www.gradvek.org',
 )
 
 

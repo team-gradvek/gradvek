@@ -5,8 +5,8 @@ DOCKER_COMPOSE_FILE := docker-compose.yml
 DOCKER_COMPOSE_FILE_NEO4j := docker-compose-neo4j-local-test.yml
 
 # Get the current user ID and group ID
-CURRENT_UID := $(shell id -u)
-CURRENT_GID := $(shell id -g)
+CURRENT_UID := $(bash id -u)
+CURRENT_GID := $(bash id -g)
 
 # Export the user ID and group ID for use in docker-compose
 export CURRENT_UID

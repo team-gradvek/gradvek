@@ -10,8 +10,8 @@ services:
     image: gradvek_neo4j
     user: "${CURRENT_UID}:${CURRENT_GID}"
     ports:
-      - "7474:7474"
-      - "7687:7687"
+      - "8081:7474"
+      - "8082:7687"
     volumes:
       - ./neo4j/data:/data
       - ./neo4j/logs:/logs
@@ -25,9 +25,10 @@ services:
     image: gradvek_backend
     command: python manage.py runserver 0.0.0.0:8000
     ports:
-      - "8000:8000"
+      - "8083:8000"
     environment:
       - NEO4J_DOCKER_URL=bolt://neo4j:gradvek1@neo4j:7687
+      - SECRET_KEY
     networks:
       - gradvek_network
   
@@ -35,7 +36,7 @@ services:
     build: ./frontend
     image: gradvek_frontend
     ports:
-      - "3000:3000"
+      - "80:3000"
     networks:
       - gradvek_network
 
