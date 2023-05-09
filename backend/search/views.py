@@ -8,6 +8,7 @@ from django.urls import get_resolver
 from django.views import View
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+import psutil
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -337,6 +338,12 @@ class GetGlobalAverageSimilarity(APIView):
             min_descriptors = self.kwargs['min_descriptors']
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+        
+        available_memory = psutil.virtual_memory().available / (1024 ** 3)  # Get available memory in GB
+        if available_memory < 8:
+            print("WARNING: Less than 8 GB of memory available. Skipping compute.")
+            return Response([])
+        
         print("!!! CAUTION: THIS PATH IS VERY SLOW AND REQUIRES A LOT OF MEMORY (>8 GB)!!!")
         print("IF RUNNING IN DOCKER, IT WILL LIKELY CRASH THE CONTAINER UNLESS YOU INCREASE THE MEMORY LIMIT")
         # Initialize empty defaultdict for storing final results
