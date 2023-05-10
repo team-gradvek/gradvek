@@ -5,7 +5,6 @@ import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
 import { Box, Card, CardBody, Text, Heading } from '@chakra-ui/react';
-import PathKG from '@/components/graph/PathsKG';
 import getPathwayData from '@/hooks/pathwaysHook'
 
 const columns = [
@@ -39,6 +38,8 @@ const TargetToAdverseEvents = () => {
   const { adverseEvent, isLoading, isError } = getAdverseEvent(target)
   const { data, isLoading: isLoadingPath, isError:isErrorPath } = getPathwayData(target)
 
+  const title = `Adverse Events for ${target}`
+
   if (isError || isErrorPath) {
     return (
       <>
@@ -68,11 +69,11 @@ const TargetToAdverseEvents = () => {
     <>
     <ResultsLayout>
         <Head>
-          <title>Target to Adverse Events Results</title>
+          <title>{title}</title>
         </Head>
       <Box p={5} w="100%">
         <DataTable
-          title={`Adverse Events for ${target}`}
+          title={title}
           id={target} 
           target={target}
           columns={columns}
