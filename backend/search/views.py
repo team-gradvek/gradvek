@@ -141,8 +141,8 @@ class GetSimilarity(APIView):
     def get(self, request, *args, **kwargs):
         # Retrieve the target and descriptor from the request path
         try:
-            target = self.kwargs['target']
-            descriptor_type = self.kwargs['descriptor']
+            target = self.kwargs['target'].upper()
+            descriptor_type = self.kwargs['descriptor'].lower()
         except Exception as e:
             # Return an error message if the target or descriptor type is not provided in the request path
             return JsonResponse({'error': str(e)}, status=400)
@@ -184,7 +184,7 @@ class GetAverageSimilarity(APIView):
     def get(self, request, *args, **kwargs):
         # Retrieve the target from the request path
         try:
-            target = self.kwargs['target']
+            target = self.kwargs['target'].upper()
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
@@ -234,7 +234,7 @@ class GetWeightedAverageSimilarity(GetAverageSimilarity):
     def get(self, request, *args, **kwargs):
         # Retrieve the target from the request path
         try:
-            target = self.kwargs['target']
+            target = self.kwargs['target'].upper()
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 

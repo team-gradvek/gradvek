@@ -120,6 +120,10 @@ a {
   text-transform: capitalize;
 }
 
+.uppercase{
+  text-transform: uppercase;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

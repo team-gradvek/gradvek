@@ -14,9 +14,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import theme from '@/styles/theme'
 
 
-const SimilarityTable = ({data, title, columns, descriptor}) => {
-
-  
+const AverageSimilarityTable = ({data, title, columns}) => {
 
   if (data.length == 0) {
     return (
@@ -33,7 +31,7 @@ const SimilarityTable = ({data, title, columns, descriptor}) => {
 
   return (
   <>
-  <Heading className="uppercase" size='md' mb={4}>{title}</Heading>
+  <Heading size='md' className='uppercase' mb={4}>{title}</Heading>
   <Table bg="white" borderRadius={5}>
     <Thead>
       <Tr>
@@ -46,20 +44,20 @@ const SimilarityTable = ({data, title, columns, descriptor}) => {
       {data.map((item, index) => (
         <Tr key={item.id || index}>
           <Td>
-            <Text className="capitalize" fontWeight="medium">
-              {item.target2}
+            <Text className="capitalize" fontWeight="medium" color={theme.brand.color}><Link href={{ pathname: `/targetToAdverseEvents/` + item.target1 }}>{item.target1}</Link></Text>
+          </Td>
+          <Td>
+            <Text className="capitalize" fontWeight="medium" color={theme.brand.color}>
+              <Link href={{ pathname: `/targetToAdverseEvents/` + item.target2 }}>{item.target2}</Link>
               </Text>
           </Td>
           <Td>
-            <Text color={theme.brand.color}>
-              <Link href={{ pathname: `/targetToAdverseEvents/` + item.target2 }}>View Adverse Events</Link>
-              </Text>
+           <Text color="muted">{item.average.toFixed(3)}</Text>
           </Td>
           <Td>
-           <Text color="muted">{item.similarity.toFixed(2)}</Text>
-          </Td>
-          <Td>
-           <Text color="muted">{descriptor}</Text>
+            {Object.keys(item.descriptors).map((key) => (
+               <Text color="muted">{key} : {item.descriptors[key].toFixed(3)}</Text>
+            ))}
           </Td>
         </Tr>
       ))}
@@ -69,4 +67,4 @@ const SimilarityTable = ({data, title, columns, descriptor}) => {
   )
 }
 
-export default SimilarityTable
+export default AverageSimilarityTable

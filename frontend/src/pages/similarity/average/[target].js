@@ -4,43 +4,40 @@ import DataTableSkeleton from '@/components/results/DataTableSkeleton'
 import ResultsLayout from '@/components/results/ResultsLayout';
 import Head from "next/head";
 import { Box, Heading, Text } from '@chakra-ui/react';
-import SimilarityTable from '@/components/similarity/SimilarityTable';
+import averageSimilarityHook from '@/hooks/averageSimilarityHook';
+import AverageSimilarityTable from '@/components/similarity/AverageSimilarityTable';
 
 const columns = [
   {
     id: 1,
+    name: 'Input'
+  }, 
+  {
+    id: 2,
     name: 'Target'
 
   },
   {
-    id: 2,
-    name: 'Adverse Events'
-
-  },
-  {
     id: 3,
-    name: 'Similarity Score'
+    name: 'Average'
   },
   {
     id: 4,
-    name: 'Descriptor'
+    name: 'Descriptors'
   },
 ]
 
 
-const TargetSimilarityMousePhenotype = () => {
+const AverageSimilarityPathway = () => {
 
   // Get data from URL
   const router = useRouter()
   const dataFromURL  = router.query
   const target = dataFromURL.target
-  const descriptor = "Mouse Phenotype"
 
-  console.log(dataFromURL)
+  const pageTitle = `Average Similarity Score for ${target}`
 
-  const pageTitle = `Targets Based on Similarity: ${descriptor} for ${target}`
-
-  const { data, isLoading, isError } = targetSimilarityHook("mousepheno", target)
+  const { data, isLoading, isError } = averageSimilarityHook(target)
 
   if (isError) {
     return (
@@ -74,12 +71,11 @@ const TargetSimilarityMousePhenotype = () => {
           <title>{pageTitle}</title>
         </Head>
       <Box p={5} w="100%">
-      <SimilarityTable
+      <AverageSimilarityTable
           title={pageTitle}
           data={data}
           id={target} 
           columns={columns}
-          descriptor={descriptor}
           />
           </Box>
     </ResultsLayout>
@@ -87,4 +83,4 @@ const TargetSimilarityMousePhenotype = () => {
   )
 }
 
-export default TargetSimilarityMousePhenotype
+export default AverageSimilarityPathway

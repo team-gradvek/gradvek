@@ -59,7 +59,7 @@ const DataTable = ({title, columns, data, isError, isLoading}) => {
 
   return (
   <>
-  <Heading size='md' mb={4}>{title}</Heading>
+  <Heading size='md' mb={4} className='uppercase'>{title}</Heading>
   <Table bg="white" borderRadius={5}>
     <Thead>
       <Tr>
