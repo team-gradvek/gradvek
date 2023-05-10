@@ -55,7 +55,7 @@ function Uploader(props) {
       console.log(files)
       formData.append('csv_file', acceptedFiles[0])
       // console.log(formData)
-      axios.post('http://localhost:8000/api/csv/', formData, {
+      axios.post('http://www.gradvek.org:8083/api/csv/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }, 
