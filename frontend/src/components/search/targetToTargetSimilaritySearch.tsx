@@ -53,7 +53,12 @@ function TargetToTargetSimilaritySearch() {
       }
 
       const handleOpenNewTab = (value) => {
-        const url = `/similarity/${value}/${selectedTypeAhead[0].symbol}`;
+        let url
+        if (value === "average"){
+          url = `/similarity/average/${selectedTypeAhead[0].symbol}`;
+        } else {
+          url = `/similarity/${value}/${selectedTypeAhead[0].symbol}`;
+        }
         window.open(url, "_blank");
       };
       
@@ -90,7 +95,7 @@ function TargetToTargetSimilaritySearch() {
         <Box my={2}>
         <CheckboxGroup colorScheme='blue' defaultValue={['reactome']} onChange={handleCheckboxChange} value={checkedValues}>
                 <Stack spacing={[1, 5]} direction={['column', 'row']}>
-                {["hgene", "hprotein", "intact", "mouse", "pathway", "reactome", "signor"].map((item, index) => (
+                {["hgene", "hprotein", "intact", "mouse", "pathway", "reactome", "signor", "average"].map((item, index) => (
                   <Checkbox
                     key={index}
                     value={item}
