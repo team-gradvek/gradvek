@@ -35,7 +35,7 @@ const TargetSimilarityPathway = () => {
   const target = dataFromURL.target
   const descriptor = "Pathway"
 
-  const pageTitle = `Top 10 Targets Based on Similarity ${descriptor} for ${target}`
+  const pageTitle = `Targets Based on Similarity: ${descriptor} for ${target}`
 
   const { data, isLoading, isError } = targetSimilarityHook("pathway", target)
 

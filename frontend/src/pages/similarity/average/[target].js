@@ -35,14 +35,9 @@ const AverageSimilarityPathway = () => {
   const dataFromURL  = router.query
   const target = dataFromURL.target
 
-  console.log(`Target from URL: ${target}`)
-
   const pageTitle = `Average Similarity Score for ${target}`
 
   const { data, isLoading, isError } = averageSimilarityHook(target)
-
-  console.log("Data returned:")
-  console.log(data)
 
   if (isError) {
     return (

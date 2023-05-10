@@ -31,7 +31,7 @@ const SimilarityTable = ({data, title, columns, descriptor}) => {
 
   return (
   <>
-  <Heading size='md' mb={4}>{title}</Heading>
+  <Heading className="uppercase" size='md' mb={4}>{title}</Heading>
   <Table bg="white" borderRadius={5}>
     <Thead>
       <Tr>
@@ -41,8 +41,8 @@ const SimilarityTable = ({data, title, columns, descriptor}) => {
       </Tr>
     </Thead>
     <Tbody>
-      {data.map((item) => (
-        <Tr key={item.id}>
+      {data.map((item, index) => (
+        <Tr key={item.id || index}>
           <Td>
             <Text className="capitalize" fontWeight="medium" color={theme.brand.color}><Link href={{ pathname: `/targetToAdverseEvents/` + item.target1 }}>{item.target1}</Link></Text>
           </Td>
@@ -52,7 +52,7 @@ const SimilarityTable = ({data, title, columns, descriptor}) => {
               </Text>
           </Td>
           <Td>
-           <Text color="muted">{item.similarity}</Text>
+           <Text color="muted">{item.similarity.toFixed(2)}</Text>
           </Td>
           <Td>
            <Text color="muted">{descriptor}</Text>

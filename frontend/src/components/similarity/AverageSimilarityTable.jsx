@@ -31,7 +31,7 @@ const AverageSimilarityTable = ({data, title, columns}) => {
 
   return (
   <>
-  <Heading size='md' mb={4}>{title}</Heading>
+  <Heading size='md' className='uppercase' mb={4}>{title}</Heading>
   <Table bg="white" borderRadius={5}>
     <Thead>
       <Tr>
@@ -41,8 +41,8 @@ const AverageSimilarityTable = ({data, title, columns}) => {
       </Tr>
     </Thead>
     <Tbody>
-      {data.map((item) => (
-        <Tr key={item.id}>
+      {data.map((item, index) => (
+        <Tr key={item.id || index}>
           <Td>
             <Text className="capitalize" fontWeight="medium" color={theme.brand.color}><Link href={{ pathname: `/targetToAdverseEvents/` + item.target1 }}>{item.target1}</Link></Text>
           </Td>
@@ -52,10 +52,12 @@ const AverageSimilarityTable = ({data, title, columns}) => {
               </Text>
           </Td>
           <Td>
-           <Text color="muted">{item.average}</Text>
+           <Text color="muted">{item.average.toFixed(2)}</Text>
           </Td>
           <Td>
-           <Text color="muted">{item.descriptors}</Text>
+            {Object.keys(item.descriptors).map((key) => (
+               <Text color="muted">{key} : {item.descriptors[key].toFixed(2)}</Text>
+            ))}
           </Td>
         </Tr>
       ))}

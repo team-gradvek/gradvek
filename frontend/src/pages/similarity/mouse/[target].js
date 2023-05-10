@@ -37,7 +37,7 @@ const TargetSimilarityMousePhenotype = () => {
 
   console.log(dataFromURL)
 
-  const pageTitle = `Top 10 Targets Based on Similarity ${descriptor} for ${target}`
+  const pageTitle = `Targets Based on Similarity: ${descriptor} for ${target}`
 
   const { data, isLoading, isError } = targetSimilarityHook("mousepheno", target)
 
