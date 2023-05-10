@@ -52,11 +52,11 @@ const AverageSimilarityTable = ({data, title, columns}) => {
               </Text>
           </Td>
           <Td>
-           <Text color="muted">{item.average.toFixed(2)}</Text>
+           <Text color="muted">{item.average.toFixed(3)}</Text>
           </Td>
           <Td>
             {Object.keys(item.descriptors).map((key) => (
-               <Text color="muted">{key} : {item.descriptors[key].toFixed(2)}</Text>
+               <Text color="muted">{key} : {item.descriptors[key].toFixed(3)}</Text>
             ))}
           </Td>
         </Tr>
