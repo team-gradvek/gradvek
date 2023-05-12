@@ -149,7 +149,7 @@ Please manually create the folder
 
 
 # Design of system
-![plot](./screeshots/gradvek_diagram.png)
+![plot](./screenshots/gradvek_diagram.png)
 
 GradVek (GRaph of ADVerse Event Knowledge) is a software system designed to manage OpenTargets Drug data. It provides an interactive interface for users to explore and understand drug-related adverse events. This section outlines the design of the system, including frontend, backend, and database components, as well as the choice of language/platform.
 
@@ -201,7 +201,8 @@ Datasets: Written entirely as functions, the two main components operate in a si
 
 ### `gradvekbackend` Package Diagram
 Gradvek backend is primarily django configuration, settings, and startup triggers.
-![plot](./screeshots/django_config.png)
+![plot](./screenshots/django_config.png)
+
 This section handles django setup and configuration, as well as startup functions triggering the functions in the datasets package, as well as handling establishing the connection between the backend and neo4j, using a retry and timeout mechanism, as well as handling connections changes between environments such as running natively or in a docker container.
 
 ### `search` Package
@@ -212,7 +213,7 @@ The search section of the backend is where the routes are provided and the backe
 * `cytoscape`: Provides the necessary classes to process and organize paths of data retrieved from neo4j
 * Cytoscape Entity Class Diagram: Used as part of processing Target to Adverse event and Adverse Event to Target paths
 
-![plot](./screeshots/cytoscape.png)
+![plot](./screenshots/cytoscape.png)
 
 ### Language and Platform
 GradVek's choice of language and platform is influenced by the following factors:
@@ -226,26 +227,26 @@ GradVek's choice of language and platform is influenced by the following factors
 # Screenshots
 
 ### http://www.gradvek.org
-![plot](./screeshots/home.png)
+![plot](./screenshots/home.png)
 
 ### Target to Adverse Event
-![plot](./screeshots/search1.png)
-![plot](./screeshots/result1.png)
+![plot](./screenshots/search1.png)
+![plot](./screenshots/result1.png)
 
 ### Adverse Event to Target
-![plot](./screeshots/result2.png)
+![plot](./screenshots/result2.png)
 
 ### Target to Target Similarity
 TARGETS BASED ON SIMILARITY: MOUSE PHENOTYPE FOR FGG
-![plot](./screeshots/FGG-mouse.png)
+![plot](./screenshots/FGG-mouse.png)
 TARGETS BASED ON SIMILARITY: AVERAGE FOR FGG
-![plot](./screeshots/FGG-average.png)
+![plot](./screenshots/FGG-average.png)
 
 
 ### Drug Search by Target and AE
-![plot](./screeshots/target-ae.png)
-![plot](./screeshots/result3.png)
+![plot](./screenshots/target-ae.png)
+![plot](./screenshots/result3.png)
 
 
 ### Proprietary Data
-![plot](./screeshots/csv.png)
+![plot](./screenshots/csv.png)
