@@ -93,14 +93,14 @@ Open your browser and navigate to http://localhost:3000/.
  
 ### 2. Run the Django backend
 **Make sure Docker is running.**  
-The Neo4j database must be running for the backend to work (check Makefile commands). 
+The Neo4j database must be running for the backend to work. 
 ```bash
 cd gradvek
 make run-neo4j
 ```
 _Note: Look at the Docker logs and wait until you see "started"._
 
-There is a startup function in Django that retrieves the Open Targets datasets and parse it to the Neo4j database. The Neo4j database must be running for the backend to work (check Makefile commands).
+There is a startup function in Django that retrieves the Open Targets datasets and parse it to the Neo4j database. 
 
 ```bash
 cd backend
