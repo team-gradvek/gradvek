@@ -15,6 +15,8 @@ function ResultsLayout({ children }) {
       base: 'column',
       lg: 'row',
     }}
+    maxWidth="1366px"
+    margin="auto"
     >
     {children}
     </Flex>

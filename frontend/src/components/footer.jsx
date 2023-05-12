@@ -4,9 +4,11 @@ import {
   Divider,
   Stack,
   Text,
-  useColorMode
+  useColorMode,
+  Icon
 } from '@chakra-ui/react'
 import Link from 'next/link';
+import { AiOutlineArrowRight } from 'react-icons/ai';
 
 export default function Footer() {
 
@@ -14,6 +16,7 @@ export default function Footer() {
 
  return (
   <Container as="footer" role="contentinfo" w='100%' maxWidth='1366px'>
+    <Divider />
     <Stack
       py={{
         base: '12',
@@ -23,33 +26,39 @@ export default function Footer() {
         <Stack direction="row" spacing="8">
           <Stack spacing="4" minW="36" flex="1">
             <Text fontSize="sm" fontWeight="semibold" color="subtle">
-              Product
+              Data & Settings
             </Text>
             <Stack spacing="4" shouldWrapChildren>
-              <Button variant="link">Features</Button>
-              <Button variant="link">Documentation</Button>
-              <Button variant="link">Data Management</Button>
+              <Button variant="link"><Link href='/settings'>Settings</Link></Button>
+              <Button variant="link"><Link href='/settings/uploads'>Data Upload</Link></Button>
+              <Button variant="link"><Link href='https://github.com/team-gradvek/gradvek'>Documentation</Link></Button>
+              <Button variant="link"><Link href='https://platform.opentargets.org/downloads'>Open Target</Link></Button>
               <Button variant="link">API Docs</Button>
             </Stack>
           </Stack>
           
           <Stack spacing="4" minW="36" flex="1">
             <Text fontSize="sm" fontWeight="semibold" color="subtle">
-              Pathways
+              Sample Pathways
             </Text>
             <Stack spacing="3" shouldWrapChildren>
               <Button variant="link"><Link href='/pathways/drd3'>Target</Link></Button>
-              <Button variant="link"><Link href='/pathways/drd3/10034010'>Target + AE</Link></Button>
+              <Button variant="link"><Link href='/pathways/drd3/parkisonism'>Target + AE</Link></Button>
               <Button variant="link"><Link href='/pathways/drd3/LEVODOPA'>Target + AE + Drug</Link></Button>
+              <Divider />
+              <Button variant="link"><Link href='/target-pathways/parkisonism'>Adverse Event</Link></Button>
+              <Button variant="link"><Link href='/target-pathways/parkisonism/drd3'>AE + Target</Link></Button>
+              <Button variant="link"><Link href='/target-pathways/parkisonism/drd3/LEVODOPA'>AE + Target + Drug</Link></Button>
             </Stack>
           </Stack>
           <Stack spacing="4" minW="36" flex="1">
             <Text fontSize="sm" fontWeight="semibold" color="subtle">
-              Resources
+              Sample Knowledge Graphs
             </Text>
             <Stack spacing="3" shouldWrapChildren>
-              <Button variant="link">Open Target</Button>
-              <Button variant="link">Community</Button>
+              <Button variant="link"><Link href='/kg/DRD3'>Target KG</Link></Button>
+              <Button variant="link"><Link href='/kg/DRD3/extrapyramidal%20disorder'>Target with AE KG</Link></Button>
+              <Button variant="link"><Link href='/kg/DRD3/extrapyramidal%20disorder/LEVODOPA'>Target with AE and Drug KG</Link></Button>
             </Stack>
           </Stack>
           

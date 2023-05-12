@@ -19,7 +19,7 @@ import {
              base: '4',
              lg: '5',
            }}
-           w='100%' maxW='1480px'
+           w='100%' maxW='1366px'
          >
            <HStack spacing="10" justify="space-between">
            <Link href="/">
@@ -30,7 +30,6 @@ import {
                   
                     <Button colorScheme='grey' variant="link" key="Search"><Link href='/'>Search </Link></Button>
                             
-                    <Button colorScheme='grey' variant="link" key="Settings"><Link href='/settings'>Settings</Link></Button>
                  
                     <Button colorScheme='grey' variant="link" key="Documentation"><Link href='https://github.com/team-gradvek/gradvek'>Documentation</Link></Button>
                 

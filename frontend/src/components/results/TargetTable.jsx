@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Checkbox,
   HStack,
   Heading,
   Table,
@@ -18,7 +17,7 @@ import DataTableSkeleton from './DataTableSkeleton'
 
 
 
-const DataTable = ({title, columns, data, isError, isLoading}) => {
+const TargetTable = ({title, columns, data, isError, isLoading}) => {
 
   if (data.length == 0) {
     return (
@@ -72,15 +71,16 @@ const DataTable = ({title, columns, data, isError, isLoading}) => {
       {data.map((item) => (
         <Tr key={item.id}>
           <Td>
-            <HStack spacing="3">
-              <Avatar name={item.name} boxSize="10" />
-              <Box>
-                <Text className="capitalize" fontWeight="medium">{item.name}</Text>
-              </Box>
+            <HStack>
+            <Avatar name={item.symbol} boxSize="10" />
+            <Text className="capitalize" fontWeight="medium">{item.symbol}</Text>
             </HStack>
           </Td>
           <Td>
-           <Text color="muted">{item.id}</Text>
+              <Text className="capitalize" fontWeight="medium">{item.name}</Text>
+          </Td>
+          <Td>
+           <Text color="muted">{item.type}</Text>
           </Td>
           <Td>
             <Text color="muted">{item.llr.toFixed(2)}</Text>
@@ -96,4 +96,4 @@ const DataTable = ({title, columns, data, isError, isLoading}) => {
   )
 }
 
-export default DataTable
+export default TargetTable

@@ -9,11 +9,12 @@ import SimilarityTable from '@/components/similarity/SimilarityTable';
 const columns = [
   {
     id: 1,
-    name: 'Input'
-  }, 
+    name: 'Target'
+
+  },
   {
     id: 2,
-    name: 'Target'
+    name: 'Adverse Events'
 
   },
   {
@@ -35,7 +36,7 @@ const TargetSimilarityPathway = () => {
   const target = dataFromURL.target
   const descriptor = "Signor"
 
-  const pageTitle = `Top 10 Targets Based on Similarity ${descriptor} for ${target}`
+  const pageTitle = `Targets Based on Similarity: ${descriptor} for ${target}`
 
   const { data, isLoading, isError } = targetSimilarityHook("signor", target)
 
