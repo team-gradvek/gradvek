@@ -151,9 +151,6 @@ https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-fai
 ### Neo4j/Docker Connection Errors
 https://stackoverflow.com/questions/42397751/neo4j-in-docker-max-heap-size-causes-hard-crash-137/42398497#42398497
 
-### Couldn't validate latest open targets version and update data.[Errno 2] No such file or directory: 'XXX/gradvek/datasets/opentarget/diseases’
-Please manually create the folder
-
 
 ### Neo4j container
 _Note: If `make run-all` you run the complete application in Docker it is possible the Neo4j container exits as it is competing for memory. Try restarting the Neo4j container a few times._
