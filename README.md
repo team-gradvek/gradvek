@@ -72,10 +72,9 @@ NEO4J_BOLT_URL=bolt://neo4j:gradvek1@localhost:7687
 
 ## Running the application
 You can run the app locally or with Docker. Check the makefile commands:
-[Makefile commands](#makefile-commands)
-Note: The Neo4j database must be running for the backend to work (check Makefile commands).
+[Makefile commands](#makefile-commands)   
 
-The steps below describe how to operate the frontend and backend without Docker:
+**The steps below describe how to operate the frontend and backend without Docker:**
 
 ### 1. Install Node.js modules and Run the Next.js frontend
 Navigate to the frontend folder and install the required Node.js modules:
@@ -91,7 +90,17 @@ npm run dev
 ```
 Open your browser and navigate to http://localhost:3000/.
 
+ 
 ### 2. Run the Django backend
+**Make sure Docker is running.**  
+The Neo4j database must be running for the backend to work (check Makefile commands). 
+```bash
+cd gradvek
+make run-neo4j
+```
+_Note: Look at the Docker logs and wait until you see "started"._
+
+There is a startup function in Django that retrieves the Open Targets datasets and parse it to the Neo4j database. The Neo4j database must be running for the backend to work (check Makefile commands).
 
 ```bash
 cd backend
@@ -99,17 +108,16 @@ python3 manage.py runserver
 ```
 Visit http://localhost:8000/ to ensure the backend is running.
 
-Note: The Neo4j database must be running for the backend to work (check Makefile commands).
+You can see the Neo4j db at http://localhost:7474/.
 
 
 ## Makefile commands
 
-Note: If `make run-all` you run the complete application in Docker it is possible the Neo4j container exits as it is competing for memory. Try restarting the Neo4j container a few times.
+_Note: If `make run-all` you run the complete application in Docker it is possible the Neo4j container exits as it is competing for memory. Try restarting the Neo4j container a few times._
 
 If you run any component of the application in Docker, please check the Docker logs to see how things are progressing.
 
-
-_Note: The Neo4j database must be running for the `make send-data` or the `make run-backend` command to work._
+_Note: The Neo4j database must be running for the `make send-data` or the `make run-backend` command to work._  
 _Note: SECRET_KEY must be set in docker-compose-published.yml for `make run-deployed` command to work._
 
 | Command                       | Description                                                  |
@@ -133,19 +141,22 @@ _Note: SECRET_KEY must be set in docker-compose-published.yml for `make run-depl
 
 
 
-
 # Errors
 
-## How to resolve  SSL: CERTIFICATE_VERIFY_FAILED error 
+### How to resolve  SSL: CERTIFICATE_VERIFY_FAILED error 
 https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
 
 "If you're using macOS go to Macintosh HD > Applications > Python3.6 folder (or whatever version of python you're using) > double click on "Install Certificates.command" file."
 
-## Neo4j/Docker Connection Errors
+### Neo4j/Docker Connection Errors
 https://stackoverflow.com/questions/42397751/neo4j-in-docker-max-heap-size-causes-hard-crash-137/42398497#42398497
 
-## Couldn't validate latest open targets version and update data.[Errno 2] No such file or directory: 'XXX/gradvek/datasets/opentarget/diseases’
+### Couldn't validate latest open targets version and update data.[Errno 2] No such file or directory: 'XXX/gradvek/datasets/opentarget/diseases’
 Please manually create the folder
+
+
+### Neo4j container
+_Note: If `make run-all` you run the complete application in Docker it is possible the Neo4j container exits as it is competing for memory. Try restarting the Neo4j container a few times._
 
 
 # Design of system
