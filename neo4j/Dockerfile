@@ -14,7 +14,7 @@ ENV NEO4J_AUTH=neo4j/gradvek1 \
 # COPY data /data
 # COPY logs /logs
 # COPY import /var/lib/neo4j/import
-COPY plugins /plugins
+# COPY plugins /plugins
 
 # Expose Neo4j ports
 EXPOSE 7474 7473 7687
