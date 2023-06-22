@@ -1,4 +1,4 @@
-FROM neo4j
+FROM neo4j:5.9.0
 
 # Set environment variables
 ENV NEO4J_AUTH=neo4j/gradvek1 \
