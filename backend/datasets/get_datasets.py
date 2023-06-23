@@ -209,8 +209,11 @@ def get_open_targets_version_from_file(file_name):
                 data_version = line.split('=')[1].strip()
                 if data_version.startswith('"') and data_version.endswith('"'):
                     data_version = data_version[1:-1]
+                # If data_version is in year.month format, append the first day of the month
+                if data_version.count('.') == 1:
+                    data_version += ".01"
                 break
-        
+        print(f"Data version: {data_version}")
         # Print the data_version value
         if data_version:
             return datetime.strptime(data_version, '%y.%m.%d').date()
@@ -218,6 +221,7 @@ def get_open_targets_version_from_file(file_name):
             return datetime.strptime('21.01.01', '%y.%m.%d').date()
     except Exception as e:
         return datetime.strptime('21.01.01', '%y.%m.%d').date()
+
 
 
 
